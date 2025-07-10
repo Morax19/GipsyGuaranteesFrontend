@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/styles.css';
 import { fetchWithAuth } from '../fetchWithAuth';
 
 const ForgotPassword = () => {

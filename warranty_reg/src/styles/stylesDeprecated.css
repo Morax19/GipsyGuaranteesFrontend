@@ -34,7 +34,7 @@ body {
     font-size: 1.1rem;
     margin-top: 28px;
     margin-bottom: 14px;
-    color: #007BFF;
+    color: #4068f8;
 }
 .cardContainer input {
     display: block;
@@ -48,7 +48,7 @@ body {
     transition: border 0.2s;
 }
 .cardContainer input:focus {
-    border: 1.5px solid #007BFF;
+    border: 1.5px solid #4068f8;
     outline: none;
     background: #fff;
 }
@@ -56,7 +56,7 @@ body {
     display: block;
     width: 60%;
     padding: 12px;
-    background-color: #007BFF;
+    background-color: #4068f8;
     color: white;
     border: none;
     border-radius: 6px;
@@ -79,7 +79,7 @@ body {
     top: 16px;
     left: 16px;
     background: #fff;
-    border: 1px solid #007BFF;
+    border: 1px solid #4068f8;
     border-radius: 50%;
     width: 36px !important;
     height: 36px !important;
@@ -90,7 +90,7 @@ body {
     font-size: 22px;
     font-weight: bold;
     line-height: 1;
-    color: #007BFF;
+    color: #4068f8;
     box-shadow: 0 2px 6px rgba(0,0,0,0.07);
     transition: background 0.2s, color 0.2s, border 0.2s;
     padding: 0;
@@ -102,8 +102,8 @@ body {
 }
 .backArrow:hover {
     background: #e6f0ff;
-    color: #0056b3;
-    border-color: #0056b3;
+    color: #4068f8;
+    border-color: #4068f8;
 }
 
 p {
@@ -122,7 +122,7 @@ p {
     z-index: 10;
 }
 .menuToggle {
-    background: #007BFF;
+    background: #4068f8;
     color: white;
     border: none;
     border-radius: 50%;
@@ -165,7 +165,7 @@ p {
 }
 .menuDropdown button:hover {
     background: #f0f4fa;
-    color: #007BFF;
+    color: #4068f8;
 }
 
 /* SessionModal styles */
@@ -196,7 +196,7 @@ p {
   justify-content: center;
 }
 .session-modal-btn-primary {
-  background: #007BFF;
+  background: #4068f8;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -217,6 +217,6 @@ p {
   margin-top: 18px;
   background: none;
   border: none;
-  color: #007BFF;
+  color: #4068f8;
   cursor: pointer;
 }
