@@ -1,3 +1,5 @@
+/* Este componente está listo NO TOCAR*/
+
 import React, { useState } from 'react';
 import '../styles/welcome.css';
 import { useNavigate } from 'react-router-dom';
