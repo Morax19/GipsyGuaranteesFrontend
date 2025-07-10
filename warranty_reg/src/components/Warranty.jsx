@@ -15,11 +15,14 @@ export default function Warranty() {
   });
 
   // Redirect if no token present
+/* Deshabilitado el redirect a login si no hay sesión iniciada
+
   useEffect(() => {
     if (!localStorage.getItem('session_token')) {
       navigate('/login');
     }
   }, [navigate]);
+*/
 
   // Handle form field changes
   const handleChange = ({ target: { name, value, files } }) => {
