@@ -1,4 +1,6 @@
 import React from 'react';
+import { fetchWithAuth } from '../fetchWithAuth';
+import { useSession } from '../SessionContext';
 import LayoutBase from './LayoutBase';
 import image from '../assets/IMG/WarrancyWallpaper.jpg';
 
@@ -11,7 +13,7 @@ const Home = ({ userFirstName }) => {
             <h2>Control de Garantías Gipsy</h2>
           </div>
           <div className="title-center">
-            <h3>Bienvenido(a), Pepe Pérez</h3>
+            <h3>Bienvenido(a), {userFirstName}</h3>
           </div>
         </div>
         <img

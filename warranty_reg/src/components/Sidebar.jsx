@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSession } from '../SessionContext';
 import '../styles/menuBlue.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png'
 
 const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
   const isActive = (page) => activePage === page;
+  const { onLogout } = useSession();
 
   return (
     <>
       {/* Sidebar */}
       <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebar">
         <div className="logo">
-          <Link to="/homeSeller" onClick={closeSidebar}>
             <img src={logo} alt="Gipsy's logo" />
-          </Link>
         </div>
         <div className="containerSideBar">
           <ul>
@@ -40,9 +40,15 @@ const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
           </ul>
           <ul className="bottomMenu">
             <li>
+              {/* Editar Perfil */}
+              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                <Link to="/edit-profile" className="optionLink" onClick={closeSidebar}>Editar Perfil</Link>
+              </div>
+            </li>
+            <li>
               {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
-                <Link to="/" className="optionLink" onClick={closeSidebar}>Cerrar Sesión</Link>
+                <Link to="/" className="optionLink" onClick={onLogout}>Cerrar Sesión</Link>
               </div>
             </li>
           </ul>
