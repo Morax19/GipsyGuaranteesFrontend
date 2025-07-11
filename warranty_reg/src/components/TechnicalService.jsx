@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import '../styles/technicalService.css';
+import { Link } from 'react-router-dom';
+import backIcon from '../assets/IMG/back.png';
 
 const sucursalesData = [
   {
@@ -40,6 +42,12 @@ const TechnicalService = () => {
 
   return (
     <div className="technical-service-container">
+      <div className="back-link-container">
+        <Link to="/">
+          <img src={backIcon} alt="Volver" className="back-icon" />
+        </Link>
+      </div>
+
       <h2>Servicio Técnico</h2>
       <p>Sucursales disponibles para la atención del control de su(s) garantía(s)</p>
       
