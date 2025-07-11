@@ -72,13 +72,42 @@ export default function Warranty() {
     <div className="cardContainer">
       <h2>Registro de Garantía</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <label htmlFor="barCode">Código de Barras:</label>
+        <label htmlFor="storeName"></label>
+        <select
+          id="storeName"
+          name="storeName"
+          required
+          value={form.storeName}
+          onChange={handleChange}
+        >
+          <option value="">Tienda donde compró el producto</option>
+          <option value="StoreA">Opción 1</option>
+          <option value="StoreB">Opción 2</option>
+          <option value="StoreC">Opción 3</option>
+        </select>
+
+        <label htmlFor="storeAddress"></label>
+        <select
+          id="storeAddress"
+          name="storeAddress"
+          required
+          value={form.storeAddress}
+          onChange={handleChange}
+        >
+          <option value="">Dirección de la tienda</option>
+          <option value="StoreA">Dirección 1</option>
+          <option value="StoreB">Dirección 2</option>
+          <option value="StoreC">Dirección 3</option>
+        </select>
+
+        <label htmlFor="StoreID"></label>
         <input
           type="text"
-          id="barCode"
-          name="barCode"
+          id="StoreID"
+          name="StoreID"
+          placeholder="RIF de la tienda"
           required
-          value={form.barCode}
+          value={form.StoreID}
           onChange={handleChange}
         />
 
@@ -92,33 +121,49 @@ export default function Warranty() {
           onChange={handleChange}
         />
 
-        <label htmlFor="storeName">Tienda donde compró el producto:</label>
-        <select
-          id="storeName"
-          name="storeName"
+        <label htmlFor="NroFactura"></label>
+        <input
+          type="text"
+          id="NroFactura"
+          name="NroFactura"
+          placeholder="Número de Factura"
           required
-          value={form.storeName}
+          value={form.NroFactura}
           onChange={handleChange}
-        >
-          <option value="">Escoge una tienda</option>
-          <option value="StoreA">Opción 1</option>
-          <option value="StoreB">Opción 2</option>
-          <option value="StoreC">Opción 3</option>
-        </select>
+        />
 
-        <label htmlFor="storeAddress">Dirección de la sucursal:</label>
-        <select
-          id="storeAddress"
-          name="storeAddress"
+        <label htmlFor="MarcaProducto"></label>
+        <input
+          type="text"
+          id="MarcaProducto"
+          name="MarcaProducto"
+          placeholder="Marca del producto"
           required
-          value={form.storeAddress}
+          value={form.MarcaProducto}
           onChange={handleChange}
-        >
-          <option value="">Escoge una dirección</option>
-          <option value="StoreA">Dirección 1</option>
-          <option value="StoreB">Dirección 2</option>
-          <option value="StoreC">Dirección 3</option>
-        </select>
+        />
+
+        <label htmlFor="ModeloProducto"></label>
+        <input
+          type="text"
+          id="ModeloProducto"
+          name="ModeloProducto"
+          placeholder="Modelo del producto"
+          required
+          value={form.ModeloProducto}
+          onChange={handleChange}
+        />
+        
+        <label htmlFor="barCode"></label>
+        <input
+          type="text"
+          id="barCode"
+          name="barCode"
+          placeholder="Código de Barras"
+          required
+          value={form.barCode}
+          onChange={handleChange}
+        />
 
         <label htmlFor="invoiceNumber">Factura del producto:</label>
         <input
