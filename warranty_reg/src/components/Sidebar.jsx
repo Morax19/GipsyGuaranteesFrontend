@@ -41,7 +41,7 @@ const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
           <ul className="bottomMenu">
             <li>
               {/* Editar Perfil */}
-              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+              <div className={`optionContainer ${isActive('edit-profile') ? 'active' : ''}`}>
                 <Link to="/edit-profile" className="optionLink" onClick={closeSidebar}>Editar Perfil</Link>
               </div>
             </li>
