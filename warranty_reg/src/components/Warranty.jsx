@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../fetchWithAuth';
 import { useSession } from '../SessionContext';
+import LayoutBase from './LayoutBase';
 
 export default function Warranty() {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ export default function Warranty() {
   };
 
   return (
+    <LayoutBase activePage="warranty">
     <div className="cardContainer">
       <h2>Registro de Garantía</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -131,5 +133,6 @@ export default function Warranty() {
         <button type="submit">Guardar Garantía</button>
       </form>
     </div>
+    </LayoutBase>
   );
 }

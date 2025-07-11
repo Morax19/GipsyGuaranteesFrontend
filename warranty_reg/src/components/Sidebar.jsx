@@ -24,7 +24,7 @@ const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
             </li>
             <li>
               <div className={`optionContainer ${isActive('register') ? 'active' : ''}`}>
-                <Link to="/register" className="optionLink" onClick={closeSidebar}>Registrar Garantía</Link>
+                <Link to="/warranty" className="optionLink" onClick={closeSidebar}>Registrar Garantía</Link>
               </div>
             </li>
             <li>

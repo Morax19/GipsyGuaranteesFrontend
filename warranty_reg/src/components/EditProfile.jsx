@@ -4,6 +4,7 @@ import { fetchWithAuth } from '../fetchWithAuth';
 import SessionModal from "./SessionModal";
 import { useSessionTimeout } from '../useSessionTimeout';
 import '../styles/editProfile.css';
+import LayoutBase from './LayoutBase';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const EditProfile = () => {
@@ -96,14 +97,7 @@ const EditProfile = () => {
     const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
 
   return (
-    <>
-    {showSessionModal && (
-            <SessionModal
-              onRefresh={() => { window.location.reload(); setShowSessionModal(false); }}
-              onLogout={handleLogout}
-              onClose={() => setShowSessionModal(false)}
-            />
-          )}
+    <LayoutBase activePage="edit-profile">
     <div className="cardContainerEditProfile">
       <h2>Editar Perfil</h2>
       <form onSubmit={handleSubmit}>
@@ -157,14 +151,14 @@ const EditProfile = () => {
           onChange={handlePasswordChange}
           required
         />
-        <div class="ButtonGroupEditProfile">
+        <div className="ButtonGroupEditProfile">
           <button type="submit">Guardar contraseña</button>
           <button type="submit">Guardar cambios</button>
         </div>
       </form>
       {message && <p>{message}</p>}
     </div>
-  </>
+    </LayoutBase>
   );
 };
 
