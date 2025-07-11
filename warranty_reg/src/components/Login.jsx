@@ -1,6 +1,7 @@
 /* Este componente esta listo NO TOCAR */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/login.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
@@ -51,7 +52,9 @@ function Login() {
   return (
     <div className="cardContainerLogin">
       <img src={logo} alt="Logo" className="logoLogin" />
-      <h2>Iniciar sesión</h2>
+      <Link to="/home" className="no-underline-link"> 
+          <h2>Iniciar sesión</h2>
+      </Link>
       <br />
       <form onSubmit={handleSubmit}>
         <input
