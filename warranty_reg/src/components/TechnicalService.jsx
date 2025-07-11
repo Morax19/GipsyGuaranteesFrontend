@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/technicalService.css';
-import technicalServiceImage from '../assets/IMG/technical.png';
 
 const sucursalesData = [
   {
