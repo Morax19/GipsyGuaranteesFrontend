@@ -40,6 +40,12 @@ const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
           </ul>
           <ul className="bottomMenu">
             <li>
+              {/* Editar Perfil */}
+              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                <Link to="/edit-profile" className="optionLink" onClick={closeSidebar}>Editar Perfil</Link>
+              </div>
+            </li>
+            <li>
               {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
                 <Link to="/" className="optionLink" onClick={onLogout}>Cerrar Sesión</Link>
