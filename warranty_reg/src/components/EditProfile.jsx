@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../fetchWithAuth';
 import SessionModal from "./SessionModal";
 import { useSessionTimeout } from '../useSessionTimeout';
+import '../styles/editProfile.css';
+import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const EditProfile = () => {
+
   const navigate = useNavigate();
   const [user, setUser] = useState({ firstName: '', lastName: '', email: '', address: '' });
   const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
@@ -13,7 +16,8 @@ const EditProfile = () => {
   useEffect(() => {
     const token = localStorage.getItem('session_token');
     if (!token) {
-      navigate('/login');
+      //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
+      //navigate('/login');
       return;
     }
     fetchWithAuth('http://localhost:8000/current_user/')
@@ -100,14 +104,7 @@ const EditProfile = () => {
               onClose={() => setShowSessionModal(false)}
             />
           )}
-    <div className="cardContainer">
-    <button
-        className="backArrow"
-        onClick={() => navigate('/home')}
-        aria-label="Volver"
-    >
-        {'<'}
-    </button>
+    <div className="cardContainerEditProfile">
       <h2>Editar Perfil</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -160,10 +157,12 @@ const EditProfile = () => {
           onChange={handlePasswordChange}
           required
         />
-        <button type="submit">Cambiar contraseña</button>
+        <div class="ButtonGroupEditProfile">
+          <button type="submit">Guardar contraseña</button>
+          <button type="submit">Guardar cambios</button>
+        </div>
       </form>
       {message && <p>{message}</p>}
-      <button type="submit">Guardar cambios</button>
     </div>
   </>
   );

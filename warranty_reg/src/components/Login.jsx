@@ -7,10 +7,10 @@ import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 function Login() {
   /* Añade y elimina la barra curva de la parte inferior */
   useEffect(() => {
-    document.body.classList.add('barraCurva');
+    document.body.classList.add('barraCurvaLogin');
 
     return () => {
-      document.body.classList.remove('barraCurva');
+      document.body.classList.remove('barraCurvaLogin');
     };
   }, []);
 
@@ -49,9 +49,10 @@ function Login() {
   };
 
   return (
-    <div className="cardContainer">
-      <img src={logo} alt="Logo" className="logo" />
+    <div className="cardContainerLogin">
+      <img src={logo} alt="Logo" className="logoLogin" />
       <h2>Iniciar sesión</h2>
+      <br />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -61,6 +62,7 @@ function Login() {
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
+        <br />
         <input
           type="password"
           name="password"
@@ -69,6 +71,7 @@ function Login() {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
+        <br />
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>

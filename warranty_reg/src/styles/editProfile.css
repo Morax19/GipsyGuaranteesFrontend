@@ -13,20 +13,7 @@ body {
     align-items: center;
 }
 
-body.barraCurvaLogin::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-color: #4068f8;
-    border-radius: 50% 50% 0 0;
-    transform: scale(1.5);
-    z-index: -1;
-}
-
-.cardContainerLogin {
+.cardContainerEditProfile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,38 +29,29 @@ body.barraCurvaLogin::after {
     margin-bottom: 24px;
 }
 
-.cardContainerLogin h1, .cardContainerLogin h2, .cardContainerLogin h3 {
+.cardContainerEditProfile h2 {
     margin-bottom: 5px;
     text-align: center;
     font-weight: 600;
     color: #191c16;
-}
-
-.cardContainerLogin h2 {
     font-size: 1.3rem;
     margin-top: 0;
     padding-top: 8px;
 }
 
-.cardContainerLogin h3 {
-    font-size: 1.1rem;
-    margin-top: 28px;
-    margin-bottom: 14px;
-    color: #4068f8;
-}
-
-.cardContainerLogin form {
+.cardContainerEditProfile form {
     display: flex;
     flex-direction: column;
     align-items: center; /* This will center the inputs horizontally */
     width: 100%; /* Ensure the form takes up the full width of its parent */
 }
 
-.cardContainerLogin form input[type="text"],
-.cardContainerLogin form input[type="password"] {
-    width: 70%;
+.cardContainerEditProfile form input[type="text"], 
+.cardContainerEditProfile form input[type="email"],
+.cardContainerEditProfile form input[type="password"] {
+    width: 65%;
     padding: 10px;
-    margin: 5px 0;
+    margin: 12px 0;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -83,13 +61,23 @@ body.barraCurvaLogin::after {
     transition: background-color 0.3s ease;
 }
 
-.cardContainerLogin input:focus {
+.cardContainerEditProfile input:focus {
     border: 1.5px solid #4068f8;
     outline: none;
     background: #fff;
 }
 
-.cardContainerLogin button {
+.ButtonGroupEditProfile {
+    display: flex; /* Makes buttons flex items */
+    gap: 15px; /* Adds space between buttons */
+    margin-top: 15px; /* Adjust margin as needed */
+    margin-bottom: 15px; /* Adjust margin as needed */
+    /* Optional: To center the button group within the form */
+    width: 100%;
+    justify-content: center; /* Centers the buttons horizontally within the group */
+}
+
+.cardContainerEditProfile button {
     display: block;
     width: 35%;
     padding: 12px;
@@ -108,18 +96,6 @@ body.barraCurvaLogin::after {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.cardContainerLogin button:hover {
+.cardContainerEditProfile button:hover {
     background-color: #5b7efa;
-}
-
-.logoLogin {
-    max-width: 300px;
-    margin-bottom: 30px;
-}
-
-p {
-    color: #474747;
-    text-align: center;
-    margin-top: 10px;
-    font-size: 1rem;
 }

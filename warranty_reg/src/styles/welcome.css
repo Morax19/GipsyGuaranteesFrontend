@@ -14,7 +14,7 @@ body {
 }
 
 /* Curva inferior */
-body.barraCurva::after {
+body.barraCurvaHome::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -27,7 +27,7 @@ body.barraCurva::after {
     z-index: -1;
 }
 
-.container {
+.containerHome {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,32 +36,30 @@ body.barraCurva::after {
     z-index: 1;
 }
 
-.logo {
+.logoHome {
     max-width: 300px;
     margin-bottom: 30px;
 }
 
-.form input[type="text"], 
-.form input[type="password"],
-.form input[type="submit"]{
-    width: 90%;
-    padding: 10px;
-    margin: 5px 0;
-    font-size: 16px;
-    border: 1px solid #191c16;
-    border-radius: 10px;
-    background-color: #fff;
-    text-decoration: none;
-    color: #191c16;
-    transition: background-color 0.3s ease;
+.inputHome {
+    display: block;
+    width: 35%;
+    padding: 12px;
+    background-color: #a2c0bb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.form input[type="submit"]{
-    background-color: #a2c0bb;
-    color: #191c16;
-    border-radius: 50px;
-    width: 45%;
-    font-size: 1em;
-    text-decoration: none;
-    cursor: pointer;
+.inputHome:hover {
+    background-color: #619990;
 }

@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../fetchWithAuth';
+import '../styles/forgotPassword.css';
+import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const ForgotPassword = () => {
+  /* Añade y elimina la barra curva de la parte inferior */
+  useEffect(() => {
+    document.body.classList.add('barraCurvaFPassword');
+
+    return () => {
+      document.body.classList.remove('barraCurvaFPassword');
+    };
+  }, []);
+
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,20 +46,21 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="cardContainer">
+    <div className="cardContainerFPassword">
+      <img src={logo} alt="Logo" className="logoFPassword" />
       <h2>Recuperar Contraseña</h2>
+      <br />
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Correo electrónico:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br />
         <button type="submit" disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar correo de recuperación'}
+          {loading ? 'Enviando...' : 'Enviar correo'}
         </button>
       </form>
       {message && <p>{message}</p>}

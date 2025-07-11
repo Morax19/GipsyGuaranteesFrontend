@@ -1,15 +1,16 @@
+/* Componente listo, NO TOCAR*/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 function Register() {
-  /* Añade y elimina la barra curva de la parte inferior */
+    /* Añade y elimina la barra curva de la parte inferior */
     useEffect(() => {
-      document.body.classList.add('barraCurva');
+      document.body.classList.add('barraCurvaURegister');
   
       return () => {
-        document.body.classList.remove('barraCurva');
+        document.body.classList.remove('barraCurvaURegister');
       };
     }, []);
 
@@ -58,9 +59,10 @@ function Register() {
   };
 
   return (
-    <div className="cardContainer">
-      <img src={logo} alt="Logo" className="logo" />
+    <div className="cardContainerURegister">
+      <img src={logo} alt="Logo" className="logoURegister" />
       <h2>Registro de usuario</h2>
+      <br />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -109,6 +111,7 @@ function Register() {
           value={form.confirmPassword}
           onChange={handleChange}
         />
+        <br />
         <button type="submit">Registrarse</button>
       </form>
       {message && <p>{message}</p>}

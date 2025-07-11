@@ -13,7 +13,7 @@ body {
     align-items: center;
 }
 
-body.barraCurva::after {
+body.barraCurvaURegister::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -26,7 +26,7 @@ body.barraCurva::after {
     z-index: -1;
 }
 
-.cardContainer {
+.cardContainerURegister {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,33 +42,40 @@ body.barraCurva::after {
     margin-bottom: 24px;
 }
 
-.cardContainer h1, .cardContainer h2, .cardContainer h3 {
+.cardContainerURegister h1, .cardContainerURegister h2, .cardContainerURegister h3 {
     margin-bottom: 5px;
     text-align: center;
     font-weight: 600;
     color: #191c16;
 }
 
-.cardContainer h2 {
+.cardContainerURegister h2 {
     font-size: 1.3rem;
     margin-top: 0;
     padding-top: 8px;
 }
 
-.cardContainer h3 {
+.cardContainerURegister h3 {
     font-size: 1.1rem;
     margin-top: 28px;
     margin-bottom: 14px;
     color: #4068f8;
 }
 
-.cardContainer form input[type="text"], 
-.cardContainer form input[type="email"],
-.cardContainer form input[type="submit"],
-.cardContainer form input[type="password"] {
-    width: 60%;
+.cardContainerURegister form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center the inputs horizontally */
+    width: 100%; /* Ensure the form takes up the full width of its parent */
+}
+
+.cardContainerURegister form input[type="text"], 
+.cardContainerURegister form input[type="email"],
+.cardContainerURegister form input[type="submit"],
+.cardContainerURegister form input[type="password"] {
+    width: 65%;
     padding: 10px;
-    margin: 5px 0;
+    margin: 12px 0;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -78,15 +85,15 @@ body.barraCurva::after {
     transition: background-color 0.3s ease;
 }
 
-.cardContainer input:focus {
+.cardContainerURegister input:focus {
     border: 1.5px solid #4068f8;
     outline: none;
     background: #fff;
 }
 
-.cardContainer button {
+.cardContainerURegister button {
     display: block;
-    width: 60%;
+    width: 35%;
     padding: 12px;
     background-color: #4068f8;
     color: white;
@@ -94,7 +101,7 @@ body.barraCurva::after {
     border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: bold;
     margin-top: 15px;
     margin-left: auto;
     margin-right: auto;
@@ -103,11 +110,11 @@ body.barraCurva::after {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.cardContainer button:hover {
-    background-color: #0056b3;
+.cardContainerURegister button:hover {
+    background-color: #5b7efa;
 }
 
-.logo {
+.logoURegister {
     max-width: 300px;
     margin-bottom: 30px;
 }

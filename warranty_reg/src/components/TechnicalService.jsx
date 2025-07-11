@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/technicalService.css';
 
 const sucursalesData = [
@@ -29,6 +29,15 @@ const sucursalesData = [
 ];
 
 const TechnicalService = () => {
+  /* Añade y elimina la barra curva de la parte inferior */
+  useEffect(() => {
+    document.body.classList.add('barraCurvaServTec');
+
+    return () => {
+      document.body.classList.remove('barraCurvaServTec');
+    };
+  }, []);
+
   return (
     <div className="technical-service-container">
       <h2>Servicio Técnico</h2>
