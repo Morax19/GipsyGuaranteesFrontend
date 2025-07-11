@@ -7,6 +7,7 @@ import Register from './components/Register';
 import Warranty from './components/Warranty';
 import EditProfile from './components/EditProfile';
 import ForgotPassword from './components/ForgotPassword';
+import TechnicalService from './components/TechnicalService';
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoutes() {
       <Route path="/warranty"      element={<Warranty />} />
       <Route path="/edit-profile"  element={<EditProfile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/technical-service" element={<TechnicalService />} />
     </Routes>
   );
 }
