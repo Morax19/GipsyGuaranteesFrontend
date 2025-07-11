@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/register.css';
+import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 function Register() {
+  /* Añade y elimina la barra curva de la parte inferior */
+    useEffect(() => {
+      document.body.classList.add('barraCurva');
+  
+      return () => {
+        document.body.classList.remove('barraCurva');
+      };
+    }, []);
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -48,6 +59,7 @@ function Register() {
 
   return (
     <div className="cardContainer">
+      <img src={logo} alt="Logo" className="logo" />
       <h2>Registro de usuario</h2>
       <form onSubmit={handleSubmit}>
         <input

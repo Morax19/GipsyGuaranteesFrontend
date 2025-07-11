@@ -1,7 +1,19 @@
+/* Este componente esta listo NO TOCAR */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/login.css';
+import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 function Login() {
+  /* Añade y elimina la barra curva de la parte inferior */
+  useEffect(() => {
+    document.body.classList.add('barraCurva');
+
+    return () => {
+      document.body.classList.remove('barraCurva');
+    };
+  }, []);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -38,7 +50,8 @@ function Login() {
 
   return (
     <div className="cardContainer">
-      <h2>Registro de Garantías</h2>
+      <img src={logo} alt="Logo" className="logo" />
+      <h2>Iniciar sesión</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

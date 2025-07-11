@@ -1,25 +1,20 @@
-.back {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 10;
-}
-
-.back img {
-    width: 30px;
-    height: auto;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
     background-color: #ffffff;
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Curva inferior */
-body::after {
+body.barraCurva::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -38,7 +33,6 @@ body::after {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    position: relative;
     z-index: 1;
 }
 

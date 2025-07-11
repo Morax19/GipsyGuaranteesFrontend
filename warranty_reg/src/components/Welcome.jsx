@@ -1,17 +1,23 @@
 /* Este componente está listo NO TOCAR*/
-
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import '../styles/welcome.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
-const WelcomePage = () => {
+function WelcomePage() {
+  /* Añade y elimina la barra curva de la parte inferior */
+  useEffect(() => {
+    document.body.classList.add('barraCurva');
+
+    return () => {
+      document.body.classList.remove('barraCurva');
+    };
+  }, []);
+
   const navigate = useNavigate();
 
   return (
     <div className="container">
-      <a className="back" href="/">
-      </a>
       <div className="header">
         <img src={logo} alt="Logo" className="logo" />
         <h2>Bienvenido(a), GipsyGuarantees</h2>
