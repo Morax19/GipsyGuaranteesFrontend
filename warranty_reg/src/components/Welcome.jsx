@@ -19,7 +19,7 @@ function WelcomePage() {
   return (
     <div className="containerHome">
       <img src={logoHome} alt="Logo" className="logoHome" />
-      <h2>Bienvenido(a), GipsyGuarantees</h2>
+      <h2>Bienvenido a Control de Garantías Gipsy</h2>
       <input className="inputHome" type="submit" value="Ingresar" onClick={() => navigate('/login')}></input>
       <br /><br /> 
     </div>
