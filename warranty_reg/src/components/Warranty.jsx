@@ -82,9 +82,9 @@ export default function Warranty() {
           onChange={handleChange}
         >
           <option value="">Tienda donde compró el producto</option>
-          <option value="StoreA">Opción 1</option>
-          <option value="StoreB">Opción 2</option>
-          <option value="StoreC">Opción 3</option>
+          <option value="StoreA">Farmatodo</option>
+          <option value="StoreB">BECO</option>
+          <option value="StoreC">SoyTechno</option>
         </select>
 
         <label htmlFor="storeAddress"></label>
@@ -96,9 +96,12 @@ export default function Warranty() {
           onChange={handleChange}
         >
           <option value="">Dirección de la tienda</option>
-          <option value="StoreA">Dirección 1</option>
-          <option value="StoreB">Dirección 2</option>
-          <option value="StoreC">Dirección 3</option>
+          <option value="StoreA">1040 Av. P.º Los Ilustres, Caracas 1041, Distrito Capital</option>
+          <option value="StoreB">Av. Francisco de Miranda. Al lado del Edif. Inavi, Chacao., Caracas</option>
+          <option value="StoreC">Centro Expresso Chacaito, Av Principal del Bosque, Caracas 1060, Miranda</option>
+          <option value="StoreD">Av. Sur 9, Caracas 1011, Distrito Capital</option>
+          <option value="StoreF">Local LR-11, Nivel Libertador, Centro Comercial Sambil Chacao, Av. Libertador, Caracas 1071, Miranda</option>
+          <option value="StoreG">AV EL CUARTEL URDANETA, 1.Vereda, Caracas 1030, Distrito Capital</option>
         </select>
 
         <label htmlFor="StoreID"></label>
