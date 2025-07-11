@@ -1,3 +1,8 @@
+.no-underline-link {
+    text-decoration: none; /* Esto quita el subrayado */
+    color: inherit; /* Opcional: Para asegurar que herede el color del texto si lo tienes definido en el <h2> */
+}
+
 html, body {
     height: 100%;
     margin: 0;

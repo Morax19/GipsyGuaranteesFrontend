@@ -7,8 +7,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f1efef;
     position: relative;
-    overflow: hidden;
-    display: flex;
+    overflow-y: auto;
+    display: block;
     justify-content: center;
     align-items: center;
 }
@@ -17,8 +17,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 15vh;
+    min-height: auto;
     z-index: 1;
     background: #fff;
     padding: 32px 24px 24px 24px;
@@ -30,6 +29,7 @@ body {
 
 .cardContainerWarranty h2{
     color: #324bab;
+    margin-bottom: 20px;
 }
 
 .cardContainerWarranty form {
@@ -112,7 +112,7 @@ body {
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
-    margin-top: 15px;
+    margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 15px;
