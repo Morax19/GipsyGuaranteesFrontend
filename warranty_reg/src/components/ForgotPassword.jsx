@@ -4,6 +4,8 @@ import { fetchWithAuth } from '../fetchWithAuth';
 import '../styles/forgotPassword.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 const ForgotPassword = () => {
   /* Añade y elimina la barra curva de la parte inferior */
   useEffect(() => {
@@ -24,7 +26,7 @@ const ForgotPassword = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetchWithAuth('http://localhost:8000/forgotPassword/', {
+      const response = await fetchWithAuth(`${apiUrl}/forgotPassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

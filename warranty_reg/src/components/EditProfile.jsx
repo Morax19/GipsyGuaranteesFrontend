@@ -7,6 +7,8 @@ import '../styles/editProfile.css';
 import LayoutBase from './LayoutBase';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 const EditProfile = () => {
 
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ const EditProfile = () => {
       //navigate('/login');
       return;
     }
-    fetchWithAuth('http://localhost:8000/current_user/')
+    fetchWithAuth(`${apiUrl}/current_user/`)
       .then(res => res.json())
       .then(data => setUser(data))
       .catch(() => setUser({ firstName: '', lastName: '', email: '', address: '' }));
@@ -40,7 +42,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetchWithAuth('http://localhost:8000/edit_profile/', {
+      const response = await fetchWithAuth(`${apiUrl}/edit_profile/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetchWithAuth('http://localhost:8000/changePassword/', {
+      const response = await fetchWithAuth(`${apiUrl}/changePassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

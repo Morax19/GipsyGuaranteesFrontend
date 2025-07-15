@@ -4,6 +4,8 @@ import { fetchWithAuth } from '../fetchWithAuth';
 import { useSession } from '../SessionContext';
 import '../styles/homeBlue.css';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 export default function Home() {
   const navigate = useNavigate();
   const { onLogout } = useSession();
@@ -16,7 +18,7 @@ export default function Home() {
       navigate('/login');
       return;
     }
-    fetchWithAuth('http://localhost:8000/current_user/')
+    fetchWithAuth(`${apiUrl}/current_user/`)
       .then(res => res.json())
       .then(setUser)
       .catch(() => setUser(null));

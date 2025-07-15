@@ -5,6 +5,8 @@ import { useSession } from '../SessionContext';
 import LayoutBase from './LayoutBase';
 import '../styles/warranty.css';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 export default function Warranty() {
   const navigate = useNavigate();
   const { onLogout } = useSession();
@@ -46,7 +48,7 @@ export default function Warranty() {
 
     try {
       const response = await fetchWithAuth(
-        'http://localhost:8000/registerWarranty/',
+        `${apiUrl}/warranty/`,  // Adjust the endpoint as needed
         {
           method: 'POST',
           headers: {

@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionTimeout } from './useSessionTimeout';
 import SessionModal from './components/SessionModal';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
 const SessionContext = createContext();
 
 /**
@@ -44,7 +45,7 @@ export function SessionProvider({ children }) {
     }
 
     try {
-      const res = await fetch('http://localhost:8000/token/refresh/', {
+      const res = await fetch(`${apiUrl}/token/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh: refreshToken })

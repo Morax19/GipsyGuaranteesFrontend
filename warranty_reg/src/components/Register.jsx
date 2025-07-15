@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 function Register() {
     /* Añade y elimina la barra curva de la parte inferior */
     useEffect(() => {
@@ -38,7 +40,7 @@ function Register() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8000/submitRegistration/', {
+      const response = await fetch(`${apiUrl}/submitRegistration/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
