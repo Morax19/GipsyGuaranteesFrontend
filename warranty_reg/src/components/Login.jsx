@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import '../styles/login.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
+const apiUrl = import.meta.env.VITE_API_DEV_URL;
+
 function Login() {
   /* Añade y elimina la barra curva de la parte inferior */
   useEffect(() => {
@@ -29,7 +31,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/login/', {
+      const response = await fetch(`${apiUrl}/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
