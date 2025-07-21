@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import '../styles/technicalService.css';
-import { Link } from 'react-router-dom';
-import backIcon from '../assets/IMG/back.png';
+import React from 'react';
+import '../styles/technical_service/technicalService.css';
+import LayoutBase from '../base/LayoutBase';
 
 const sucursalesData = [
   {
@@ -31,23 +30,9 @@ const sucursalesData = [
 ];
 
 const TechnicalService = () => {
-  /* Añade y elimina la barra curva de la parte inferior */
-  useEffect(() => {
-    document.body.classList.add('barraCurvaServTec');
-
-    return () => {
-      document.body.classList.remove('barraCurvaServTec');
-    };
-  }, []);
-
   return (
+    <LayoutBase activePage="user-technical-service">
     <div className="technical-service-container">
-      <div className="back-link-container">
-        <Link to="/">
-          <img src={backIcon} alt="Volver" className="back-icon" />
-        </Link>
-      </div>
-
       <h2>Servicio Técnico</h2>
       <p>Sucursales disponibles para la atención del control de su(s) garantía(s)</p>
       
@@ -69,6 +54,7 @@ const TechnicalService = () => {
         ))}
       </div>
     </div>
+    </LayoutBase>
   );
 };
 

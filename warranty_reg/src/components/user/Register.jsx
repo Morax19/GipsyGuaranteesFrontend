@@ -1,7 +1,7 @@
 /* Componente listo, NO TOCAR*/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/register.css';
+import '../styles/user/register.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../fetchWithAuth';
-import { useSession } from '../SessionContext';
+import { fetchWithAuth } from '../../fetchWithAuth';
+import { useSession } from '../../SessionContext';
 import '../styles/homeBlue.css';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;

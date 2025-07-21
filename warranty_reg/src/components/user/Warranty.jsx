@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../fetchWithAuth';
-import { useSession } from '../SessionContext';
-import LayoutBase from './LayoutBase';
-import '../styles/warranty.css';
+import { fetchWithAuth } from '../../fetchWithAuth';
+import { useSession } from '../../SessionContext';
+import LayoutBase from '../base/LayoutBase';
+import '../styles/user/warranty.css';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 

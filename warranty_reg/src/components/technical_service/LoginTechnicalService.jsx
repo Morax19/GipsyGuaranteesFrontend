@@ -2,18 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import '../styles/login.css';
+import '../styles/technical_service/loginTechnicalService.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 
-function Login() {
+function LoginTechnicalService() {
   /* Añade y elimina la barra curva de la parte inferior */
   useEffect(() => {
-    document.body.classList.add('barraCurvaLogin');
+    document.body.classList.add('barraCurvaLoginTechnicalService');
 
     return () => {
-      document.body.classList.remove('barraCurvaLogin');
+      document.body.classList.remove('barraCurvaLoginTechnicalService');
     };
   }, []);
 
@@ -24,14 +24,14 @@ function Login() {
   useEffect(() => {
     // If already logged in, redirect to home page
     if (localStorage.getItem('session_token')) {
-      navigate('/home');
+      navigate('/technical-service/home');
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/login/`, {
+      const response = await fetch(`${apiUrl}/technical-service/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ function Login() {
       if (response.ok && data.access) {
         localStorage.setItem('session_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
-        navigate('/home');
+        navigate('/technical-service/home');
       } else {
         alert(data.detail || data.message || 'Login failed');
       }
@@ -52,9 +52,9 @@ function Login() {
   };
 
   return (
-    <div className="cardContainerLogin">
-      <img src={logo} alt="Logo" className="logoLogin" />
-      <Link to="/home" className="no-underline-link"> 
+    <div className="cardContainerLoginTechnicalService">
+      <img src={logo} alt="Logo" className="logoLoginTechnicalService" />
+      <Link to="/technical-service/home" className="no-underline-link"> 
           <h2>Iniciar sesión</h2>
       </Link>
       <br />
@@ -80,13 +80,10 @@ function Login() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register/'); }}>Regístrate</a>
-      </p>
-      <p>
-        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/technical-service/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
     </div>
   );
 }
 
-export default Login;
+export default LoginTechnicalService;

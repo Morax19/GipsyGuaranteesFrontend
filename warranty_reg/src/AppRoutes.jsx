@@ -1,14 +1,18 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Welcome from './components/Welcome';
-import Login from './components/Login';
-import Register from './components/Register';
-import Warranty from './components/Warranty';
-import EditProfile from './components/EditProfile';
-import ForgotPassword from './components/ForgotPassword';
-import TechnicalService from './components/TechnicalService';
-import UserTechnicalService from './components/TechnicalServiceLogged';
+
+import Welcome from './components/base/Welcome';
+
+import Login from './components/user/Login';
+import Home from './components/user/Home/Home';
+import Register from './components/user/Register';
+import Warranty from './components/user/Warranty';
+import EditProfile from './components/user/EditProfile';
+import ForgotPassword from './components/user/ForgotPassword';
+import UserTechnicalService from './components/user/TechnicalServiceLogged';
+
+import TechnicalService from './components/technical_service/TechnicalService';
+import LoginTechnicalService from './components/technical_service/LoginTechnicalService';
 
 export default function AppRoutes() {
   return (
@@ -20,8 +24,9 @@ export default function AppRoutes() {
       <Route path="/warranty"      element={<Warranty />} />
       <Route path="/edit-profile"  element={<EditProfile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/technical-service" element={<TechnicalService />} />
       <Route path="/user-technical-service" element={<UserTechnicalService />} />
+      <Route path="/technical-service" element={<TechnicalService />} />
+      <Route path="/technical-service/login" element={<LoginTechnicalService />} />
     </Routes>
   );
 }

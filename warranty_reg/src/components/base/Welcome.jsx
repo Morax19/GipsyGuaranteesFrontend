@@ -1,6 +1,6 @@
 /* Este componente está listo NO TOCAR*/
 import React, { useEffect } from 'react';
-import '../styles/welcome.css';
+import '../styles/base/welcome.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logoHome from '../assets/IMG/Gipsy_imagotipo_color.png';

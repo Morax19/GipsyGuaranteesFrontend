@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../fetchWithAuth';
-import '../styles/forgotPassword.css';
+import { fetchWithAuth } from '../../fetchWithAuth';
+import '../styles/user/forgotPassword.css';
 import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;

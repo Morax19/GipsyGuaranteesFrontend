@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSessionTimeout } from './useSessionTimeout';
-import SessionModal from './components/SessionModal';
+import SessionModal from './components/base/SessionModal';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 const SessionContext = createContext();
