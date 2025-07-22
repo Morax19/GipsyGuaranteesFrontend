@@ -146,8 +146,7 @@ table tbody tr:hover {
 
 /* Estilos para los estados de la garantía (opcional) */
 .status-abierto { color: #28a745; font-weight: bold; }
-.status-en-revision { color: #ffc107; font-weight: bold; }
-.status-pendiente { color: #17a2b8; font-weight: bold; }
+.status-en-revisión { color: #ca874d; font-weight: bold; }
 .status-cerrado { color: #6c757d; font-weight: normal; }
 
 

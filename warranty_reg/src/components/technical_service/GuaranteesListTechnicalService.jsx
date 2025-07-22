@@ -4,7 +4,7 @@ import { useSession } from '../../SessionContext';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import eye from '../../assets/IMG/ojo.png';
 import '../../styles/technical_service/guaranteesList.css';
-
+import GuaranteeDetailsModal from './GuaranteesDetailsModal';
 
 // --- Data de ejemplo ---
 const mockGuarantees = [
@@ -12,73 +12,101 @@ const mockGuarantees = [
     id: 'G001',
     codigo: 'ABC-123-X',
     fechaRecepcion: '2024-07-01',
+    fechaRevision: null,
     nombreCliente: 'Juan Pérez',
     tienda: 'ElectroMega',
     producto: 'Lavadora XYZ',
     estado: 'Abierto',
+    diagnostico: '',
+    descripcionAccion: '',
   },
   {
     id: 'G002',
     codigo: 'DEF-456-Y',
     fechaRecepcion: '2024-07-05',
+    fechaRevision: '2024-07-10',
     nombreCliente: 'María López',
     tienda: 'TecnoGlobal',
     producto: 'Televisor QLED',
     estado: 'En Revisión',
+    diagnostico: 'Falla de conexión',
+    descripcionAccion: 'Se restableció la conexión y se probó el equipo.',
   },
   {
     id: 'G003',
     codigo: 'GHI-789-Z',
     fechaRecepcion: '2024-06-10',
+    fechaRevision: null,
     nombreCliente: 'Carlos García',
     tienda: 'MegaHogar',
     producto: 'Refrigerador Cool',
     estado: 'Abierto',
+    diagnostico: '',
+    descripcionAccion: '',
   },
   {
     id: 'G004',
     codigo: 'JKL-012-A',
     fechaRecepcion: '2024-08-12',
+    fechaRevision: null,
     nombreCliente: 'Ana Fernández',
     tienda: 'ElectroMega',
     producto: 'Microondas Smart',
-    estado: 'Pendiente',
+    estado: 'En Revisión',
+    diagnostico: '',
+    descripcionAccion: '',
   },
   {
     id: 'G005',
     codigo: 'MNO-345-B',
     fechaRecepcion: '2024-07-15',
+    fechaRevision: null,
     nombreCliente: 'Luis Martínez',
     tienda: 'TecnoGlobal',
     producto: 'Aspiradora Robótica',
     estado: 'Abierto',
+    diagnostico: '',
+    descripcionAccion: '',
   },
   {
     id: 'G006',
     codigo: 'PQR-678-C',
     fechaRecepcion: '2024-08-20',
+    fechaRevision: '2024-08-25',
     nombreCliente: 'Sofía Díaz',
     tienda: 'MegaHogar',
     producto: 'Horno Eléctrico',
     estado: 'Cerrado',
+    diagnostico: 'Sin errores',
+    descripcionAccion: 'El equipo funciona correctamente después de la revisión.',
+    fechaCierre: '2024-08-25',
   },
   {
     id: 'G007',
     codigo: 'STU-901-D',
     fechaRecepcion: '2024-07-22',
+    fechaRevision: null,
     nombreCliente: 'Pedro Gómez',
     tienda: 'ElectroMega',
     producto: 'Cafetera Express',
-    estado: 'Finalizado',
+    estado: 'Cerrado',
+    diagnostico: 'Falla de encendido',
+    descripcionAccion: 'Se reemplazó el fusible y se probó la cafetera.',
+    fechaCierre: '2024-07-25',
   },
 ];
+
 
 const GuaranteesList = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');
   const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
+  const [allGuarantees, setAllGuarantees] = useState(mockGuarantees);
   const [filteredGuarantees, setFilteredGuarantees] = useState(mockGuarantees);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGuarantee, setSelectedGuarantee] = useState(null);
 
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -86,7 +114,14 @@ const GuaranteesList = ({ userFirstName }) => {
   ];
 
   useEffect(() => {
-    let currentGuarantees = mockGuarantees;
+    let currentGuarantees = allGuarantees;
+
+    // --- Ordenar por fecha si no hay filtro primario ---
+    if (!primaryFilter) {
+      currentGuarantees = [...currentGuarantees].sort(
+        (a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion)
+      );
+    }
 
     // --- Búsqueda de Código de Garantía ---
     if (searchTerm) {
@@ -146,16 +181,31 @@ const GuaranteesList = ({ userFirstName }) => {
       currentGuarantees.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
     } else if (primaryFilter === 'tienda') {
       currentGuarantees.sort((a, b) => a.tienda.localeCompare(b.tienda));
-    } else if (primaryFilter === 'estado') { // <-- Lógica de ordenación para estado (alfabética por defecto)
+    } else if (primaryFilter === 'estado') {
         currentGuarantees.sort((a, b) => a.estado.localeCompare(b.estado));
     }
 
     setFilteredGuarantees(currentGuarantees);
-  }, [searchTerm, primaryFilter, secondaryFilter]);
+  }, [searchTerm, primaryFilter, secondaryFilter, allGuarantees]);
 
+
+  // --- Detalles de la Garantía ---
 
   const handleViewDetails = (guaranteeId) => {
-    console.log('Ver detalles de la garantía:', guaranteeId);
+    const guarantee = allGuarantees.find(g => g.id === guaranteeId);
+    setSelectedGuarantee(guarantee);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedGuarantee(null);
+  };
+
+  const handleUpdateGuaranteeInList = (updatedGuarantee) => {
+    setAllGuarantees(prevGuarantees =>
+      prevGuarantees.map(g => (g.id === updatedGuarantee.id ? updatedGuarantee : g))
+    );
   };
 
   return (
@@ -250,6 +300,15 @@ const GuaranteesList = ({ userFirstName }) => {
           )}
         </div>
       </div>
+
+      {/* Renderización del Modal */}
+      <GuaranteeDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        guarantee={selectedGuarantee}
+        onUpdateGuarantee={handleUpdateGuaranteeInList}
+      />
+
     </LayoutBaseTechServ>
   );
 };
