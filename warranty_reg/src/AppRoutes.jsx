@@ -13,6 +13,7 @@ import UserTechnicalService from './components/user/TechnicalServiceLogged';
 
 import TechnicalService from './components/technical_service/TechnicalService';
 import LoginTechnicalService from './components/technical_service/LoginTechnicalService';
+import ForgotPasswordTechnicalService from './components/technical_service/ForgotPasswordTechnicalService';
 
 export default function AppRoutes() {
   return (
@@ -27,6 +28,7 @@ export default function AppRoutes() {
       <Route path="/user-technical-service" element={<UserTechnicalService />} />
       <Route path="/technical-service" element={<TechnicalService />} />
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
+      <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
     </Routes>
   );
 }
