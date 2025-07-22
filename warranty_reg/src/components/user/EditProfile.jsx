@@ -4,7 +4,7 @@ import { fetchWithAuth } from '../../fetchWithAuth';
 import SessionModal from "../base/SessionModal";
 import { useSessionTimeout } from '../../useSessionTimeout';
 import '../../styles/user/editProfile.css';
-import LayoutBase from '../base/LayoutBase';
+import LayoutBase from '../base/LayoutBaseUser';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
