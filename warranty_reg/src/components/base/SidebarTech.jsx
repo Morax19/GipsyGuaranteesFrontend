@@ -23,8 +23,8 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('history') ? 'active' : ''}`}>
-                <Link to="/technical-service/history" className="optionLink" onClick={closeSidebar}>Servicios Abiertos</Link>
+              <div className={`optionContainer ${isActive('guaranteesList') ? 'active' : ''}`}>
+                <Link to="/technical-service/open-guarantees" className="optionLink" onClick={closeSidebar}>Casos Abiertos</Link>
               </div>
             </li>
           </ul>
