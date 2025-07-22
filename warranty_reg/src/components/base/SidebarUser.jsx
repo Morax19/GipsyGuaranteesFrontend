@@ -13,7 +13,9 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
       {/* Sidebar */}
       <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarUser">
         <div className="logo">
-            <img src={logo} alt="Gipsy's logo" />
+            <Link to="/home" onClick={closeSidebar}>
+              <img src={logo} alt="Gipsy's logo" />
+            </Link>
         </div>
         <div className="containerSideBar">
           <ul>
@@ -29,7 +31,7 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
             </li>
             <li>
               <div className={`optionContainer ${isActive('history') ? 'active' : ''}`}>
-                <Link to="/history" className="optionLink" onClick={closeSidebar}>Historial de Garantías</Link>
+                <Link to="/warranties-history" className="optionLink" onClick={closeSidebar}>Historial de Garantías</Link>
               </div>
             </li>
             <li>

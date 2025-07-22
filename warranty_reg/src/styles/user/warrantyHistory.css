@@ -1,5 +1,5 @@
 /* --- Estilos Generales del Contenedor de la Lista --- */
-.guarantees-list-container {
+.warranty-list-container {
     padding: 30px;
     background-color: white;
     min-height: calc(100vh - 40px);
@@ -8,19 +8,19 @@
     align-items: center;
 }
 
-.title-section {
+.warranty-title-section {
     width: 100%;
     text-align: center;
     margin-bottom: 40px;
 }
 
-.title-section h2 {
-    color: #37474F;
+.warranty-title-section h2 {
+    color: #324bab;
     margin-bottom: 0;
 }
 
 /* --- Estilos de la Barra de Búsqueda y Filtro --- */
-.filters-and-search {
+.warranty-filters-history-container {
     display: flex;
     gap: 15px;
     margin-bottom: 30px;
@@ -28,37 +28,16 @@
     max-width: 1200px;
     flex-wrap: wrap;
     margin-left: 0;
+    margin-right: 0;
 }
 
-.search-input {
-    padding: 12px 15px;
-    border: 1px solid #B0BEC5;
-    border-radius: 8px;
-    font-size: 1em;
-    color: #37474F;
-    background-color: #ECEFF1;
-    flex-grow: 1;
-    min-width: 200px;
-    max-width: 300px;
-}
-
-.search-input::placeholder {
-    color: #607D8B;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #546E7A;
-    box-shadow: 0 0 0 3px rgba(84, 110, 122, 0.2);
-}
-
-.filter-select {
+.warranty-filter-select {
     padding: 12px 20px;
-    border: 1px solid #607D8B;
+    border: 1px solid #4068f8;
     border-radius: 8px;
     font-size: 1em;
     color: white;
-    background-color: #607D8B;
+    background-color: #4068f8;
     cursor: pointer;
     appearance: none;
     background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2C114.7L146.2%2C255.5L5.4%2C114.7H287z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha blanca SVG */
@@ -68,85 +47,61 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.filter-select:hover {
-    background-color: #546E7A;
-    border-color: #546E7A;
+.warranty-filter-select:hover {
+    background-color: #5b7efa;
+    border-color: #5b7efa;
 }
 
-.filter-select:focus {
+.warranty-filter-select:focus {
     outline: none;
-    border-color: #455A64;
-    box-shadow: 0 0 0 3px rgba(69, 90, 100, 0.2);
+    border-color: #324bab;
+    box-shadow: 0 0 0 3px rgba(64, 104, 248, 0.3);
 }
 
 
 
 /* --- Estilos de la Tabla de Garantías --- */
-.guarantees-table-container {
+.warranty-table-container {
     width: calc(100% - 60px);
     max-width: 1200px;
     overflow-x: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(50, 75, 171, 0.1);
     background-color: white;
     margin-bottom: 50px;
 }
 
-table {
+.warranty-table {
     width: 100%;
     border-collapse: collapse;
     min-width: 700px;
     background-color: white;
 }
 
-table th,
-table td {
+.warranty-table th,
+.warranty-table td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #CFD8DC;
+    border-bottom: 1px solid #d0d8e2;
     color: #37474F;
 }
 
-table th {
+.warranty-table th {
     background-color: white;
     color: #37474F;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9em;
-    border-bottom: 2px solid #90A4AE;
+    border-bottom: 2px solid #a0b8e0;
 }
 
-table tbody tr:hover {
-    background-color: #ECEFF1;
+.warranty-table tbody tr:hover {
+    background-color: #e6f0ff;
     cursor: pointer;
 }
 
-/* Estilos para el botón de detalles con imagen */
-.details-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-}
-
-.details-button img {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.2s ease;
-}
-
-.details-button:hover img {
-    transform: scale(1.1);
-}
-
-/* Estilos para los estados de la garantía (opcional) */
+/* Estilos para los estados de la garantía */
 .status-abierto { color: #28a745; font-weight: bold; }
-.status-en-revisión { color: #ca874d; font-weight: bold; }
 .status-cerrado { color: #6c757d; font-weight: normal; }
 
 
@@ -154,6 +109,6 @@ table tbody tr:hover {
 .no-results {
     text-align: center;
     padding: 50px;
-    color: #607D8B;
+    color: #526f9f;
     font-size: 1.1em;
 }
