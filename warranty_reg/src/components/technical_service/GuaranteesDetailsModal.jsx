@@ -155,7 +155,6 @@ const GuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onUpdateGuarantee }
           ) : (
             <span className="case-closed-message">Este caso ya está {guarantee.estado.toLowerCase()}.</span>
           )}
-          <button className="modal-button cancel-button" onClick={onClose}>Salir</button>
         </div>
       </div>
     </div>
