@@ -6,11 +6,12 @@ import eye from '../../assets/IMG/ojo.png';
 import '../../styles/technical_service/guaranteesList.css';
 
 
+// --- Data de ejemplo ---
 const mockGuarantees = [
   {
     id: 'G001',
     codigo: 'ABC-123-X',
-    fechaRecepcion: '2024-07-01', // Julio
+    fechaRecepcion: '2024-07-01',
     nombreCliente: 'Juan Pérez',
     tienda: 'ElectroMega',
     producto: 'Lavadora XYZ',
@@ -19,7 +20,7 @@ const mockGuarantees = [
   {
     id: 'G002',
     codigo: 'DEF-456-Y',
-    fechaRecepcion: '2024-07-05', // Julio
+    fechaRecepcion: '2024-07-05',
     nombreCliente: 'María López',
     tienda: 'TecnoGlobal',
     producto: 'Televisor QLED',
@@ -28,7 +29,7 @@ const mockGuarantees = [
   {
     id: 'G003',
     codigo: 'GHI-789-Z',
-    fechaRecepcion: '2024-06-10', // Junio
+    fechaRecepcion: '2024-06-10',
     nombreCliente: 'Carlos García',
     tienda: 'MegaHogar',
     producto: 'Refrigerador Cool',
@@ -37,7 +38,7 @@ const mockGuarantees = [
   {
     id: 'G004',
     codigo: 'JKL-012-A',
-    fechaRecepcion: '2024-08-12', // Agosto
+    fechaRecepcion: '2024-08-12',
     nombreCliente: 'Ana Fernández',
     tienda: 'ElectroMega',
     producto: 'Microondas Smart',
@@ -46,7 +47,7 @@ const mockGuarantees = [
   {
     id: 'G005',
     codigo: 'MNO-345-B',
-    fechaRecepcion: '2024-07-15', // Julio
+    fechaRecepcion: '2024-07-15',
     nombreCliente: 'Luis Martínez',
     tienda: 'TecnoGlobal',
     producto: 'Aspiradora Robótica',
@@ -55,7 +56,7 @@ const mockGuarantees = [
   {
     id: 'G006',
     codigo: 'PQR-678-C',
-    fechaRecepcion: '2024-08-20', // Agosto
+    fechaRecepcion: '2024-08-20',
     nombreCliente: 'Sofía Díaz',
     tienda: 'MegaHogar',
     producto: 'Horno Eléctrico',
@@ -64,11 +65,11 @@ const mockGuarantees = [
   {
     id: 'G007',
     codigo: 'STU-901-D',
-    fechaRecepcion: '2024-07-22', // Julio
+    fechaRecepcion: '2024-07-22',
     nombreCliente: 'Pedro Gómez',
     tienda: 'ElectroMega',
     producto: 'Cafetera Express',
-    estado: 'Finalizado', // Nuevo estado de ejemplo
+    estado: 'Finalizado',
   },
 ];
 
@@ -87,14 +88,14 @@ const GuaranteesList = ({ userFirstName }) => {
   useEffect(() => {
     let currentGuarantees = mockGuarantees;
 
-    // 1. Aplicar Búsqueda por código de garantía (siempre primero)
+    // --- Búsqueda de Código de Garantía ---
     if (searchTerm) {
       currentGuarantees = currentGuarantees.filter(guarantee =>
         guarantee.codigo.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Lógica para poblar opciones del filtro secundario (basado en el primaryFilter actual)
+    // --- Poblado de opciones del filtro secundario ---
     let newSecondaryOptions = [];
     if (primaryFilter === 'fecha') {
       const months = [...new Set(currentGuarantees.map(g => new Date(g.fechaRecepcion).getMonth()))]
@@ -107,21 +108,18 @@ const GuaranteesList = ({ userFirstName }) => {
     } else if (primaryFilter === 'tienda') {
       const stores = [...new Set(currentGuarantees.map(g => g.tienda))].sort();
       newSecondaryOptions = stores.map(s => ({ value: s, label: s }));
-    } else if (primaryFilter === 'estado') { // <-- NUEVA LÓGICA: para el filtro por estado
+    } else if (primaryFilter === 'estado') {
       const statuses = [...new Set(currentGuarantees.map(g => g.estado))].sort();
       newSecondaryOptions = statuses.map(s => ({ value: s, label: s }));
     }
     setSecondaryFilterOptions(newSecondaryOptions);
 
-    // Reiniciar secondaryFilter si el primaryFilter cambió o el valor actual no es válido
     if (primaryFilter !== '' && secondaryFilter !== '' && !newSecondaryOptions.some(opt => opt.value === secondaryFilter)) {
         setSecondaryFilter('');
-    } else if (primaryFilter === '' && secondaryFilter !== '') { // Si el primaryFilter se resetea, resetear secondary
+    } else if (primaryFilter === '' && secondaryFilter !== '') {
         setSecondaryFilter('');
     }
 
-
-    // 3. Aplicar Filtro Secundario (si primaryFilter y secondaryFilter están seleccionados)
     if (primaryFilter && secondaryFilter !== '') {
       if (primaryFilter === 'fecha') {
         currentGuarantees = currentGuarantees.filter(guarantee =>
@@ -135,16 +133,13 @@ const GuaranteesList = ({ userFirstName }) => {
         currentGuarantees = currentGuarantees.filter(guarantee =>
           guarantee.tienda === secondaryFilter
         );
-      } else if (primaryFilter === 'estado') { // <-- NUEVA LÓGICA: para filtrar por estado
+      } else if (primaryFilter === 'estado') {
         currentGuarantees = currentGuarantees.filter(guarantee =>
           guarantee.estado === secondaryFilter
         );
       }
     }
 
-    // 4. Aplicar Ordenación (siempre después del filtrado)
-    // Nota: la ordenación por estado podría no ser alfabética si tienes un orden específico deseado (ej. Abierto, En Revisión, Cerrado)
-    // Para ordenar por estado, necesitarías una lógica de ordenación personalizada si no es alfabética
     if (primaryFilter === 'producto') {
       currentGuarantees.sort((a, b) => a.producto.localeCompare(b.producto));
     } else if (primaryFilter === 'fecha') {
@@ -153,12 +148,6 @@ const GuaranteesList = ({ userFirstName }) => {
       currentGuarantees.sort((a, b) => a.tienda.localeCompare(b.tienda));
     } else if (primaryFilter === 'estado') { // <-- Lógica de ordenación para estado (alfabética por defecto)
         currentGuarantees.sort((a, b) => a.estado.localeCompare(b.estado));
-        // Si necesitas un orden específico (ej: Abierto, En Revisión, Cerrado, Finalizado),
-        // definirías un array de orden y usarías sus índices:
-        /*
-        const estadoOrder = ['Abierto', 'En Revisión', 'Pendiente', 'Cerrado', 'Finalizado'];
-        currentGuarantees.sort((a, b) => estadoOrder.indexOf(a.estado) - estadoOrder.indexOf(b.estado));
-        */
     }
 
     setFilteredGuarantees(currentGuarantees);
@@ -193,7 +182,7 @@ const GuaranteesList = ({ userFirstName }) => {
             <option value="producto">Producto</option>
             <option value="fecha">Fecha</option>
             <option value="tienda">Tienda</option>
-            <option value="estado">Estado</option> {/* <-- NUEVA OPCIÓN: Estado */}
+            <option value="estado">Estado</option>
           </select>
 
           {/* El filtro secundario solo es visible si se elige un filtro primario y hay opciones */}
@@ -208,7 +197,7 @@ const GuaranteesList = ({ userFirstName }) => {
                 {primaryFilter === 'fecha' && 'Seleccione un mes'}
                 {primaryFilter === 'producto' && 'Seleccione un producto'}
                 {primaryFilter === 'tienda' && 'Seleccione una tienda'}
-                {primaryFilter === 'estado' && 'Seleccione un estado'} {/* <-- NUEVO: texto para estado */}
+                {primaryFilter === 'estado' && 'Seleccione un estado'}
                 {!primaryFilter && 'Seleccione una opción...'}
               </option>
               {secondaryFilterOptions.map(option => (
