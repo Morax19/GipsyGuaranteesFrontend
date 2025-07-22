@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../../SessionContext';
-import '../../styles/base/menuGrey.css';
+import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_medioBlanco.png'
 
 const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
@@ -11,7 +11,7 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
   return (
     <>
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebar">
+      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarTech">
         <div className="logo">
             <img src={logo} alt="Gipsy's logo" />
         </div>
