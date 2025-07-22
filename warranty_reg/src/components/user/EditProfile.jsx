@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../fetchWithAuth';
 import SessionModal from "../base/SessionModal";
 import { useSessionTimeout } from '../../useSessionTimeout';
-import '../styles/user/editProfile.css';
+import '../../styles/user/editProfile.css';
 import LayoutBase from '../base/LayoutBase';
-import logo from '../assets/IMG/Gipsy_imagotipo_color.png';
+import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 

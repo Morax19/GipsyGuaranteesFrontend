@@ -2,7 +2,7 @@ import React from 'react';
 import { fetchWithAuth } from '../../fetchWithAuth';
 import { useSession } from '../../SessionContext';
 import LayoutBase from '../base/LayoutBase';
-import image from '../assets/IMG/WarrancyWallpaper.jpg';
+import image from '../../assets/IMG/WarrancyWallpaper.jpg';
 
 const Home = ({ userFirstName }) => {
   return (

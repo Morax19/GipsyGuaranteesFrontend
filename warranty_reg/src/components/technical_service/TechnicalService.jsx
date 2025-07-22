@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import '../styles/technical_service/technicalService.css';
+import '../../styles/technical_service/technicalService.css';
 import { Link } from 'react-router-dom';
-import backIcon from '../assets/IMG/back.png';
+import backIcon from '../../assets/IMG/back.png';
 
 const sucursalesData = [
   {

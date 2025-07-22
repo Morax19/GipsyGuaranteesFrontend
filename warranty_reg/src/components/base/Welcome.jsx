@@ -1,9 +1,9 @@
 /* Este componente está listo NO TOCAR*/
 import React, { useEffect } from 'react';
-import '../styles/base/welcome.css';
+import '../../styles/base/welcome.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import logoHome from '../assets/IMG/Gipsy_imagotipo_color.png';
+import logoHome from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 function WelcomePage() {
   /* Añade y elimina la barra curva de la parte inferior */

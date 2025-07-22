@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import '../styles/base/menuBlue.css';
-import '../styles/base/homeBlue.css';
+import '../../styles/base/menuBlue.css';
+import '../../styles/base/homeBlue.css';
 
 const LayoutBase = ({ userFirstName, activePage, children }) => {
   const [sidebarActive, setSidebarActive] = useState(false);

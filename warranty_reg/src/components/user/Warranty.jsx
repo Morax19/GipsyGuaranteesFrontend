@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../fetchWithAuth';
 import { useSession } from '../../SessionContext';
 import LayoutBase from '../base/LayoutBase';
-import '../styles/user/warranty.css';
+import '../../styles/user/warranty.css';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 

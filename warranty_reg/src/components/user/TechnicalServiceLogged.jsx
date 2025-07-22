@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/technical_service/technicalService.css';
+import '../../styles/technical_service/technicalService.css';
 import LayoutBase from '../base/LayoutBase';
 
 const sucursalesData = [

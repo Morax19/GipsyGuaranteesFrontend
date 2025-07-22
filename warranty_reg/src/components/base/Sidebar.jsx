@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../../SessionContext';
-import '../styles/base/menuBlue.css';
-import logo from '../assets/IMG/Gipsy_imagotipo_color.png'
+import '../../styles/base/menuBlue.css';
+import logo from '../../assets/IMG/Gipsy_imagotipo_color.png'
 
 const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
   const isActive = (page) => activePage === page;
