@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../styles/technical_service/technicalService.css';
-import LayoutBase from '../base/LayoutBase';
+import LayoutBase from '../base/LayoutBaseUser';
 
 const sucursalesData = [
   {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import SidebarUser from './SidebarUser';
 import '../../styles/base/menuBlue.css';
 import '../../styles/base/homeBlue.css';
 
-const LayoutBase = ({ userFirstName, activePage, children }) => {
+const LayoutBaseUser = ({ userFirstName, activePage, children }) => {
   const [sidebarActive, setSidebarActive] = useState(false);
 
   const toggleSidebar = () => setSidebarActive(!sidebarActive);
@@ -13,7 +13,7 @@ const LayoutBase = ({ userFirstName, activePage, children }) => {
   return (
     <div className="layout">
       {/* El Sidebar ahora es un componente separado */}
-      <Sidebar
+      <SidebarUser
         activePage={activePage}
         sidebarActive={sidebarActive}
         closeSidebar={closeSidebar}
@@ -41,4 +41,4 @@ const LayoutBase = ({ userFirstName, activePage, children }) => {
   );
 };
 
-export default LayoutBase;
+export default LayoutBaseUser;
