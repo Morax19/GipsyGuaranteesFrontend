@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import SidebarTech from './SidebarTech';
-import '../../styles/base/menuGrey.css';
-import '../../styles/base/homeGrey.css';
+import Sidebar from './SidebarTech';
+import '../../styles/base/menu.css';
+import '../../styles/base/home.css';
 
 const LayoutBaseTechServ = ({ userFirstName, activePage, children }) => {
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -13,14 +13,14 @@ const LayoutBaseTechServ = ({ userFirstName, activePage, children }) => {
   return (
     <div className="layout">
       {/* El Sidebar ahora es un componente separado */}
-      <SidebarTech
+      <Sidebar
         activePage={activePage}
         sidebarActive={sidebarActive}
         closeSidebar={closeSidebar}
       />
 
       {/* Contenido principal */}
-      <div className={`main-content ${sidebarActive ? 'sidebar-open' : ''}`}> {/* Nueva clase sidebar-open para el main-content */}
+      <div className={`main-content ${sidebarActive ? 'sidebar-open' : ''}`} id='mainContentTech'>
         {/* <header>
           <div className="menu-icon" onClick={toggleSidebar}>
             <img src="/IMG/menu_icon.png" alt="Menu Icon" />

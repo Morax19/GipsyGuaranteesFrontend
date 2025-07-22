@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../../SessionContext';
-import '../../styles/base/menuBlue.css';
+import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png'
 
-const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
+const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
   const isActive = (page) => activePage === page;
   const { onLogout } = useSession();
 
   return (
     <>
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebar">
+      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarUser">
         <div className="logo">
             <img src={logo} alt="Gipsy's logo" />
         </div>
@@ -58,4 +58,4 @@ const Sidebar = ({ activePage, sidebarActive, closeSidebar }) => {
   );
 };
 
-export default Sidebar;
+export default SidebarUser;

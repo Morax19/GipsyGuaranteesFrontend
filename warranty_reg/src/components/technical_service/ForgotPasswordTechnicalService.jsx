@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../fetchWithAuth';
 import '../../styles/technical_service/forgotPasswordTechnicalService.css';
+import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
@@ -49,6 +51,11 @@ const ForgotPasswordTechnicalService = () => {
 
   return (
     <div className="cardContainerFPasswordTechnicalService">
+      <div className="back-link-container">
+        <Link to="/technical-service/login">
+          <img src={backIcon} alt="Volver" className="back-icon" />
+        </Link>
+      </div>
       <img src={logo} alt="Logo" className="logoFPasswordTechnicalService" />
       <h2>Recuperar Contraseña</h2>
       <br />

@@ -1,10 +1,20 @@
-.main-content {
+/*  User style  */
+#mainContentUser {
+    color: #324bab;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/*  Technical Service style */
+#mainContentTech {
     color: #455a64;
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
+/*  Base style  */
 .content {
     padding: 0% 3% 3% 3%;
     flex: 1;

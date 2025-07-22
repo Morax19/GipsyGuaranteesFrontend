@@ -1,7 +1,9 @@
 /* Componente listo, NO TOCAR*/
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/user/register.css';
+import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
@@ -62,6 +64,11 @@ function Register() {
 
   return (
     <div className="cardContainerURegister">
+      <div className="back-link-container">
+        <Link to="/login">
+          <img src={backIcon} alt="Volver" className="back-icon" />
+        </Link>
+      </div>
       <img src={logo} alt="Logo" className="logoURegister" />
       <h2>Registro de usuario</h2>
       <br />
