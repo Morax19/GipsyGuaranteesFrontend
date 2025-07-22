@@ -31,7 +31,7 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
             </li>
             <li>
               <div className={`optionContainer ${isActive('history') ? 'active' : ''}`}>
-                <Link to="/history" className="optionLink" onClick={closeSidebar}>Historial de Garantías</Link>
+                <Link to="/warranties-history" className="optionLink" onClick={closeSidebar}>Historial de Garantías</Link>
               </div>
             </li>
             <li>

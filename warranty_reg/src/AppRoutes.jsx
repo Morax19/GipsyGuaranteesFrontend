@@ -10,6 +10,7 @@ import Warranty from './components/user/Warranty';
 import EditProfile from './components/user/EditProfile';
 import ForgotPassword from './components/user/ForgotPassword';
 import UserTechnicalService from './components/user/TechnicalServiceLogged';
+import WarrantyHistory from './components/user/WarrantyHistory';
 
 import TechnicalService from './components/technical_service/TechnicalService';
 import HomeTechnicalService from './components/technical_service/HomeTechnicalService';
@@ -28,11 +29,12 @@ export default function AppRoutes() {
       <Route path="/edit-profile"  element={<EditProfile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/user-technical-service" element={<UserTechnicalService />} />
+      <Route path="/warranties-history" element={<WarrantyHistory />} />
       <Route path="/technical-service" element={<TechnicalService />} />
       <Route path="/technical-service/home" element={<HomeTechnicalService />} />
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
       <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
-      <Route path="/technical-service/open-guarantees" element={<GuaranteesListTechnicalService />} />
+      <Route path="/technical-service/open-warranties" element={<GuaranteesListTechnicalService />} />
     </Routes>
   );
 }
