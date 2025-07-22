@@ -183,3 +183,12 @@ hr {
     font-style: italic;
     font-size: 0.9em;
 }
+
+.modal-button.open-case-button {
+    background-color: #1e8736;
+    color: white;
+}
+
+.modal-button.open-case-button:hover {
+    background-color: #19762f;
+}
