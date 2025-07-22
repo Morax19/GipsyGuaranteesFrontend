@@ -61,86 +61,112 @@ const mockGuarantees = [
     producto: 'Horno Eléctrico',
     estado: 'Cerrado',
   },
+  {
+    id: 'G007',
+    codigo: 'STU-901-D',
+    fechaRecepcion: '2024-07-22', // Julio
+    nombreCliente: 'Pedro Gómez',
+    tienda: 'ElectroMega',
+    producto: 'Cafetera Express',
+    estado: 'Finalizado', // Nuevo estado de ejemplo
+  },
 ];
 
 const GuaranteesList = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [primaryFilter, setPrimaryFilter] = useState(''); // Renombrado de 'filterBy' a 'primaryFilter'
-  const [secondaryFilter, setSecondaryFilter] = useState(''); // Nuevo estado para el filtro secundario
-  const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]); // Opciones dinámicas para el filtro 2
+  const [primaryFilter, setPrimaryFilter] = useState('');
+  const [secondaryFilter, setSecondaryFilter] = useState('');
+  const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
   const [filteredGuarantees, setFilteredGuarantees] = useState(mockGuarantees);
 
-  // Mapeo de meses para el filtro de fecha
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  // Efecto para actualizar las opciones del filtro secundario y los filtros principales
   useEffect(() => {
     let currentGuarantees = mockGuarantees;
 
-    // --- Lógica para poblar opciones del filtro secundario ---
-    let newSecondaryOptions = [];
-    if (primaryFilter === 'fecha') {
-      // Extrae los meses únicos de las fechas de recepción
-      const months = [...new Set(mockGuarantees.map(g => new Date(g.fechaRecepcion).getMonth()))]
-        .sort((a, b) => a - b) // Ordena por número de mes
-        .map(monthNum => ({ value: monthNum, label: monthNames[monthNum] }));
-      newSecondaryOptions = months;
-    } else if (primaryFilter === 'producto') {
-      // Extrae los productos únicos
-      const products = [...new Set(mockGuarantees.map(g => g.producto))].sort();
-      newSecondaryOptions = products.map(p => ({ value: p, label: p }));
-    } else if (primaryFilter === 'tienda') {
-      // Extrae las tiendas únicas
-      const stores = [...new Set(mockGuarantees.map(g => g.tienda))].sort();
-      newSecondaryOptions = stores.map(s => ({ value: s, label: s }));
-    }
-    setSecondaryFilterOptions(newSecondaryOptions);
-    setSecondaryFilter(''); // Reiniciar el filtro secundario cuando cambia el primario
-
-    // --- Aplicar Búsqueda por código de garantía ---
+    // 1. Aplicar Búsqueda por código de garantía (siempre primero)
     if (searchTerm) {
       currentGuarantees = currentGuarantees.filter(guarantee =>
         guarantee.codigo.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // --- Aplicar Filtro Primario y Secundario ---
-    if (primaryFilter) {
-      if (primaryFilter === 'fecha' && secondaryFilter !== '') {
+    // 2. Lógica para poblar opciones del filtro secundario (basado en el primaryFilter actual)
+    let newSecondaryOptions = [];
+    if (primaryFilter === 'fecha') {
+      const months = [...new Set(currentGuarantees.map(g => new Date(g.fechaRecepcion).getMonth()))]
+        .sort((a, b) => a - b)
+        .map(monthNum => ({ value: String(monthNum), label: monthNames[monthNum] }));
+      newSecondaryOptions = months;
+    } else if (primaryFilter === 'producto') {
+      const products = [...new Set(currentGuarantees.map(g => g.producto))].sort();
+      newSecondaryOptions = products.map(p => ({ value: p, label: p }));
+    } else if (primaryFilter === 'tienda') {
+      const stores = [...new Set(currentGuarantees.map(g => g.tienda))].sort();
+      newSecondaryOptions = stores.map(s => ({ value: s, label: s }));
+    } else if (primaryFilter === 'estado') { // <-- NUEVA LÓGICA: para el filtro por estado
+      const statuses = [...new Set(currentGuarantees.map(g => g.estado))].sort();
+      newSecondaryOptions = statuses.map(s => ({ value: s, label: s }));
+    }
+    setSecondaryFilterOptions(newSecondaryOptions);
+
+    // Reiniciar secondaryFilter si el primaryFilter cambió o el valor actual no es válido
+    if (primaryFilter !== '' && secondaryFilter !== '' && !newSecondaryOptions.some(opt => opt.value === secondaryFilter)) {
+        setSecondaryFilter('');
+    } else if (primaryFilter === '' && secondaryFilter !== '') { // Si el primaryFilter se resetea, resetear secondary
+        setSecondaryFilter('');
+    }
+
+
+    // 3. Aplicar Filtro Secundario (si primaryFilter y secondaryFilter están seleccionados)
+    if (primaryFilter && secondaryFilter !== '') {
+      if (primaryFilter === 'fecha') {
         currentGuarantees = currentGuarantees.filter(guarantee =>
-          new Date(guarantee.fechaRecepcion).getMonth() === parseInt(secondaryFilter)
+          String(new Date(guarantee.fechaRecepcion).getMonth()) === secondaryFilter
         );
-      } else if (primaryFilter === 'producto' && secondaryFilter !== '') {
+      } else if (primaryFilter === 'producto') {
         currentGuarantees = currentGuarantees.filter(guarantee =>
           guarantee.producto === secondaryFilter
         );
-      } else if (primaryFilter === 'tienda' && secondaryFilter !== '') {
+      } else if (primaryFilter === 'tienda') {
         currentGuarantees = currentGuarantees.filter(guarantee =>
           guarantee.tienda === secondaryFilter
         );
-      }
-      // Si solo hay filtro primario seleccionado y no secundario, o si el secundario es solo para ordenar
-      // Aplicar ordenación basada en el filtro primario
-      if (primaryFilter === 'producto') {
-        currentGuarantees.sort((a, b) => a.producto.localeCompare(b.producto));
-      } else if (primaryFilter === 'fecha') {
-        currentGuarantees.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
-      } else if (primaryFilter === 'tienda') {
-        currentGuarantees.sort((a, b) => a.tienda.localeCompare(b.tienda));
+      } else if (primaryFilter === 'estado') { // <-- NUEVA LÓGICA: para filtrar por estado
+        currentGuarantees = currentGuarantees.filter(guarantee =>
+          guarantee.estado === secondaryFilter
+        );
       }
     }
 
+    // 4. Aplicar Ordenación (siempre después del filtrado)
+    // Nota: la ordenación por estado podría no ser alfabética si tienes un orden específico deseado (ej. Abierto, En Revisión, Cerrado)
+    // Para ordenar por estado, necesitarías una lógica de ordenación personalizada si no es alfabética
+    if (primaryFilter === 'producto') {
+      currentGuarantees.sort((a, b) => a.producto.localeCompare(b.producto));
+    } else if (primaryFilter === 'fecha') {
+      currentGuarantees.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
+    } else if (primaryFilter === 'tienda') {
+      currentGuarantees.sort((a, b) => a.tienda.localeCompare(b.tienda));
+    } else if (primaryFilter === 'estado') { // <-- Lógica de ordenación para estado (alfabética por defecto)
+        currentGuarantees.sort((a, b) => a.estado.localeCompare(b.estado));
+        // Si necesitas un orden específico (ej: Abierto, En Revisión, Cerrado, Finalizado),
+        // definirías un array de orden y usarías sus índices:
+        /*
+        const estadoOrder = ['Abierto', 'En Revisión', 'Pendiente', 'Cerrado', 'Finalizado'];
+        currentGuarantees.sort((a, b) => estadoOrder.indexOf(a.estado) - estadoOrder.indexOf(b.estado));
+        */
+    }
+
     setFilteredGuarantees(currentGuarantees);
-  }, [searchTerm, primaryFilter, secondaryFilter]); // Dependencias para re-ejecutar el efecto
+  }, [searchTerm, primaryFilter, secondaryFilter]);
 
 
-  // Función para manejar el clic en el ícono de detalles
   const handleViewDetails = (guaranteeId) => {
     console.log('Ver detalles de la garantía:', guaranteeId);
-    // Aquí puedes redirigir a una página de detalles de garantía o abrir un modal
   };
 
   return (
@@ -167,20 +193,22 @@ const GuaranteesList = ({ userFirstName }) => {
             <option value="producto">Producto</option>
             <option value="fecha">Fecha</option>
             <option value="tienda">Tienda</option>
+            <option value="estado">Estado</option> {/* <-- NUEVA OPCIÓN: Estado */}
           </select>
 
-          {/* Nuevo select para el filtro secundario, solo visible si se elige un filtro primario */}
+          {/* El filtro secundario solo es visible si se elige un filtro primario y hay opciones */}
           {primaryFilter && secondaryFilterOptions.length > 0 && (
             <select
-              className="filter-select" // Nueva clase para estilos específicos
+              className="filter-select"
               value={secondaryFilter}
               onChange={(e) => setSecondaryFilter(e.target.value)}
-              disabled={secondaryFilterOptions.length === 0} // Deshabilitado si no hay opciones
+              disabled={secondaryFilterOptions.length === 0}
             >
               <option value="">
                 {primaryFilter === 'fecha' && 'Seleccione un mes'}
                 {primaryFilter === 'producto' && 'Seleccione un producto'}
                 {primaryFilter === 'tienda' && 'Seleccione una tienda'}
+                {primaryFilter === 'estado' && 'Seleccione un estado'} {/* <-- NUEVO: texto para estado */}
                 {!primaryFilter && 'Seleccione una opción...'}
               </option>
               {secondaryFilterOptions.map(option => (
