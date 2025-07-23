@@ -1,0 +1,132 @@
+.no-underline-link {
+    text-decoration: none; /* Esto quita el subrayado */
+    color: inherit; /* Opcional: Para asegurar que herede el color del texto si lo tienes definido en el <h2> */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1efef;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.barraCurvaLoginTechnicalService::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #455a64;
+    border-radius: 50% 50% 0 0;
+    transform: scale(1.5);
+    z-index: -1;
+}
+
+.cardContainerLoginTechnicalService {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 15vh;
+    z-index: 1;
+    background: #fff;
+    padding: 32px 24px 24px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    width: 500px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.cardContainerLoginTechnicalService h1,
+.cardContainerLoginTechnicalService h2,
+.cardContainerLoginTechnicalService h3 {
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 600;
+    color: #191c16;
+}
+
+.cardContainerLoginTechnicalService h2 {
+    font-size: 1.3rem;
+    margin-top: 0;
+    padding-top: 8px;
+}
+
+.cardContainerLoginTechnicalService h3 {
+    font-size: 1.1rem;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    color: #455a64;
+}
+
+.cardContainerLoginTechnicalService form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center the inputs horizontally */
+    width: 100%; /* Ensure the form takes up the full width of its parent */
+}
+
+.cardContainerLoginTechnicalService form input[type="text"],
+.cardContainerLoginTechnicalService form input[type="password"] {
+    width: 70%;
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    transition: border 0.2s;
+    transition: background-color 0.3s ease;
+}
+
+.cardContainerLoginTechnicalService input:focus {
+    border: 1.5px solid #455a64;
+    outline: none;
+    background: #fff;
+}
+
+.cardContainerLoginTechnicalService button {
+    display: block;
+    width: 35%;
+    padding: 12px;
+    background-color: #455a64;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.cardContainerLoginTechnicalService button:hover {
+    background-color: #b0bec5;
+}
+
+.logoLoginTechnicalService {
+    max-width: 300px;
+    margin-bottom: 30px;
+}
+
+p {
+    color: #474747;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1rem;
+}

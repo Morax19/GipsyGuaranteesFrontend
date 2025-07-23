@@ -1,0 +1,71 @@
+body.barraCurvaServTec::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #4068f8;
+    border-radius: 50% 50% 0 0;
+    transform: scale(1.5);
+    z-index: -1;
+}
+
+.back-link-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.back-icon {
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+}
+
+.technical-service-container {
+    text-align: left;
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.technical-service-container h2,
+.technical-service-container p {
+    text-align: left;
+}
+
+.branch-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.branch-card {
+    background-color: #f1efef;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    width: 120%; 
+    box-sizing: border-box;
+}
+
+.branch-card-info {
+    flex: 2;
+}
+
+.branch-card-schedule {
+    flex: 1;
+    font-style: italic;
+    text-align: right;
+}
+
+.branch-card-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
