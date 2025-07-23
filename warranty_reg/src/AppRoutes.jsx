@@ -34,7 +34,7 @@ export default function AppRoutes() {
       <Route path="/technical-service/home" element={<HomeTechnicalService />} />
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
       <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
-      <Route path="/technical-service/open-warranties" element={<GuaranteesListTechnicalService />} />
+      <Route path="/technical-service/history-guarantees" element={<GuaranteesListTechnicalService />} />
     </Routes>
   );
 }

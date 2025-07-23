@@ -212,7 +212,7 @@ const GuaranteesList = ({ userFirstName }) => {
     <LayoutBaseTechServ activePage="guaranteesList">
       <div className="guarantees-list-container">
         <div className="title-section">
-          <h2>Casos Abiertos de Garantías</h2>
+          <h2>Historial de Servicios</h2>
         </div>
 
         <div className="filters-and-search">
