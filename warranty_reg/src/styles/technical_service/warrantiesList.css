@@ -1,5 +1,5 @@
 /* --- Estilos Generales del Contenedor de la Lista --- */
-.guarantees-list-container {
+.warranties-list-container {
     padding: 30px;
     background-color: white;
     min-height: calc(100vh - 40px);
@@ -82,7 +82,7 @@
 
 
 /* --- Estilos de la Tabla de Garantías --- */
-.guarantees-table-container {
+.warranties-table-container {
     width: calc(100% - 60px);
     max-width: 1200px;
     overflow-x: auto;

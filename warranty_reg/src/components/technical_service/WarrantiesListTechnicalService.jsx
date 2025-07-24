@@ -3,11 +3,11 @@ import { fetchWithAuth } from '../../fetchWithAuth';
 import { useSession } from '../../SessionContext';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import eye from '../../assets/IMG/ojo.png';
-import '../../styles/technical_service/guaranteesList.css';
-import GuaranteeDetailsModal from './GuaranteesDetailsModal';
+import '../../styles/technical_service/warrantiesList.css';
+import WarrantyDetailsModal from './WarrantyDetailsModal';
 
 // --- Data de ejemplo ---
-const mockGuarantees = [
+const mockWarranties = [
   {
     id: 'G001',
     codigo: 'ABC-123-X',
@@ -97,16 +97,16 @@ const mockGuarantees = [
 ];
 
 
-const GuaranteesList = ({ userFirstName }) => {
+const WarrantiesList = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');
   const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
-  const [allGuarantees, setAllGuarantees] = useState(mockGuarantees);
-  const [filteredGuarantees, setFilteredGuarantees] = useState(mockGuarantees);
+  const [allWarranties, setAllWarranties] = useState(mockWarranties);
+  const [filteredWarranties, setFilteredWarranties] = useState(mockWarranties);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedGuarantee, setSelectedGuarantee] = useState(null);
+  const [selectedwarranty, setSelectedwarranty] = useState(null);
 
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -114,37 +114,37 @@ const GuaranteesList = ({ userFirstName }) => {
   ];
 
   useEffect(() => {
-    let currentGuarantees = allGuarantees;
+    let currentWarranties = allWarranties;
 
     // --- Ordenar por fecha si no hay filtro primario ---
     if (!primaryFilter) {
-      currentGuarantees = [...currentGuarantees].sort(
+      currentWarranties = [...currentWarranties].sort(
         (a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion)
       );
     }
 
     // --- Búsqueda de Código de Garantía ---
     if (searchTerm) {
-      currentGuarantees = currentGuarantees.filter(guarantee =>
-        guarantee.codigo.toLowerCase().includes(searchTerm.toLowerCase())
+      currentWarranties = currentWarranties.filter(warranty =>
+        warranty.codigo.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // --- Poblado de opciones del filtro secundario ---
     let newSecondaryOptions = [];
     if (primaryFilter === 'fecha') {
-      const months = [...new Set(currentGuarantees.map(g => new Date(g.fechaRecepcion).getMonth()))]
+      const months = [...new Set(currentWarranties.map(g => new Date(g.fechaRecepcion).getMonth()))]
         .sort((a, b) => a - b)
         .map(monthNum => ({ value: String(monthNum), label: monthNames[monthNum] }));
       newSecondaryOptions = months;
     } else if (primaryFilter === 'producto') {
-      const products = [...new Set(currentGuarantees.map(g => g.producto))].sort();
+      const products = [...new Set(currentWarranties.map(g => g.producto))].sort();
       newSecondaryOptions = products.map(p => ({ value: p, label: p }));
     } else if (primaryFilter === 'tienda') {
-      const stores = [...new Set(currentGuarantees.map(g => g.tienda))].sort();
+      const stores = [...new Set(currentWarranties.map(g => g.tienda))].sort();
       newSecondaryOptions = stores.map(s => ({ value: s, label: s }));
     } else if (primaryFilter === 'estado') {
-      const statuses = [...new Set(currentGuarantees.map(g => g.estado))].sort();
+      const statuses = [...new Set(currentWarranties.map(g => g.estado))].sort();
       newSecondaryOptions = statuses.map(s => ({ value: s, label: s }));
     }
     setSecondaryFilterOptions(newSecondaryOptions);
@@ -157,60 +157,60 @@ const GuaranteesList = ({ userFirstName }) => {
 
     if (primaryFilter && secondaryFilter !== '') {
       if (primaryFilter === 'fecha') {
-        currentGuarantees = currentGuarantees.filter(guarantee =>
-          String(new Date(guarantee.fechaRecepcion).getMonth()) === secondaryFilter
+        currentWarranties = currentWarranties.filter(warranty =>
+          String(new Date(warranty.fechaRecepcion).getMonth()) === secondaryFilter
         );
       } else if (primaryFilter === 'producto') {
-        currentGuarantees = currentGuarantees.filter(guarantee =>
-          guarantee.producto === secondaryFilter
+        currentWarranties = currentWarranties.filter(warranty =>
+          warranty.producto === secondaryFilter
         );
       } else if (primaryFilter === 'tienda') {
-        currentGuarantees = currentGuarantees.filter(guarantee =>
-          guarantee.tienda === secondaryFilter
+        currentWarranties = currentWarranties.filter(warranty =>
+          warranty.tienda === secondaryFilter
         );
       } else if (primaryFilter === 'estado') {
-        currentGuarantees = currentGuarantees.filter(guarantee =>
-          guarantee.estado === secondaryFilter
+        currentWarranties = currentWarranties.filter(warranty =>
+          warranty.estado === secondaryFilter
         );
       }
     }
 
     if (primaryFilter === 'producto') {
-      currentGuarantees.sort((a, b) => a.producto.localeCompare(b.producto));
+      currentWarranties.sort((a, b) => a.producto.localeCompare(b.producto));
     } else if (primaryFilter === 'fecha') {
-      currentGuarantees.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
+      currentWarranties.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
     } else if (primaryFilter === 'tienda') {
-      currentGuarantees.sort((a, b) => a.tienda.localeCompare(b.tienda));
+      currentWarranties.sort((a, b) => a.tienda.localeCompare(b.tienda));
     } else if (primaryFilter === 'estado') {
-        currentGuarantees.sort((a, b) => a.estado.localeCompare(b.estado));
+        currentWarranties.sort((a, b) => a.estado.localeCompare(b.estado));
     }
 
-    setFilteredGuarantees(currentGuarantees);
-  }, [searchTerm, primaryFilter, secondaryFilter, allGuarantees]);
+    setFilteredWarranties(currentWarranties);
+  }, [searchTerm, primaryFilter, secondaryFilter, allWarranties]);
 
 
   // --- Detalles de la Garantía ---
 
-  const handleViewDetails = (guaranteeId) => {
-    const guarantee = allGuarantees.find(g => g.id === guaranteeId);
-    setSelectedGuarantee(guarantee);
+  const handleViewDetails = (warrantyId) => {
+    const warranty = allWarranties.find(g => g.id === warrantyId);
+    setSelectedwarranty(warranty);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedGuarantee(null);
+    setSelectedwarranty(null);
   };
 
-  const handleUpdateGuaranteeInList = (updatedGuarantee) => {
-    setAllGuarantees(prevGuarantees =>
-      prevGuarantees.map(g => (g.id === updatedGuarantee.id ? updatedGuarantee : g))
+  const handleUpdatewarrantyInList = (updatedwarranty) => {
+    setAllWarranties(prevWarranties =>
+      prevWarranties.map(g => (g.id === updatedwarranty.id ? updatedwarranty : g))
     );
   };
 
   return (
-    <LayoutBaseTechServ activePage="guaranteesList">
-      <div className="guarantees-list-container">
+    <LayoutBaseTechServ activePage="warrantiesList">
+      <div className="warranties-list-container">
         <div className="title-section">
           <h2>Historial de Servicios</h2>
         </div>
@@ -259,8 +259,8 @@ const GuaranteesList = ({ userFirstName }) => {
           )}
         </div>
 
-        <div className="guarantees-table-container">
-          {filteredGuarantees.length > 0 ? (
+        <div className="warranties-table-container">
+          {filteredWarranties.length > 0 ? (
             <table>
               <thead>
                 <tr>
@@ -274,18 +274,18 @@ const GuaranteesList = ({ userFirstName }) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredGuarantees.map(guarantee => (
-                  <tr key={guarantee.id}>
-                    <td>{guarantee.codigo}</td>
-                    <td>{guarantee.fechaRecepcion}</td>
-                    <td>{guarantee.nombreCliente}</td>
-                    <td>{guarantee.tienda}</td>
-                    <td>{guarantee.producto}</td>
-                    <td><span className={`status-${guarantee.estado.replace(/\s+/g, '-').toLowerCase()}`}>{guarantee.estado}</span></td>
+                {filteredWarranties.map(warranty => (
+                  <tr key={warranty.id}>
+                    <td>{warranty.codigo}</td>
+                    <td>{warranty.fechaRecepcion}</td>
+                    <td>{warranty.nombreCliente}</td>
+                    <td>{warranty.tienda}</td>
+                    <td>{warranty.producto}</td>
+                    <td><span className={`status-${warranty.estado.replace(/\s+/g, '-').toLowerCase()}`}>{warranty.estado}</span></td>
                     <td>
                       <button
                         className="details-button"
-                        onClick={() => handleViewDetails(guarantee.id)}
+                        onClick={() => handleViewDetails(warranty.id)}
                         title="Ver detalles"
                       >
                         <img src={eye} alt="Ver detalles" />
@@ -302,15 +302,15 @@ const GuaranteesList = ({ userFirstName }) => {
       </div>
 
       {/* Renderización del Modal */}
-      <GuaranteeDetailsModal
+      <WarrantyDetailsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        guarantee={selectedGuarantee}
-        onUpdateGuarantee={handleUpdateGuaranteeInList}
+        warranty={selectedwarranty}
+        onUpdatewarranty={handleUpdatewarrantyInList}
       />
 
     </LayoutBaseTechServ>
   );
 };
 
-export default GuaranteesList;
+export default WarrantiesList;
