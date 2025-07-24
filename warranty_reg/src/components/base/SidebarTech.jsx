@@ -25,8 +25,8 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('guaranteesList') ? 'active' : ''}`}>
-                <Link to="/technical-service/history-guarantees" className="optionLink" onClick={closeSidebar}>Historial de Servicios</Link>
+              <div className={`optionContainer ${isActive('warrantiesList') ? 'active' : ''}`}>
+                <Link to="/technical-service/history-warranties" className="optionLink" onClick={closeSidebar}>Historial de Servicios</Link>
               </div>
             </li>
           </ul>

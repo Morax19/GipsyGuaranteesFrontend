@@ -1,10 +1,10 @@
 import React from 'react';
-import '../../styles/technical_service/guaranteesDetailsModal.css';
+import '../../styles/technical_service/warrantyDetailsModal.css';
 
-const SearchedGuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onOpenCase }) => {
-  if (!isOpen || !guarantee) return null;
+const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase }) => {
+  if (!isOpen || !warranty) return null;
 
-  const isGuaranteeValid = (purchaseDate, usedCount) => {
+  const isWarrantyValid = (purchaseDate, usedCount) => {
     const today = new Date();
     const pDate = new Date(purchaseDate);
     const validUntil = new Date(pDate.setFullYear(pDate.getFullYear() + 1));
@@ -12,13 +12,13 @@ const SearchedGuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onOpenCase 
     return today <= validUntil && usedCount < 2;
   };
 
-  const validityStatus = isGuaranteeValid(guarantee.purchaseDate) ? 'Válida' : 'No Válida';
-  const usedCount = guarantee.usedCount !== undefined ? guarantee.usedCount : 0;
-  const canOpenCase = guarantee.estado !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
+  const usedCount = warranty.usedCount !== undefined ? warranty.usedCount : 0;
+  const validityStatus = isWarrantyValid(warranty.purchaseDate, usedCount) ? 'Válida' : 'No Válida';
+  const canOpenCase = warranty.estado !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
 
 
   const handleOpenCaseClick = () => {
-    onOpenCase(guarantee);
+    onOpenCase(warranty);
     onClose();
   };
 
@@ -32,16 +32,16 @@ const SearchedGuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onOpenCase 
 
         <div className="modal-body">
           <div className="detail-row">
-            <strong>Código de Garantía:</strong> <span>{guarantee.codigo}</span>
+            <strong>Código de Garantía:</strong> <span>{warranty.codigo}</span>
           </div>
           <div className="detail-row">
-            <strong>Fecha de Registro:</strong> <span>{guarantee.purchaseDate || 'N/A'}</span> {/* Asumiendo 'purchaseDate' es la fecha de registro */}
+            <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span> {/* Asumiendo 'purchaseDate' es la fecha de registro */}
           </div>
           <div className="detail-row">
-            <strong>Número de Factura:</strong> <span>{guarantee.invoiceNumber || 'N/A'}</span>
+            <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
           </div>
           <div className="detail-row">
-            <strong>Producto:</strong> <span>{guarantee.MarcaProducto} - {guarantee.ModeloProducto}</span>
+            <strong>Producto:</strong> <span>{warranty.MarcaProducto} - {warranty.ModeloProducto}</span>
           </div>
           <div className="detail-row">
             <strong>Estatus (Vigencia):</strong> 
@@ -55,8 +55,8 @@ const SearchedGuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onOpenCase 
           </div>
           <div className="detail-row">
             <strong>Estado Actual del Caso:</strong> 
-            <span className={`status-${guarantee.estado ? guarantee.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
-                {guarantee.estado || 'N/A'}
+            <span className={`status-${warranty.estado ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
+                {warranty.estado || 'N/A'}
             </span>
           </div>
 
@@ -80,4 +80,4 @@ const SearchedGuaranteeDetailsModal = ({ isOpen, onClose, guarantee, onOpenCase 
   );
 };
 
-export default SearchedGuaranteeDetailsModal;
+export default SearchedWarrantyDetailsModal;
