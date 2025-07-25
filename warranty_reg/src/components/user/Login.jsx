@@ -85,6 +85,12 @@ function Login() {
       <p>
         <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
+
+      <div className="login-footer">
+        <Link to="/technical-service/login" className="login-link"> 
+          Soy Servicio Técnico
+        </Link>
+      </div>
     </div>
   );
 }
