@@ -128,3 +128,26 @@ p {
     margin-top: 10px;
     font-size: 1rem;
 }
+
+
+/* Estilos para el nuevo footer/enlace de Login Cliente y Servicio Técnico */
+.login-footer {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    text-align: right;
+    z-index: 10;
+}
+
+.login-link {
+    color: #e0e0e0;
+    font-size: 0.95em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #b7b8bd;
+    text-decoration: underline;
+}
