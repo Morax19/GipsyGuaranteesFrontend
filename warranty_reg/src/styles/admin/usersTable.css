@@ -90,7 +90,7 @@
     box-shadow: 0 0 0 3px rgba(139, 86, 237, 0.2);
 }
 
-.filter-select {
+.filter-select-admin {
     padding: 12px 20px;
     border: 1px solid #421d83;
     border-radius: 8px;
@@ -106,12 +106,12 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.filter-select:hover {
+.filter-select-admin:hover {
     background-color: #8b56ed;
     border-color: #8b56ed;
 }
 
-.filter-select:focus {
+.filter-select-admin:focus {
     outline: none;
     border-color: #421d83;
     box-shadow: 0 0 0 3px rgba(66, 29, 131, 0.2);
