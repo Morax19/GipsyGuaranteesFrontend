@@ -20,6 +20,8 @@ import WarrantiesListTechnicalService from './components/technical_service/Warra
 
 import LoginAdmin from './components/admin/LoginAdmin';
 import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
+import HomeAdmin from './components/admin/HomeAdmin';
+import UsersTable from './components/admin/UsersTable';
 
 export default function AppRoutes() {
   return (
@@ -40,6 +42,8 @@ export default function AppRoutes() {
       <Route path="/technical-service/history-warranties" element={<WarrantiesListTechnicalService />} />
       <Route path="/admin/login" element={<LoginAdmin />} />
       <Route path="/admin/forgot-password" element={<ForgotPasswordAdmin />} />
+      <Route path="/admin/home" element={<HomeAdmin />} />
+      <Route path="/admin/users-table" element={<UsersTable />} />
     </Routes>
   );
 }

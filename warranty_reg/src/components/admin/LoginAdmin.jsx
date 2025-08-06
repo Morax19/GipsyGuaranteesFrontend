@@ -53,7 +53,7 @@ function LoginAdmin() {
   return (
     <div className="cardContainerLoginAdmin">
       <img src={logo} alt="Logo" className="logoLoginAdmin" />
-      <Link to="/technical-service/home" className="no-underline-link"> 
+      <Link to="/admin/home" className="no-underline-link"> 
           <h2>Iniciar sesión como <br/> Administrador</h2>
       </Link>
       <br />

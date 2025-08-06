@@ -41,21 +41,39 @@ body {
     transition: transform 0.3s ease;
 }
 
+#sidebarAdmin {
+    width: 380px;
+    flex-shrink: 0;
+    height: 100%;
+    background-color: #8b56ed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
 #sidebarUser .logo,
-#sidebarTech .logo {
+#sidebarTech .logo,
+#sidebarAdmin .logo {
     display: flex;
     justify-content: center;
     padding: 20px 0;
 }
 
 #sidebarUser .logo img,
-#sidebarTech .logo img {
+#sidebarTech .logo img,
+#sidebarAdmin .logo img {
     width: 150px;
     height: auto;
 }
 
 #sidebarUser ul,
-#sidebarTech ul {
+#sidebarTech ul,
+#sidebarAdmin ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -63,7 +81,8 @@ body {
 }
 
 #sidebarUser ul li,
-#sidebarTech ul li {
+#sidebarTech ul li,
+#sidebarAdmin ul li {
     margin: 5px 0;
 }
 
@@ -120,7 +139,8 @@ body {
 }
 
 #mainContentUser,
-#mainContentTech {
+#mainContentTech,
+#mainContentAdmin {
     flex-grow: 1;
     padding: 0;
     overflow-y: auto;
@@ -195,12 +215,14 @@ header {
     }
 
     #sidebarUser.active,
-    #sidebarTech.active {
+    #sidebarTech.active,
+    #sidebarAdmin.active {
         transform: translateX(280px);
     }
 
     #mainContentUser,
-    #mainContentTech {
+    #mainContentTech,
+    #mainContentAdmin {
         margin-left: 0;
         width: 100vw;
         transition: transform 0.3s ease;
@@ -228,7 +250,8 @@ header {
     }
 
     #sidebarUser .logo img,
-    #sidebarTech .logo img {
+    #sidebarTech .logo img,
+    #sidebarAdmin .logo img {
         width: 120px;
     }
 
