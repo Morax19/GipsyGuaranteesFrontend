@@ -1,19 +1,18 @@
-/* Este componente esta listo NO TOCAR */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import '../../styles/technical_service/loginTechnicalService.css';
+import '../../styles/admin/LoginAdmin.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const apiUrl = import.meta.env.VITE_API_DEV_URL;
 
-function LoginTechnicalService() {
+function LoginAdmin() {
   /* Añade y elimina la barra curva de la parte inferior */
   useEffect(() => {
-    document.body.classList.add('barraCurvaLoginTechnicalService');
+    document.body.classList.add('barraCurvaLoginAdmin');
 
     return () => {
-      document.body.classList.remove('barraCurvaLoginTechnicalService');
+      document.body.classList.remove('barraCurvaLoginAdmin');
     };
   }, []);
 
@@ -52,10 +51,10 @@ function LoginTechnicalService() {
   };
 
   return (
-    <div className="cardContainerLoginTechnicalService">
-      <img src={logo} alt="Logo" className="logoLoginTechnicalService" />
+    <div className="cardContainerLoginAdmin">
+      <img src={logo} alt="Logo" className="logoLoginAdmin" />
       <Link to="/technical-service/home" className="no-underline-link"> 
-          <h2>Iniciar sesión como <br/> Servicio Técnico</h2>
+          <h2>Iniciar sesión como <br/> Administrador</h2>
       </Link>
       <br />
       <form onSubmit={handleSubmit}>
@@ -80,7 +79,7 @@ function LoginTechnicalService() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        <a href="#" onClick={e => { e.preventDefault(); navigate('/technical-service/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/admin/forgot-password'); }}>¿Olvidaste tu contraseña?</a>
       </p>
 
       <div className="login-footer">
@@ -88,12 +87,12 @@ function LoginTechnicalService() {
           Soy Cliente
         </Link>
         <br />
-        <Link to="/admin/login" className="login-link"> 
-          Soy Administrador
+        <Link to="/technical-service/login" className="login-link"> 
+          Soy Servicio Técnico
         </Link>
       </div>
     </div>
   );
 }
 
-export default LoginTechnicalService;
+export default LoginAdmin;

@@ -18,6 +18,9 @@ import LoginTechnicalService from './components/technical_service/LoginTechnical
 import ForgotPasswordTechnicalService from './components/technical_service/ForgotPasswordTechnicalService';
 import WarrantiesListTechnicalService from './components/technical_service/WarrantiesListTechnicalService';
 
+import LoginAdmin from './components/admin/LoginAdmin';
+import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,6 +38,8 @@ export default function AppRoutes() {
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
       <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
       <Route path="/technical-service/history-warranties" element={<WarrantiesListTechnicalService />} />
+      <Route path="/admin/login" element={<LoginAdmin />} />
+      <Route path="/admin/forgot-password" element={<ForgotPasswordAdmin />} />
     </Routes>
   );
 }
