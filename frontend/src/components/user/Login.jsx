@@ -55,7 +55,7 @@ function Login() {
     <div className="cardContainerLogin">
       <img src={logo} alt="Logo" className="logoLogin" />
       <Link to="/home" className="no-underline-link"> 
-          <h2>Iniciar sesión</h2>
+          <h2>Iniciar sesión como <br/> Cliente</h2>
       </Link>
       <br />
       <form onSubmit={handleSubmit}>
@@ -85,6 +85,16 @@ function Login() {
       <p>
         <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
+
+      <div className="login-footer">
+        <Link to="/technical-service/login" className="login-link"> 
+          Soy Servicio Técnico
+        </Link>
+        <br />
+        <Link to="/admin/login" className="login-link"> 
+          Soy Administrador
+        </Link>
+      </div>
     </div>
   );
 }

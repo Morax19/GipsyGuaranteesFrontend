@@ -4,16 +4,16 @@ import { useSession } from '../../SessionContext';
 import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_medioBlanco.png'
 
-const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
+const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar }) => {
   const isActive = (page) => activePage === page;
   const { onLogout } = useSession();
 
   return (
     <>
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarTech">
+      <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarAdmin">
         <div className="logo">
-            <Link to="/technical-service/home" onClick={closeSidebar}>
+            <Link to="/admin/home" onClick={closeSidebar}>
               <img src={logo} alt="Gipsy's logo" />
             </Link>
         </div>
@@ -21,12 +21,17 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
           <ul>
             <li>
               <div className={`optionContainer ${isActive('home') ? 'active' : ''}`}>
-                <Link to="/technical-service/home" className="optionLink" onClick={closeSidebar}>Inicio</Link>
+                <Link to="/admin/home" className="optionLink" onClick={closeSidebar}>Inicio</Link>
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('warrantiesList') ? 'active' : ''}`}>
-                <Link to="/technical-service/history-warranties" className="optionLink" onClick={closeSidebar}>Historial de Servicios</Link>
+              <div className={`optionContainer ${isActive('usersTable') ? 'active' : ''}`}>
+                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios</Link>
+              </div>
+            </li>
+            <li>
+              <div className={`optionContainer ${isActive('branchesTable') ? 'active' : ''}`}>
+                <Link to="/admin/branches-table" className="optionLink" onClick={closeSidebar}>Sucursales</Link>
               </div>
             </li>
           </ul>
@@ -44,4 +49,4 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar }) => {
   );
 };
 
-export default SidebarTech;
+export default SidebarAdmin;

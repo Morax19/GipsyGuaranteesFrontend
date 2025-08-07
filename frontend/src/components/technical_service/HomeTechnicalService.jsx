@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
-import SearchedGuaranteeDetailsModal from './SearchedGuaranteeDetailsModal'; // <-- Importa el nuevo modal
+import SearchedWarrantyDetailsModal from './SearchedWarrantyDetailsModal';
 
-// --- Datos de Garantías de ejemplo (con más detalles) ---
-const allMockGuarantees = [
+// --- Datos de Garantías de ejemplo ---
+const allMockWarranties = [
     {
         id: 'G001',
         codigo: 'ABC-123',
@@ -48,20 +48,20 @@ const allMockGuarantees = [
 const Home = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [foundGuarantee, setFoundGuarantee] = useState(null);
+  const [foundWarranty, setFoundWarranty] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
 
       // --- Simulación de búsqueda con mock data ---
-      const found = allMockGuarantees.find(g => g.codigo === searchTerm.trim().toUpperCase());
+      const found = allMockWarranties.find(g => g.codigo === searchTerm.trim().toUpperCase());
       if (found) {
-        setFoundGuarantee(found);
+        setFoundWarranty(found);
         setIsModalOpen(true);
       } else {
         alert('Garantía no encontrada.');
-        setFoundGuarantee(null);
+        setFoundWarranty(null);
         setIsModalOpen(false);
       }
     } else {
@@ -75,15 +75,15 @@ const Home = ({ userFirstName }) => {
     }
   };
 
-  const handleOpenCaseFromModal = (guaranteeToOpenCase) => {
-    console.log('Solicitud para abrir caso para:', guaranteeToOpenCase.codigo);
-    alert(`Se ha abierto un caso para la garantía: ${guaranteeToOpenCase.codigo}.`);
+  const handleOpenCaseFromModal = (warrantyToOpenCase) => {
+    console.log('Solicitud para abrir caso para:', warrantyToOpenCase.codigo);
+    alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.codigo}.`);
     setIsModalOpen(false);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setFoundGuarantee(null);
+    setFoundWarranty(null);
   };
 
   return (
@@ -112,10 +112,10 @@ const Home = ({ userFirstName }) => {
       </div>
 
       {/* Renderiza el nuevo modal aquí, controlando su visibilidad */}
-      <SearchedGuaranteeDetailsModal
+      <SearchedWarrantyDetailsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        guarantee={foundGuarantee}
+        warranty={foundWarranty}
         onOpenCase={handleOpenCaseFromModal}
       />
     </LayoutBaseTechServ>
