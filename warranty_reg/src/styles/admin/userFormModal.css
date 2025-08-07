@@ -77,7 +77,9 @@
 .modal-content-user input[type="text"],
 .modal-content-user input[type="password"],
 .modal-content-user input[type="date"],
-.modal-content-user select {
+.modal-content-user select,
+.modal-content-user input[type="number"],
+.modal-content-user textarea {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #ccc;
@@ -90,11 +92,17 @@
 }
 
 .modal-content-user input:focus,
-.modal-content-user select:focus {
+.modal-content-user select:focus,
+.modal-content-user input[type="number"]:focus,
+.modal-content-user textarea:focus {
     outline: none;
     border-color: #8b56ed;
     box-shadow: 0 0 0 3px rgba(139, 86, 237, 0.2);
     background-color: #fff;
+}
+
+.modal-content-user textarea {
+    resize: vertical;
 }
 
 .modal-content-user input:disabled {
@@ -102,6 +110,61 @@
     color: #6c757d;
     cursor: not-allowed;
     border-color: #adb5bd;
+}
+
+.checkbox-group-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group-user label {
+    margin-bottom: 0;
+}
+
+.checkbox-group-user input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkbox-group-user input[type="checkbox"] {
+    /* Ocultar el checkbox original */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Estilo para el check cuando está marcado */
+.checkbox-group-user input[type="checkbox"]:checked {
+    background-color: #8b56ed;
+    border-color: #8b56ed;
+}
+
+/* Pseudo-elemento para crear el visto */
+.checkbox-group-user input[type="checkbox"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Efecto de enfoque para accesibilidad */
+.checkbox-group-user input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 3px rgba(139, 86, 237, 0.2);
 }
 
 .password-input-container {

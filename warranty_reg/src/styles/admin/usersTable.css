@@ -67,7 +67,7 @@
     background-color: #8b56ed; /* Color de hover de botón de LoginAdmin.css */
 }
 
-.search-input {
+.search-input-admin {
     padding: 12px 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -79,11 +79,11 @@
     max-width: 300px;
 }
 
-.search-input::placeholder {
-    color: #607D8B;
+.search-input-admin::placeholder {
+    color: #61608b;
 }
 
-.search-input:focus {
+.search-input-admin:focus {
     outline: none;
     border-color: #8b56ed;
     background-color: #fff;
@@ -219,6 +219,6 @@
 .no-results {
     text-align: center;
     padding: 50px;
-    color: #607D8B;
+    color: #61608b;
     font-size: 1.1em;
 }

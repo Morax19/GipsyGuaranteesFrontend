@@ -22,6 +22,7 @@ import LoginAdmin from './components/admin/LoginAdmin';
 import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
 import HomeAdmin from './components/admin/HomeAdmin';
 import UsersTable from './components/admin/UsersTable';
+import BranchesTable from './components/admin/BranchesTable';
 
 export default function AppRoutes() {
   return (
@@ -44,6 +45,7 @@ export default function AppRoutes() {
       <Route path="/admin/forgot-password" element={<ForgotPasswordAdmin />} />
       <Route path="/admin/home" element={<HomeAdmin />} />
       <Route path="/admin/users-table" element={<UsersTable />} />
+      <Route path="/admin/branches-table" element={<BranchesTable />} />
     </Routes>
   );
 }

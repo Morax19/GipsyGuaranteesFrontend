@@ -25,13 +25,13 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar }) => {
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('usersList') ? 'active' : ''}`}>
+              <div className={`optionContainer ${isActive('usersTable') ? 'active' : ''}`}>
                 <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios</Link>
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('warrantiesList') ? 'active' : ''}`}>
-                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Sucursales</Link>
+              <div className={`optionContainer ${isActive('branchesTable') ? 'active' : ''}`}>
+                <Link to="/admin/branches-table" className="optionLink" onClick={closeSidebar}>Sucursales</Link>
               </div>
             </li>
           </ul>

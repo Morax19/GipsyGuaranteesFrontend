@@ -164,7 +164,7 @@ const UsersTable = () => {
   };
 
   return (
-    <LayoutBaseAdmin activePage="usersList">
+    <LayoutBaseAdmin activePage="usersTable">
       <div className="users-list-container">
         <div className="title-section">
           <h2>Gestión de Usuarios</h2>
