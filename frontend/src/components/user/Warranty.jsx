@@ -5,7 +5,8 @@ import { useSession } from '../../SessionContext';
 import LayoutBase from '../base/LayoutBaseUser';
 import '../../styles/user/warranty.css';
 
-const apiUrl = import.meta.env.VITE_API_DEV_URL;
+const isDevelopment = import.meta.env.MODE === 'development'
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
   const navigate = useNavigate();

@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import '../../styles/user/login.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
-const apiUrl = import.meta.env.VITE_API_DEV_URL;
+const isDevelopment = import.meta.env.MODE === 'development'
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 function Login() {
   /* Añade y elimina la barra curva de la parte inferior */

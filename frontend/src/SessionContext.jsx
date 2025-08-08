@@ -10,7 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionTimeout } from './useSessionTimeout';
 import SessionModal from './components/base/SessionModal';
 
-const apiUrl = import.meta.env.VITE_API_DEV_URL;
+const isDevelopment = import.meta.env.MODE === 'development'
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
+
 const SessionContext = createContext();
 
 /**
