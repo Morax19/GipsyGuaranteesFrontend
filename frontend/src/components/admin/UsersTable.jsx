@@ -29,7 +29,7 @@ const mockUsers = [
     Password: 'strongpassword',
     registrationDate: '2023-07-25',
     CustomerID: '003',
-    roleID: 'Cliente'
+    roleID: 'Servicio Técnico'
   },
   {
     id_usuario: 4,
@@ -37,7 +37,7 @@ const mockUsers = [
     Password: 'anotherpass',
     registrationDate: '2024-06-15',
     CustomerID: '004',
-    roleID: 'Cliente'
+    roleID: 'Servicio Técnico'
   },
 ];
 
