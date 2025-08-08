@@ -6,7 +6,8 @@ import '../../styles/technical_service/forgotPasswordTechnicalService.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
-const apiUrl = import.meta.env.VITE_API_DEV_URL;
+const isDevelopment = import.meta.env.MODE === 'development'
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const ForgotPasswordTechnicalService = () => {
   /* Añade y elimina la barra curva de la parte inferior */
