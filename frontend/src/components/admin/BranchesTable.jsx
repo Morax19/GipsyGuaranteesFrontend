@@ -16,7 +16,7 @@ const mockBranches = [
     RIFtype: 'J',
     RIF: 123456789,
     companyName: 'Tech Solutions Inc.',
-    address: 'Calle Falsa 123, Caracas',
+    address: 'Las Mercedes, Caracas',
     branchDescription: 'Sucursal principal de ventas y soporte'
   },
   {
