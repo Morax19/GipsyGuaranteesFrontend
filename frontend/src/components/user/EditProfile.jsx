@@ -21,6 +21,7 @@ const EditProfile = () => {
     const token = localStorage.getItem('session_token');
     if (!token) {
       //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
+      console.log(`We are using ${apiUrl}`);
       //navigate('/login');
       return;
     }
