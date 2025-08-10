@@ -59,7 +59,8 @@ function Register() {
         setMessage(data.message || 'Registration failed');
       }
     } catch (error) {
-      setMessage('Error connecting to server');
+      setMessage('Error connecting to server: ' + error.message);
+      console.error('Error during registration:', error);
     }
   };
 
