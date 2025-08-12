@@ -5,7 +5,7 @@ import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 import BranchFormModal from './BranchFormModal';
 
 const isDevelopment = import.meta.env.MODE === 'development'
-const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 // Datos de ejemplo para la tabla de Branches
 const mockBranches = [

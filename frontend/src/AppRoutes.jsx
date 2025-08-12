@@ -3,14 +3,15 @@ import { Routes, Route } from 'react-router-dom';
 
 import Welcome from './components/base/Welcome';
 
-import Login from './components/user/Login';
 import Home from './components/user/Home';
+import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Warranty from './components/user/Warranty';
 import EditProfile from './components/user/EditProfile';
 import ForgotPassword from './components/user/ForgotPassword';
-import UserTechnicalService from './components/user/TechnicalServiceLogged';
 import WarrantyHistory from './components/user/WarrantyHistory';
+import UserTechnicalService from './components/user/TechnicalServiceLogged';
+
 
 import TechnicalService from './components/technical_service/TechnicalService';
 import HomeTechnicalService from './components/technical_service/HomeTechnicalService';
@@ -18,11 +19,11 @@ import LoginTechnicalService from './components/technical_service/LoginTechnical
 import ForgotPasswordTechnicalService from './components/technical_service/ForgotPasswordTechnicalService';
 import WarrantiesListTechnicalService from './components/technical_service/WarrantiesListTechnicalService';
 
-import LoginAdmin from './components/admin/LoginAdmin';
-import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
 import HomeAdmin from './components/admin/HomeAdmin';
 import UsersTable from './components/admin/UsersTable';
+import LoginAdmin from './components/admin/LoginAdmin';
 import BranchesTable from './components/admin/BranchesTable';
+import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
 
 export default function AppRoutes() {
   return (

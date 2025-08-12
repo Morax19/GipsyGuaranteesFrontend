@@ -8,17 +8,7 @@ import LayoutBase from '../base/LayoutBaseUser';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
-
-if (isDevelopment) {
-  console.log(`We are in ${import.meta.env.MODE} mode`);
-  const apiUrl = import.meta.env.VITE_API_BASE_URL_LOCAL;
-}
-else{
-  console.log(`We are in ${import.meta.env.MODE} mode`)
-  const apiUrl = process.env.VITE_API_BASE_URL_PROD;
-}
-
-//const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 const EditProfile = () => {
 
@@ -31,9 +21,6 @@ const EditProfile = () => {
     const token = localStorage.getItem('session_token');
     if (!token) {
       //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
-      console.log(`We are in ${import.meta.env.MODE} mode`);
-      console.log(`We are using ${import.meta.env.VITE_API_BASE_URL_LOCAL} as API URL`);
-      console.log(`We are using ${import.meta.env.VITE_API_BASE_URL_PROD} as API URL`);
       //navigate('/login');
       return;
     }
