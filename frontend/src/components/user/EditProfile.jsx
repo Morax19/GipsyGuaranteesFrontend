@@ -22,7 +22,8 @@ const EditProfile = () => {
     if (!token) {
       //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
       console.log(`We are in ${import.meta.env.MODE} mode`);
-      console.log(`We are using ${apiUrl} as API URL`);
+      console.log(`We are using ${import.meta.env.VITE_API_BASE_URL_LOCAL} as API URL`);
+      console.log(`We are using ${import.meta.env.VITE_API_BASE_URL_PROD} as API URL`);
       //navigate('/login');
       return;
     }
