@@ -5,7 +5,7 @@ import '../../styles/admin/LoginAdmin.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
-const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 function LoginAdmin() {
   /* Añade y elimina la barra curva de la parte inferior */
