@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/admin/userFormModal.css';
 
-const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave }) => {
+const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) => {
   const [formData, setFormData] = useState({
     branchID: '',
     customerID: '',
@@ -39,7 +39,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave }) => {
     const { name, value, type, checked } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
+      [name]: name === 'customerID' ? parseInt(value) : (type === 'checkbox' ? (checked ? 1 : 0) : value)
     }));
   };
 
@@ -52,6 +52,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave }) => {
   };
 
   if (!isOpen) return null;
+
+  const selectedCustomerName = customers.find(c => c.id === formData.customerID)?.name;
 
   return (
     <div className="modal-overlay-user">
@@ -76,15 +78,21 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave }) => {
           )}
           
           <div className="form-group-user">
-            <label htmlFor="customerID">ID de Cliente:</label>
-            <input
-              type="number"
+            <label htmlFor="customerID">Cliente:</label>
+            <select
               id="customerID"
               name="customerID"
               value={formData.customerID}
               onChange={handleChange}
-              placeholder="Ingrese el ID del cliente"
-            />
+              required
+            >
+              <option value="">Seleccione un cliente</option>
+              {customers.map(customer => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.id} - {customer.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group-user checkbox-group-user">

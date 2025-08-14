@@ -15,7 +15,7 @@ const mockBranches = [
     isRetail: 1,
     RIFtype: 'J',
     RIF: 123456789,
-    companyName: 'Tech Solutions Inc.',
+    companyName: 'Tech Solutions Inc. Ccs',
     address: 'Las Mercedes, Caracas',
     branchDescription: 'Sucursal principal de ventas y soporte'
   },
@@ -25,7 +25,7 @@ const mockBranches = [
     isRetail: 0,
     RIFtype: 'V',
     RIF: 987654321,
-    companyName: 'Innovate S.A.',
+    companyName: 'Innovate S.A. Valencia',
     address: 'Avenida Libertador, Edificio Innova, Valencia',
     branchDescription: 'Sucursal de desarrollo de software'
   },
@@ -35,7 +35,7 @@ const mockBranches = [
     isRetail: 1,
     RIFtype: 'J',
     RIF: 112233445,
-    companyName: 'Tech Solutions Inc.',
+    companyName: 'Tech Solutions Inc. Maracay',
     address: 'Av. Principal, Maracay',
     branchDescription: 'Sucursal de soporte técnico'
   },
@@ -45,10 +45,18 @@ const mockBranches = [
     isRetail: 0,
     RIFtype: 'G',
     RIF: 445566778,
-    companyName: 'Global Distributors C.A.',
+    companyName: 'Global Distributors C.A. Barquisimeto',
     address: 'Carretera Nacional, Barquisimeto',
     branchDescription: 'Centro de distribución'
   },
+];
+
+// Clientes de ejemplo
+const mockCustomers = [
+    { id: 1, name: 'Tech Solutions Inc.' },
+    { id: 2, name: 'Innovate S.A.' },
+    { id: 3, name: 'Global Distributors C.A.' },
+    { id: 4, name: 'SoyTechno C.A.' },
 ];
 
 const BranchesTable = () => {
@@ -59,6 +67,7 @@ const BranchesTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [branchToEdit, setBranchToEdit] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'branchID', direction: 'ascending' });
+  const [customers, setCustomers] = useState(mockCustomers);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -101,7 +110,7 @@ const BranchesTable = () => {
     });
 
     setFilteredBranches(currentBranches);
-  }, [searchTerm, isRetailFilter, allBranches, sortConfig]); // Añadir isRetailFilter a las dependencias
+  }, [searchTerm, isRetailFilter, allBranches, sortConfig]);
 
   const handleAddBranch = () => {
     setBranchToEdit(null);
@@ -117,12 +126,12 @@ const BranchesTable = () => {
   const handleSaveBranch = (branchData, isEditing) => {
     if (isEditing) {
       setAllBranches(prevBranches => prevBranches.map(b => (b.branchID === branchData.branchID ? branchData : b)));
-      console.log('Sucursal actualizada:', branchData);
+      alert('Sucursal actualizada:', branchData);
     } else {
       const newBranchId = Math.max(...allBranches.map(b => b.branchID)) + 1;
       const newBranch = { ...branchData, branchID: newBranchId };
       setAllBranches(prevBranches => [...prevBranches, newBranch]);
-      console.log('Nueva sucursal agregada:', newBranch);
+      alert('Nueva sucursal agregada:', newBranch);
     }
     setIsModalOpen(false);
     setBranchToEdit(null);
@@ -149,7 +158,6 @@ const BranchesTable = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            {/* Nuevo select para el filtro de tipo de tienda */}
             <select
               className="filter-select-admin"
               value={isRetailFilter}
@@ -173,7 +181,7 @@ const BranchesTable = () => {
               <thead>
                 <tr>
                   <th onClick={() => requestSort('branchID')}>ID de Sucursal</th>
-                  <th>ID de Cliente</th>
+                  <th>Cliente</th>
                   <th>Minorista</th>
                   <th>Tipo RIF</th>
                   <th>RIF</th>
@@ -184,27 +192,32 @@ const BranchesTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredBranches.map(branch => (
-                  <tr key={branch.branchID}>
-                    <td>{branch.branchID}</td>
-                    <td>{branch.customerID}</td>
-                    <td>{branch.isRetail ? 'Sí' : 'No'}</td>
-                    <td>{branch.RIFtype}</td>
-                    <td>{branch.RIF}</td>
-                    <td>{branch.companyName}</td>
-                    <td>{branch.address}</td>
-                    <td>{branch.branchDescription}</td>
-                    <td>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEditBranch(branch.branchID)}
-                        title="Editar Sucursal"
-                      >
-                        <img src={editIcon} alt="Editar" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filteredBranches.map(branch => {
+                  const customer = customers.find(c => c.id === branch.customerID);
+                  const customerName = customer ? customer.name : 'Desconocido';
+
+                  return (
+                    <tr key={branch.branchID}>
+                      <td>{branch.branchID}</td>
+                      <td>{branch.customerID} - {customerName}</td>
+                      <td>{branch.isRetail ? 'Sí' : 'No'}</td>
+                      <td>{branch.RIFtype}</td>
+                      <td>{branch.RIF}</td>
+                      <td>{branch.companyName}</td>
+                      <td>{branch.address}</td>
+                      <td>{branch.branchDescription}</td>
+                      <td>
+                        <button
+                          className="edit-button"
+                          onClick={() => handleEditBranch(branch.branchID)}
+                          title="Editar Sucursal"
+                        >
+                          <img src={editIcon} alt="Editar" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           ) : (
@@ -218,6 +231,7 @@ const BranchesTable = () => {
         onClose={handleCloseModal}
         branchToEdit={branchToEdit}
         onSave={handleSaveBranch}
+        customers={customers}
       />
     </LayoutBaseAdmin>
   );
