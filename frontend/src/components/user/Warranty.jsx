@@ -24,7 +24,7 @@ export default function Warranty() {
 
   useEffect(() => {
     if (!localStorage.getItem('session_token')) {
-      navigate('/login');
+      navigate('/user/login');
     }
   }, [navigate]);
 */
@@ -49,7 +49,7 @@ export default function Warranty() {
 
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/warranty/`,  // Adjust the endpoint as needed
+        `${apiUrl}/api/userWarrantyRegistration/`,  // Adjust the endpoint as needed
         {
           method: 'POST',
           headers: {

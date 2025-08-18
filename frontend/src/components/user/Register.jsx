@@ -24,6 +24,7 @@ function Register() {
     lastName: '',
     email: '',
     address: '',
+    zip_code: '',
     password: '',
     confirmPassword: ''
   });
@@ -43,7 +44,7 @@ function Register() {
       return;
     }
     try {
-      const response = await fetch(`${apiUrl}/submitRegistration/`, {
+      const response = await fetch(`${apiUrl}/api/userRegistration/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ function Register() {
       if (response.ok) {
         setMessage(data.message);
         alert('Registration successful!');
-        navigate('/login'); // Redirect to login page
+        navigate('/user/login'); // Redirect to login page
       } else {
         setMessage(data.message || 'Registration failed');
       }
@@ -68,7 +69,7 @@ function Register() {
   return (
     <div className="cardContainerURegister">
       <div className="back-link-container">
-        <Link to="/login">
+        <Link to="/user/login">
           <img src={backIcon} alt="Volver" className="back-icon" />
         </Link>
       </div>
@@ -105,6 +106,13 @@ function Register() {
           name="address"
           placeholder="Dirección (Opcional)"
           value={form.address}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="zip_code"
+          placeholder="Código Postal (Opcional)"
+          value={form.zip_code}
           onChange={handleChange}
         />
         <input

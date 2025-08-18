@@ -29,7 +29,7 @@ const ForgotPassword = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/forgotPassword/`, {
+      const response = await fetchWithAuth(`${apiUrl}/api/userForgotPassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
   return (
     <div className="cardContainerFPassword">
       <div className="back-link-container">
-        <Link to="/login">
+        <Link to="/user/login">
           <img src={backIcon} alt="Volver" className="back-icon" />
         </Link>
       </div>
