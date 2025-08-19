@@ -84,7 +84,7 @@ function LoginAdmin() {
       </p>
 
       <div className="login-footer">
-        <Link to="/login" className="login-link"> 
+        <Link to="/user/login" className="login-link"> 
           Soy Cliente
         </Link>
         <br />
