@@ -49,7 +49,7 @@ export default function Warranty() {
 
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/api/userWarrantyRegistration/`,  // Adjust the endpoint as needed
+        `${apiUrl}/api/userWarrantyRegistration/`,
         {
           method: 'POST',
           headers: {
@@ -84,7 +84,7 @@ export default function Warranty() {
           value={form.storeName}
           onChange={handleChange}
         >
-          <option value="">Tienda donde compró el producto</option>
+          <option value="" disabled selected>Tienda donde compró el producto</option>
           <option value="StoreA">Farmatodo</option>
           <option value="StoreB">BECO</option>
           <option value="StoreC">SoyTechno</option>
@@ -98,7 +98,7 @@ export default function Warranty() {
           value={form.storeAddress}
           onChange={handleChange}
         >
-          <option value="">Dirección de la tienda</option>
+          <option value="" disabled selected>Dirección de la tienda</option>
           <option value="StoreA">1040 Av. P.º Los Ilustres, Caracas 1041, Distrito Capital</option>
           <option value="StoreB">Av. Francisco de Miranda. Al lado del Edif. Inavi, Chacao., Caracas</option>
           <option value="StoreC">Centro Expresso Chacaito, Av Principal del Bosque, Caracas 1060, Miranda</option>
