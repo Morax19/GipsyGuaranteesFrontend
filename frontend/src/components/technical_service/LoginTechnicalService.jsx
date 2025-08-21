@@ -32,7 +32,7 @@ function LoginTechnicalService() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/technical-service/login`, {
+      const response = await fetch(`${apiUrl}/api/technicalServicesLogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

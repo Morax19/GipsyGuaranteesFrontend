@@ -1,59 +1,43 @@
 import React, { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../../fetchWithAuth';
 import LayoutBaseUser from '../base/LayoutBaseUser';
 import '../../styles/user/warrantyHistory.css';
 
-// --- Data de ejemplo para Historial de Warranties (asegurando el campo usosRegistrados) ---
-const mockHistoryWarranties = [
-  {
-    id: 'H001',
-    codigo: 'ABC-123-X',
-    fechaCompra: '2024-01-15',
-    tienda: 'ElectroMega',
-    marcaProducto: 'Lavadora',
-    modeloProducto: 'XYZ',
-    usosRegistrados: 0,
-  },
-  {
-    id: 'H002',
-    codigo: 'DEF-456-Y',
-    fechaCompra: '2025-03-01',
-    tienda: 'TecnoGlobal',
-    marcaProducto: 'Televisor',
-    modeloProducto: 'QLED',
-    usosRegistrados: 1,
-  },
-  {
-    id: 'H003',
-    codigo: 'GHI-789-Z',
-    fechaCompra: '2024-11-20',
-    tienda: 'MegaHogar',
-    marcaProducto: 'Refrigerador',
-    modeloProducto: 'Cool',
-    usosRegistrados: 2,
-  },
-  {
-    id: 'H004',
-    codigo: 'JKL-012-A',
-    fechaCompra: '2024-07-01',
-    tienda: 'ElectroMega',
-    marcaProducto: 'Microondas',
-    modeloProducto: 'Smart',
-    usosRegistrados: 0,
-  },
-  {
-    id: 'H005',
-    codigo: 'MNO-345-B',
-    fechaCompra: '2025-01-01',
-    tienda: 'TecnoGlobal',
-    marcaProducto: 'Aspiradora',
-    modeloProducto: 'Robótica',
-    usosRegistrados: 0,
-  },
-];
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
+// Historial real de garantías del usuario
 const WarrantyHistory = ({ userFirstName }) => {
+  const [historyWarranties, setHistoryWarranties] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
-  const [filteredHistoryWarranties, setFilteredHistoryWarranties] = useState([]); 
+  const [filteredHistoryWarranties, setFilteredHistoryWarranties] = useState([]);
+
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/UserWarrantyHistoryView/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setHistoryWarranties(data);
+        } else {
+          console.log(data.message || 'Error fetching warranty history');
+        }
+      } catch {
+        console.log('Error de conexión con el servidor');
+      }
+    }
+    fetchHistory();
+  }, []);
+
 
   const getWarrantyStatus = (fechaCompra) => {
     const purchaseDate = new Date(fechaCompra);
@@ -73,7 +57,7 @@ const WarrantyHistory = ({ userFirstName }) => {
   };
 
   useEffect(() => {
-    let currentHistoryWarranties = [...mockHistoryWarranties];
+    let currentHistoryWarranties = [...historyWarranties];
 
     if (filterStatus) {
       currentHistoryWarranties = currentHistoryWarranties.filter(warranty => {
@@ -86,7 +70,7 @@ const WarrantyHistory = ({ userFirstName }) => {
     currentHistoryWarranties.sort((a, b) => new Date(b.fechaCompra) - new Date(a.fechaCompra)); 
 
     setFilteredHistoryWarranties(currentHistoryWarranties);
-  }, [filterStatus]);
+  }, [filterStatus, historyWarranties]);
 
   return (
     <LayoutBaseUser activePage="history">
@@ -109,31 +93,33 @@ const WarrantyHistory = ({ userFirstName }) => {
 
         <div className="warranty-table-container">
           {filteredHistoryWarranties.length > 0 ? (
-            <table class="warranty-table">
+            <table className="warranty-table">
               <thead>
                 <tr>
-                  <th>Código de Garantía</th>
+                  <th>ID</th>
+                  <th>Código</th>
                   <th>Fecha de Compra</th>
                   <th>Tienda</th>
-                  <th>Producto</th>
+                  <th>Marca</th>
+                  <th>Modelo</th>
                   <th>Fecha de Vencimiento</th>
                   <th>Días Disponibles</th>
-                  <th>Usos Registrados</th>
                   <th>Estado</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredHistoryWarranties.map(warranty => {
-                  const { expirationDate, daysLeft, status } = getWarrantyStatus(warranty.fechaCompra); // Renombrado
+                  const { expirationDate, daysLeft, status } = getWarrantyStatus(warranty.purchaseDate);
                   return (
                     <tr key={warranty.id}>
-                      <td>{warranty.codigo}</td>
-                      <td>{warranty.fechaCompra}</td>
-                      <td>{warranty.tienda}</td>
-                      <td>{warranty.marcaProducto} - {warranty.modeloProducto}</td>
+                      <td>{warranty.id}</td>
+                      <td>{warranty.code}</td>
+                      <td>{warranty.purchaseDate}</td>
+                      <td>{warranty.storeName}</td>
+                      <td>{warranty.productBrand}</td>
+                      <td>{warranty.productModel}</td>
                       <td>{expirationDate}</td>
                       <td>{daysLeft}</td>
-                      <td>{warranty.usosRegistrados}</td>
                       <td>
                         <span className={`status-${status === 'Disponible' ? 'abierto' : 'cerrado'}`}>
                           {status}
@@ -151,6 +137,6 @@ const WarrantyHistory = ({ userFirstName }) => {
       </div>
     </LayoutBaseUser>
   );
-};
+}
 
 export default WarrantyHistory;

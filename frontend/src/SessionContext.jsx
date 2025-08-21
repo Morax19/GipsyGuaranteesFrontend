@@ -32,7 +32,7 @@ export function SessionProvider({ children }) {
   const onLogout = useCallback(() => {
     localStorage.removeItem('session_token');
     localStorage.removeItem('refresh_token');
-    navigate('/login');
+    navigate('/');
   }, [navigate]);
 
   // -- Refresh handler with loading state & toasts

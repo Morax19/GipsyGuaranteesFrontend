@@ -9,7 +9,7 @@ export async function fetchWithAuth(url, options = {}) {
     // On 401, logout immediately (do not refresh token here)
     localStorage.removeItem('session_token');
     localStorage.removeItem('refresh_token');
-    window.location.href = '/login';
+    window.location.href = '/';
     throw new Error('Session expired. Please log in again.');
   }
   return response;

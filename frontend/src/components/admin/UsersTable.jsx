@@ -4,50 +4,46 @@ import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/usersTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 import UserFormModal from './UserFormModal';
+import { fetchWithAuth } from '../../fetchWithAuth';
 
-// Datos de ejemplo para la tabla de Users
-const mockUsers = [
-  {
-    id_usuario: 1,
-    User: 'johndoe',
-    Password: 'password123',
-    registrationDate: '2024-08-01',
-    CustomerID: '001',
-    roleID: 'Administrador'
-  },
-  {
-    id_usuario: 2,
-    User: 'janedoe',
-    Password: 'securepass',
-    registrationDate: '2024-08-05',
-    CustomerID: '002',
-    roleID: 'Servicio Técnico'
-  },
-  {
-    id_usuario: 3,
-    User: 'petersmith',
-    Password: 'strongpassword',
-    registrationDate: '2023-07-25',
-    CustomerID: '003',
-    roleID: 'Servicio Técnico'
-  },
-  {
-    id_usuario: 4,
-    User: 'maryjones',
-    Password: 'anotherpass',
-    registrationDate: '2024-06-15',
-    CustomerID: '004',
-    roleID: 'Servicio Técnico'
-  },
-];
+const isDevelopment = import.meta.env.MODE === 'development'
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
+
+// Users will be fetched from backend
 
 const UsersTable = () => {
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/getUserAdmin/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setAllUsers(data);
+          setFilteredUsers(data);
+        } else {
+          console.error(data.message || 'Error fetching users');
+        }
+      } catch {
+        console.error('Error connecting to server');
+      }
+    }
+    fetchUsers();
+  }, []);
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');
   const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
-  const [allUsers, setAllUsers] = useState(mockUsers);
-  const [filteredUsers, setFilteredUsers] = useState(mockUsers);
+  const [allUsers, setAllUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [showPasswordFor, setShowPasswordFor] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
