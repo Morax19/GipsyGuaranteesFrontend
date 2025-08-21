@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../../fetchWithAuth';
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
 
@@ -47,7 +50,33 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
-    onSave(formData, isEditMode);
+    const endpoint = isEditMode ? 'editUserAdmin' : 'createUserAdminView';
+    const method = isEditMode ? 'PUT' : 'POST';
+    (async () => {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/${endpoint}/`,
+          {
+            method,
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`
+            },
+            body: JSON.stringify(formData)
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
+          onSave(formData, isEditMode);
+          onClose();
+        } else {
+          alert(data.message || 'Error al guardar el usuario');
+        }
+      } catch {
+        alert('Error de conexión con el servidor');
+      }
+    })();
   };
 
   const today = new Date().toISOString().split('T')[0];

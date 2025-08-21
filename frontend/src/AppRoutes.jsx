@@ -10,8 +10,7 @@ import Warranty from './components/user/Warranty';
 import EditProfile from './components/user/EditProfile';
 import ForgotPassword from './components/user/ForgotPassword';
 import WarrantyHistory from './components/user/WarrantyHistory';
-import UserTechnicalService from './components/user/TechnicalServiceLogged';
-
+import UserTechnicalService from './components/test/TechnicalServiceLogged';
 
 import TechnicalService from './components/technical_service/TechnicalService';
 import HomeTechnicalService from './components/technical_service/HomeTechnicalService';
@@ -29,19 +28,25 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/"              element={<Welcome />} />
-      <Route path="/home"          element={<Home />} />
-      <Route path="/login"         element={<Login />} />
-      <Route path="/register"      element={<Register />} />
-      <Route path="/warranty"      element={<Warranty />} />
-      <Route path="/edit-profile"  element={<EditProfile />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/user-technical-service" element={<UserTechnicalService />} />
-      <Route path="/warranties-history" element={<WarrantyHistory />} />
+
+      {/* Path from User's Logic */}
+      <Route path="/user/home"          element={<Home />} />
+      <Route path="/user/login"         element={<Login />} />
+      <Route path="/user/register"      element={<Register />} />
+      <Route path="/user/warranty"      element={<Warranty />} />
+      <Route path="/user/edit-profile"  element={<EditProfile />} />
+      <Route path="/user/forgot-password" element={<ForgotPassword />} />
+      <Route path="/user/user-technical-service" element={<UserTechnicalService />} />
+      <Route path="/user/warranties-history" element={<WarrantyHistory />} />
+
+      {/* Path from Technical Service's Logic */}
       <Route path="/technical-service" element={<TechnicalService />} />
       <Route path="/technical-service/home" element={<HomeTechnicalService />} />
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
       <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
       <Route path="/technical-service/history-warranties" element={<WarrantiesListTechnicalService />} />
+
+      {/* Path from Admin's Logic */}
       <Route path="/admin/login" element={<LoginAdmin />} />
       <Route path="/admin/forgot-password" element={<ForgotPasswordAdmin />} />
       <Route path="/admin/home" element={<HomeAdmin />} />

@@ -25,14 +25,14 @@ function Login() {
   useEffect(() => {
     // If already logged in, redirect to home page
     if (localStorage.getItem('session_token')) {
-      navigate('/home');
+      navigate('/user/home');
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/login/`, {
+      const response = await fetch(`${apiUrl}/api/userLogin/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function Login() {
       if (response.ok && data.access) {
         localStorage.setItem('session_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
-        navigate('/home');
+        navigate('/user/home');
       } else {
         alert(data.detail || data.message || 'Login failed');
       }
@@ -55,7 +55,7 @@ function Login() {
   return (
     <div className="cardContainerLogin">
       <img src={logo} alt="Logo" className="logoLogin" />
-      <Link to="/home" className="no-underline-link"> 
+      <Link to="/user/home" className="no-underline-link"> 
           <h2>Iniciar sesión como <br/> Cliente</h2>
       </Link>
       <br />
@@ -81,10 +81,10 @@ function Login() {
         <button type="submit">Iniciar Sesión</button>
       </form>
       <p>
-        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/register/'); }}>Regístrate</a>
+        ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/user/register/'); }}>Regístrate</a>
       </p>
       <p>
-        <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
+        <a href="#" onClick={e => { e.preventDefault(); navigate('/user/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
 
       <div className="login-footer">

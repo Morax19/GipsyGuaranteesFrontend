@@ -3,71 +3,47 @@ import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/usersTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 import BranchFormModal from './BranchFormModal';
+import { fetchWithAuth } from '../../fetchWithAuth';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
-// Datos de ejemplo para la tabla de Branches
-const mockBranches = [
-  {
-    branchID: 101,
-    customerID: 1,
-    isRetail: 1,
-    RIFtype: 'J',
-    RIF: 123456789,
-    companyName: 'Tech Solutions Inc. Ccs',
-    address: 'Las Mercedes, Caracas',
-    branchDescription: 'Sucursal principal de ventas y soporte'
-  },
-  {
-    branchID: 102,
-    customerID: 2,
-    isRetail: 0,
-    RIFtype: 'V',
-    RIF: 987654321,
-    companyName: 'Innovate S.A. Valencia',
-    address: 'Avenida Libertador, Edificio Innova, Valencia',
-    branchDescription: 'Sucursal de desarrollo de software'
-  },
-  {
-    branchID: 103,
-    customerID: 1,
-    isRetail: 1,
-    RIFtype: 'J',
-    RIF: 112233445,
-    companyName: 'Tech Solutions Inc. Maracay',
-    address: 'Av. Principal, Maracay',
-    branchDescription: 'Sucursal de soporte técnico'
-  },
-  {
-    branchID: 104,
-    customerID: 3,
-    isRetail: 0,
-    RIFtype: 'G',
-    RIF: 445566778,
-    companyName: 'Global Distributors C.A. Barquisimeto',
-    address: 'Carretera Nacional, Barquisimeto',
-    branchDescription: 'Centro de distribución'
-  },
-];
-
-// Clientes de ejemplo
-const mockCustomers = [
-    { id: 1, name: 'Tech Solutions Inc.' },
-    { id: 2, name: 'Innovate S.A.' },
-    { id: 3, name: 'Global Distributors C.A.' },
-    { id: 4, name: 'SoyTechno C.A.' },
-];
-
 const BranchesTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isRetailFilter, setIsRetailFilter] = useState(''); // Nuevo estado para el filtro
-  const [allBranches, setAllBranches] = useState(mockBranches);
-  const [filteredBranches, setFilteredBranches] = useState(mockBranches);
+  const [allBranches, setAllBranches] = useState([]);
+  const [filteredBranches, setFilteredBranches] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [branchToEdit, setBranchToEdit] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'branchID', direction: 'ascending' });
-  const [customers, setCustomers] = useState(mockCustomers);
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    async function fetchBranches() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/getBranchAdmin/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setAllBranches(data);
+          setFilteredBranches(data);
+        } else {
+          console.error(data.message || 'Error fetching branches');
+        }
+      } catch {
+        console.error('Error connecting to server');
+      }
+    }
+    fetchBranches();
+  }, []);
 
   const requestSort = (key) => {
     let direction = 'ascending';

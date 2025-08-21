@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { fetchWithAuth } from '../../fetchWithAuth';
 import '../../styles/admin/userFormModal.css';
+
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) => {
   const [formData, setFormData] = useState({
@@ -48,7 +52,33 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
       alert('Por favor, complete todos los campos obligatorios (ID de Cliente, Tipo RIF, RIF, Nombre de Compañía, Dirección).');
       return;
     }
-    onSave(formData, isEditMode);
+    const endpoint = isEditMode ? 'editBranchAdmin' : 'createBranchAdminView';
+    const method = isEditMode ? 'PUT' : 'POST';
+    (async () => {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/${endpoint}/`,
+          {
+            method,
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`
+            },
+            body: JSON.stringify(formData)
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          alert(isEditMode ? 'Sucursal actualizada correctamente.' : 'Sucursal creada correctamente.');
+          onSave(formData, isEditMode);
+          onClose();
+        } else {
+          alert(data.message || 'Error al guardar la sucursal');
+        }
+      } catch {
+        alert('Error de conexión con el servidor');
+      }
+    })();
   };
 
   if (!isOpen) return null;

@@ -21,10 +21,10 @@ const EditProfile = () => {
     const token = localStorage.getItem('session_token');
     if (!token) {
       //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
-      //navigate('/login');
+      //navigate('/user/login');
       return;
     }
-    fetchWithAuth(`${apiUrl}/current_user/`)
+    fetchWithAuth(`${apiUrl}/currentUser/`)
       .then(res => res.json())
       .then(data => setUser(data))
       .catch(() => setUser({ firstName: '', lastName: '', email: '', address: '' }));
@@ -43,7 +43,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/edit_profile/`, {
+      const response = await fetchWithAuth(`${apiUrl}/userEditProfile/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/changePassword/`, {
+      const response = await fetchWithAuth(`${apiUrl}/api/userChangePassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const EditProfile = () => {
   const handleLogout = () => {
       localStorage.removeItem('session_token');
       localStorage.removeItem('refresh_token');
-      navigate('/login');
+      navigate('/user/login');
     };
 
     const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);

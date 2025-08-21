@@ -1,69 +1,75 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { fetchWithAuth } from '../../fetchWithAuth';
 import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
 import SearchedWarrantyDetailsModal from './SearchedWarrantyDetailsModal';
 
-// --- Datos de Garantías de ejemplo ---
-const allMockWarranties = [
-    {
-        id: 'G001',
-        codigo: 'ABC-123',
-        purchaseDate: '2024-01-15',
-        invoiceNumber: 'INV-1001',
-        MarcaProducto: 'Samsung',
-        ModeloProducto: 'Galaxy S23',
-        usedCount: 0,
-    },
-    {
-        id: 'G002',
-        codigo: 'DEF-456',
-        purchaseDate: '2025-05-01',
-        invoiceNumber: 'INV-1002',
-        MarcaProducto: 'LG',
-        ModeloProducto: 'OLED C2',
-        usedCount: 1,
-    },
-    {
-        id: 'G003',
-        codigo: 'GHI-789',
-        purchaseDate: '2025-01-20',
-        invoiceNumber: 'INV-1003',
-        MarcaProducto: 'Sony',
-        ModeloProducto: 'WH-1000XM5',
-        usedCount: 2,
-    },
-    {
-        id: 'G004',
-        codigo: 'JKL-101',
-        purchaseDate: '2025-05-20',
-        invoiceNumber: 'INV-1004',
-        MarcaProducto: 'Apple',
-        ModeloProducto: 'MacBook Air M3',
-        usedCount: 1,
-    },
-];
-
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const Home = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
+  const [allWarranties, setAllWarranties] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchWarranties() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/TechnicalServicesWarrantyView/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setAllWarranties(data);
+        } else {
+          console.log(data.message || 'Error fetching warranties');
+        }
+      } catch {
+        console.log('Error de conexión con el servidor');
+      }
+    }
+    fetchWarranties();
+  }, []);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-
-      // --- Simulación de búsqueda con mock data ---
-      const found = allMockWarranties.find(g => g.codigo === searchTerm.trim().toUpperCase());
-      if (found) {
-        setFoundWarranty(found);
-        setIsModalOpen(true);
-      } else {
-        alert('Garantía no encontrada.');
-        setFoundWarranty(null);
-        setIsModalOpen(false);
+      async function fetchWarrantyById() {
+        try {
+          const response = await fetchWithAuth(
+            `${apiUrl}/api/TechnicalServicesWarrantyView/${searchTerm.trim()}/`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setFoundWarranty(data);
+            setIsModalOpen(true);
+          } else {
+            alert('Garantía no encontrada.');
+            setFoundWarranty(null);
+            setIsModalOpen(false);
+          }
+        } catch {
+          alert('Error de conexión con el servidor');
+        }
       }
+      fetchWarrantyById();
     } else {
       alert('Por favor, ingrese un código de garantía.');
     }

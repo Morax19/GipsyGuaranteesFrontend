@@ -9,9 +9,36 @@ const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    async function fetchBranches() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/GetBranchView/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setBranches(data);
+        } else {
+          console.log(data.message || 'Error fetching branches');
+        }
+      } catch {
+        console.log('Error de conexión con el servidor');
+      }
+    }
+    fetchBranches();
+  }, []);
   const navigate = useNavigate();
   const { onLogout } = useSession();
-  const [form, setForm]       = useState({
+  const [form, setForm] = useState({
     barCode: '',
     purchaseDate: '',
     storeName: '',
@@ -19,12 +46,16 @@ export default function Warranty() {
     invoiceNumber: null
   });
 
+  // Get addresses for selected branch
+  const selectedBranch = branches.find(branch => branch.name === form.storeName);
+  const branchAddresses = selectedBranch ? (Array.isArray(selectedBranch.address) ? selectedBranch.address : [selectedBranch.address]) : [];
+
   // Redirect if no token present
 /* Deshabilitado el redirect a login si no hay sesión iniciada
 
   useEffect(() => {
     if (!localStorage.getItem('session_token')) {
-      navigate('/login');
+      navigate('/user/login');
     }
   }, [navigate]);
 */
@@ -49,7 +80,7 @@ export default function Warranty() {
 
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/warranty/`,  // Adjust the endpoint as needed
+        `${apiUrl}/api/userWarrantyRegistration/`,
         {
           method: 'POST',
           headers: {
@@ -84,10 +115,10 @@ export default function Warranty() {
           value={form.storeName}
           onChange={handleChange}
         >
-          <option value="">Tienda donde compró el producto</option>
-          <option value="StoreA">Farmatodo</option>
-          <option value="StoreB">BECO</option>
-          <option value="StoreC">SoyTechno</option>
+          <option value="" disabled selected>Tienda donde compró el producto</option>
+          {branches.map(branch => (
+            <option key={branch.id} value={branch.name}>{branch.name}</option>
+          ))}
         </select>
 
         <label htmlFor="storeAddress"></label>
@@ -98,13 +129,10 @@ export default function Warranty() {
           value={form.storeAddress}
           onChange={handleChange}
         >
-          <option value="">Dirección de la tienda</option>
-          <option value="StoreA">1040 Av. P.º Los Ilustres, Caracas 1041, Distrito Capital</option>
-          <option value="StoreB">Av. Francisco de Miranda. Al lado del Edif. Inavi, Chacao., Caracas</option>
-          <option value="StoreC">Centro Expresso Chacaito, Av Principal del Bosque, Caracas 1060, Miranda</option>
-          <option value="StoreD">Av. Sur 9, Caracas 1011, Distrito Capital</option>
-          <option value="StoreF">Local LR-11, Nivel Libertador, Centro Comercial Sambil Chacao, Av. Libertador, Caracas 1071, Miranda</option>
-          <option value="StoreG">AV EL CUARTEL URDANETA, 1.Vereda, Caracas 1030, Distrito Capital</option>
+          <option value="" disabled selected>Dirección de la tienda</option>
+          {branchAddresses.map((address, idx) => (
+            <option key={idx} value={address}>{address}</option>
+          ))}
         </select>
 
         <label htmlFor="StoreID"></label>
