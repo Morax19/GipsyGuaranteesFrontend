@@ -17,8 +17,42 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
     branchDescription: '',
   });
   const [isEditMode, setIsEditMode] = useState(false);
-
+  const [mainCustomers, setMainCustomers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
+
+  useEffect(() => {
+    async function fetchMainCustomers() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/adminGetMainCustomers/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setMainCustomers(data);
+        } else {
+          console.error(data.message || 'Error fetching MainCustomers');
+          setError(data.message || 'Error fetching MainCustomers');
+        }
+      } catch {
+        console.error('Error connecting to server');
+        setError('Error de conexión con el servidor');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMainCustomers();
+  }, []);
 
   useEffect(() => {
     if (branchToEdit) {
@@ -41,10 +75,29 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'customerID' ? parseInt(value) : (type === 'checkbox' ? (checked ? 1 : 0) : value)
-    }));
+    
+    if (name === 'customerID') {
+      if (value === ''){
+        setFormData(prevData => ({
+          ...prevData,
+          customerID: '',
+          isRetail: 0
+        }));
+      }
+      else {
+        const [customerID, isRetail] = value.split('-');
+        setFormData(prevData => ({
+          ...prevData,
+          customerID: parseInt(customerID),
+          isRetail: parseInt(isRetail)
+        }));
+      }
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
+      }));
+    }
   };
 
   const handleSave = () => {
@@ -82,9 +135,28 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
   };
 
   if (!isOpen) return null;
+  
+  if (isLoading) {
+    return (
+      <div className="modal-overlay-user">
+        <div className="modal-content-user">
+          <p>Cargando clientes...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const selectedCustomerName = customers.find(c => c.id === formData.customerID)?.name;
-
+  if (error) {
+    return (
+      <div className="modal-overlay-user">
+        <div className="modal-content-user">
+          <p>Error: {error}</p>
+          <button className="close-button-user" onClick={onClose}>&times;</button>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="modal-overlay-user">
       <div className="modal-content-user">
@@ -112,14 +184,14 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
             <select
               id="customerID"
               name="customerID"
-              value={formData.customerID}
+              value={formData.customerID ? `${formData.customerID}-${formData.isRetail}` : ''}
               onChange={handleChange}
               required
             >
               <option value="">Seleccione un cliente</option>
-              {customers.map(customer => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.id} - {customer.name}
+              {Array.isArray(mainCustomers) && mainCustomers.map(mainCustomer => (
+                <option key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}>
+                  {mainCustomer.ID} - {mainCustomer.FullName}
                 </option>
               ))}
             </select>
@@ -133,6 +205,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
               name="isRetail"
               checked={formData.isRetail === 1}
               onChange={handleChange}
+              disabled={isEditMode}
             />
           </div>
           
