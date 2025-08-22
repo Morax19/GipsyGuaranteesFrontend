@@ -4,10 +4,11 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
+import Cookies from 'js-cookie';
 
 const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
   const [formData, setFormData] = useState({
-    id_usuario: '',
+    userID: '',
     User: '',
     Password: '',
     registrationDate: new Date().toISOString().split('T')[0],
@@ -16,6 +17,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [customers, setCustomers] = useState([])
 
   const roleOptions = [
     'Administrador',
@@ -23,13 +25,65 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
     'Cliente',
   ];
 
+  async function fetchCSRFToken() {
+    try {
+      const response = await fetch(`${apiUrl}/api/token-getCSRF/`, {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.csrfToken; // Return the token directly
+      } else {
+        console.error(`Failed to fetch CSRF token: ${response.status}`);
+        return null;
+      }
+    } catch (error) {
+      console.error('Network error fetching CSRF token:', error);
+      return null;
+    }
+  }
+
+  function getCookie(name) {
+    return document.cookie
+      .split('; ')
+      .find(row => row.startsWith(name + '='))
+      ?.split('=')[1];
+  }
+
+  useEffect(() => {
+    async function fetchCustomers() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/adminGetCustomers/`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setCustomers(data);
+        } else {
+          console.error(data.message || 'Error fetching customers');
+        }
+      } catch {
+        console.error('Error connecting to server');
+      }
+    }
+    fetchCustomers();
+  }, [])
+
   useEffect(() => {
     if (userToEdit) {
       setFormData(userToEdit);
       setIsEditMode(true);
     } else {
       setFormData({
-        id_usuario: '',
+        userID: '',
         User: '',
         Password: '',
         registrationDate: new Date().toISOString().split('T')[0],
@@ -45,35 +99,49 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.User || !formData.Password || !formData.CustomerID || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
-    const endpoint = isEditMode ? 'editUserAdmin' : 'createUserAdminView';
+
+    await fetchCSRFToken();
+    const csrfToken = Cookies.get('csrftoken')
+    
+    const endpoint = isEditMode ? 'adminEditUser' : 'adminCreateUser';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/${endpoint}/`,
+          `${apiUrl}api/${endpoint}/`,
           {
             method,
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`
+              'X-CSRFToken': csrfToken,
+              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
             },
+            credentials: 'include',
             body: JSON.stringify(formData)
           }
         );
-        const data = await response.json();
-        if (response.ok) {
-          alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
-          onSave(formData, isEditMode);
-          onClose();
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")){
+          const data = await response.json();
+          if (response.ok) {
+            alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
+            onSave(formData, isEditMode);
+            onClose();
+          } else {
+            alert(data.message || 'Error al guardar el usuario');
+          }
         } else {
-          alert(data.message || 'Error al guardar el usuario');
+          const text = await response.text();
+          console.error('Unexpected response format:', text);
+          alert('Error inesperado del servidor. Por favor, inténtelo de nuevo.');
         }
-      } catch {
+      } catch (error) {
+        console.error(error); // Prints the error object
         alert('Error de conexión con el servidor');
       }
     })();
@@ -98,12 +166,12 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
         <div className="modal-body-user">
           {isEditMode && (
             <div className="form-group-user">
-              <label htmlFor="id_usuario">ID de Usuario:</label>
+              <label htmlFor="userID">ID de Usuario:</label>
               <input
                 type="text"
-                id="id_usuario"
-                name="id_usuario"
-                value={formData.id_usuario}
+                id="userID"
+                name="userID"
+                value={formData.userID}
                 disabled
               />
             </div>
@@ -142,29 +210,20 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
               </button>
             </div>
           </div>
-          
-          <div className="form-group-user">
-            <label htmlFor="registrationDate">Fecha de Registro:</label>
-            <input
-              type="date"
-              id="registrationDate"
-              name="registrationDate"
-              value={formData.registrationDate}
-              onChange={handleChange}
-              max={today}
-            />
-          </div>
 
           <div className="form-group-user">
-            <label htmlFor="CustomerID">ID de Cliente:</label>
-            <input
-              type="text"
+            <label htmlFor="CustomerID">Cliente asociado:</label>
+            <select
               id="CustomerID"
               name="CustomerID"
               value={formData.CustomerID}
               onChange={handleChange}
-              placeholder="Ingrese el ID del cliente"
-            />
+            >
+              <option value="">Seleccione un cliente</option>
+              {customers.map(customer => (
+                <option key={customer.ID} value={customer.ID}>{customer.FullName}</option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group-user">

@@ -22,7 +22,7 @@ const BranchesTable = () => {
     async function fetchBranches() {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/getBranchAdmin/`,
+          `${apiUrl}/api/adminGetBranches/`,
           {
             method: 'GET',
             headers: {
@@ -65,7 +65,7 @@ const BranchesTable = () => {
     
     // Aplicar el nuevo filtro de minorista/mayorista
     if (isRetailFilter !== '') {
-        const filterValue = isRetailFilter === 'retail' ? 1 : 0;
+        const filterValue = isRetailFilter === 'retail';
         currentBranches = currentBranches.filter(branch =>
             branch.isRetail === filterValue
         );
