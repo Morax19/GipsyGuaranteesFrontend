@@ -4,7 +4,7 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 
 const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
     'Servicio Técnico',
     'Cliente',
   ];
-
+/*
   async function fetchCSRFToken() {
     try {
       const response = await fetch(`${apiUrl}/api/token-getCSRF/`, {
@@ -50,7 +50,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
       .find(row => row.startsWith(name + '='))
       ?.split('=')[1];
   }
-
+*/
   useEffect(() => {
     async function fetchCustomers() {
       try {
@@ -105,8 +105,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
       return;
     }
 
-    await fetchCSRFToken();
-    const csrfToken = Cookies.get('csrftoken')
+    //await fetchCSRFToken();
+    //const csrfToken = Cookies.get('csrftoken')
     
     const endpoint = isEditMode ? 'adminEditUser' : 'adminCreateUser';
     const method = isEditMode ? 'PUT' : 'POST';
@@ -118,7 +118,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
             method,
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRFToken': csrfToken,
+              //'X-CSRFToken': csrfToken,
               Authorization: `Bearer ${localStorage.getItem('session_token')}`,
             },
             credentials: 'include',
