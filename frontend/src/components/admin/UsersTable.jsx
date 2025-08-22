@@ -9,14 +9,12 @@ import { fetchWithAuth } from '../../fetchWithAuth';
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
-// Users will be fetched from backend
-
 const UsersTable = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/getUserAdmin/`,
+          `${apiUrl}/api/adminGetUsers/`,
           {
             method: 'GET',
             headers: {
@@ -48,7 +46,7 @@ const UsersTable = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: 'id_usuario', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({ key: 'userID', direction: 'ascending' });
 
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -71,7 +69,7 @@ const UsersTable = () => {
 
     if (searchTerm) {
       currentUsers = currentUsers.filter(user =>
-        user.User.toLowerCase().includes(searchTerm.toLowerCase())
+        user.Users.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -85,7 +83,7 @@ const UsersTable = () => {
         .map(monthNum => ({ value: String(monthNum), label: monthNames[monthNum] }));
       newSecondaryOptions = months;
     } else if (primaryFilter === 'role') {
-      const roles = [...new Set(currentUsers.map(u => u.roleID))].sort();
+      const roles = [...new Set(currentUsers.map(u => u.Description))].sort();
       newSecondaryOptions = roles.map(role => ({ value: role, label: role }));
     }
     setSecondaryFilterOptions(newSecondaryOptions);
@@ -107,7 +105,7 @@ const UsersTable = () => {
         );
       } else if (primaryFilter === 'role') {
         currentUsers = currentUsers.filter(user =>
-          user.roleID === secondaryFilter
+          user.Description === secondaryFilter
         );
       }
     }
@@ -125,8 +123,8 @@ const UsersTable = () => {
     setFilteredUsers(currentUsers);
   }, [searchTerm, primaryFilter, secondaryFilter, allUsers, sortConfig]);
 
-  const handleTogglePassword = (id_usuario) => {
-    setShowPasswordFor(showPasswordFor === id_usuario ? null : id_usuario);
+  const handleTogglePassword = (userID) => {
+    setShowPasswordFor(showPasswordFor === userID ? null : userID);
   };
 
   const handleAddUser = () => {
@@ -134,19 +132,19 @@ const UsersTable = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditUser = (id_usuario) => {
-    const user = allUsers.find(u => u.id_usuario === id_usuario);
+  const handleEditUser = (userID) => {
+    const user = allUsers.find(u => u.userID === userID);
     setUserToEdit(user);
     setIsModalOpen(true);
   };
 
   const handleSaveUser = (userData, isEditing) => {
     if (isEditing) {
-      setAllUsers(prevUsers => prevUsers.map(u => (u.id_usuario === userData.id_usuario ? userData : u)));
+      setAllUsers(prevUsers => prevUsers.map(u => (u.userID === userData.userID ? userData : u)));
       console.log('Usuario actualizado:', userData);
     } else {
-      const newUserId = Math.max(...allUsers.map(u => u.id_usuario)) + 1;
-      const newUser = { ...userData, id_usuario: newUserId };
+      const newUserId = Math.max(...allUsers.map(u => u.userID)) + 1;
+      const newUser = { ...userData, userID: newUserId };
       setAllUsers(prevUsers => [...prevUsers, newUser]);
       console.log('Nuevo usuario agregado:', newUser);
     }
@@ -221,7 +219,7 @@ const UsersTable = () => {
             <table className="users-table">
               <thead>
                 <tr>
-                  <th onClick={() => requestSort('id_usuario')}>ID</th>
+                  <th onClick={() => requestSort('userID')}>ID</th>
                   <th>Usuario</th>
                   <th>Contraseña</th>
                   <th>Fecha de Registro</th>
@@ -232,26 +230,26 @@ const UsersTable = () => {
               </thead>
               <tbody>
                 {filteredUsers.map(user => (
-                  <tr key={user.id_usuario}>
-                    <td>{user.id_usuario}</td>
-                    <td>{user.User}</td>
+                  <tr key={user.userID}>
+                    <td>{user.userID}</td>
+                    <td>{user.Users}</td>
                     <td className="password-cell">
-                      {showPasswordFor === user.id_usuario ? user.Password : '********'}
+                      {showPasswordFor === user.userID ? user.Password : '********'}
                       <button
                         className="password-toggle-button"
-                        onClick={() => handleTogglePassword(user.id_usuario)}
-                        title={showPasswordFor === user.id_usuario ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        onClick={() => handleTogglePassword(user.userID)}
+                        title={showPasswordFor === user.userID ? "Ocultar contraseña" : "Mostrar contraseña"}
                       >
                         <img src={eye} alt="Toggle password visibility" />
                       </button>
                     </td>
                     <td>{user.registrationDate}</td>
                     <td>{user.CustomerID}</td>
-                    <td><span className={`role-${user.roleID.toLowerCase().replace(/\s+/g, '-')}`}>{user.roleID}</span></td>
+                    <td><span className={`role-${user.roleID?.toLowerCase().replace(/\s+/g, '-')}`}>{user.Description}</span></td>
                     <td>
                       <button
                         className="edit-button"
-                        onClick={() => handleEditUser(user.id_usuario)}
+                        onClick={() => handleEditUser(user.userID)}
                         title="Editar Usuario"
                       >
                         <img src={editIcon} alt="Editar" />
