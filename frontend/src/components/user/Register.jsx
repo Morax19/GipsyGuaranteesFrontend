@@ -128,7 +128,7 @@ function Register() {
           name="Password"
           placeholder="Contraseña"
           required
-          value={form.password}
+          value={form.Password}
           onChange={handleChange}
         />
         <input

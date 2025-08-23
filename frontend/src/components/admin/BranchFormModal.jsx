@@ -18,14 +18,10 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const [mainCustomers, setMainCustomers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
 
   useEffect(() => {
     async function fetchMainCustomers() {
-      setIsLoading(true);
-      setError(null);
       try {
         const response = await fetchWithAuth(
           `${apiUrl}/api/adminGetMainCustomers/`,
@@ -46,9 +42,6 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
         }
       } catch {
         console.error('Error connecting to server');
-        setError('Error de conexión con el servidor');
-      } finally {
-        setIsLoading(false);
       }
     }
     fetchMainCustomers();
@@ -105,7 +98,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
       alert('Por favor, complete todos los campos obligatorios (ID de Cliente, Tipo RIF, RIF, Nombre de Compañía, Dirección).');
       return;
     }
-    const endpoint = isEditMode ? 'editBranchAdmin' : 'createBranchAdminView';
+    const endpoint = isEditMode ? 'adminEditBranch' : 'adminCreateBranch';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
       try {
@@ -136,27 +129,6 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
 
   if (!isOpen) return null;
   
-  if (isLoading) {
-    return (
-      <div className="modal-overlay-user">
-        <div className="modal-content-user">
-          <p>Cargando clientes...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="modal-overlay-user">
-        <div className="modal-content-user">
-          <p>Error: {error}</p>
-          <button className="close-button-user" onClick={onClose}>&times;</button>
-        </div>
-      </div>
-    );
-  }
-  
   return (
     <div className="modal-overlay-user">
       <div className="modal-content-user">
@@ -180,7 +152,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
           )}
           
           <div className="form-group-user">
-            <label htmlFor="customerID">Cliente:</label>
+            <label htmlFor="customerID">Compañía asociada:</label>
             <select
               id="customerID"
               name="customerID"
@@ -188,10 +160,10 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
               onChange={handleChange}
               required
             >
-              <option value="">Seleccione un cliente</option>
-              {Array.isArray(mainCustomers) && mainCustomers.map(mainCustomer => (
+              <option value="">Seleccione una compañía</option>
+              {mainCustomers.map(mainCustomer => (
                 <option key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}>
-                  {mainCustomer.ID} - {mainCustomer.FullName}
+                  {mainCustomer.FullName}
                 </option>
               ))}
             </select>
@@ -237,14 +209,14 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="companyName">Nombre de Compañía:</label>
+            <label htmlFor="companyName">Nombre de la sucursal:</label>
             <input
               type="text"
               id="companyName"
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
-              placeholder="Ingrese el nombre de la compañía"
+              placeholder="Ingrese el nombre de la sucursal"
             />
           </div>
 

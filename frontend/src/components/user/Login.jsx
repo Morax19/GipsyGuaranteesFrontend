@@ -18,8 +18,8 @@ function Login() {
     };
   }, []);
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [EmailAddress, setEmailAddress] = useState('');
+  const [Password, setPassword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ EmailAddress, Password }),
       });
       const data = await response.json();
       if (response.ok && data.access) {
@@ -62,19 +62,19 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="username"
-          placeholder="Usuario"
+          name="EmailAddress"
+          placeholder="Correo electrónico"
           required
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          value={EmailAddress}
+          onChange={e => setEmailAddress(e.target.value)}
         />
         <br />
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Contraseña"
           required
-          value={password}
+          value={Password}
           onChange={e => setPassword(e.target.value)}
         />
         <br />

@@ -17,32 +17,36 @@ function LoginAdmin() {
     };
   }, []);
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [EmailAddress, setEmailAddress] = useState('');
+  const [Password, setPassword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     // If already logged in, redirect to home page
     if (localStorage.getItem('session_token')) {
-      navigate('/technical-service/home');
+      navigate('/admin/home');
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/technical-service/login`, {
+      const response = await fetch(`${apiUrl}/api/adminLogin/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ EmailAddress, Password }),
       });
       const data = await response.json();
+      if (response.ok) {
+        alert("Epa la falla está en el token")
+      }
+        
       if (response.ok && data.access) {
         localStorage.setItem('session_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
-        navigate('/technical-service/home');
+        navigate('/admin/home');
       } else {
         alert(data.detail || data.message || 'Login failed');
       }
@@ -61,19 +65,19 @@ function LoginAdmin() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="username"
-          placeholder="Usuario"
+          name="EmailAddress"
+          placeholder="Correo Electrónico"
           required
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          value={EmailAddress}
+          onChange={e => setEmailAddress(e.target.value)}
         />
         <br />
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Contraseña"
           required
-          value={password}
+          value={Password}
           onChange={e => setPassword(e.target.value)}
         />
         <br />
