@@ -20,12 +20,13 @@ function Register() {
     }, []);
 
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    address: '',
-    zip_code: '',
-    password: '',
+    FirstName: '',
+    LastName: '',
+    EmailAddress: '',
+    PhoneNumber: '',
+    Address: '',
+    Zip: '',
+    Password: '',
     confirmPassword: ''
   });
   const [message, setMessage] = useState('');
@@ -39,7 +40,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-    if (form.password !== form.confirmPassword) {
+    if (form.Password !== form.confirmPassword) {
       alert('Las contraseñas deben coincidir.');
       return;
     }
@@ -79,45 +80,52 @@ function Register() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="firstName"
+          name="FirstName"
           placeholder="Nombre"
           required
-          value={form.firstName}
+          value={form.FirstName}
           onChange={handleChange}
         />
         <input
           type="text"
-          name="lastName"
+          name="LastName"
           placeholder="Apellido"
           required
-          value={form.lastName}
+          value={form.LastName}
           onChange={handleChange}
         />
         <input
           type="email"
-          name="email"
+          name="EmailAddress"
           placeholder="Email"
           required
-          value={form.email}
+          value={form.EmailAddress}
           onChange={handleChange}
         />
         <input
           type="text"
-          name="address"
+          name="Address"
           placeholder="Dirección (Opcional)"
-          value={form.address}
+          value={form.Address}
           onChange={handleChange}
         />
         <input
+        type="tel"
+        name="PhoneNumber"
+        placeholder="Teléfono (Opcional)"
+        value={form.PhoneNumber}
+        onChange={handleChange}          
+        />
+        <input
           type="text"
-          name="zip_code"
+          name="Zip"
           placeholder="Código Postal (Opcional)"
           value={form.zip_code}
           onChange={handleChange}
         />
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Contraseña"
           required
           value={form.password}

@@ -82,6 +82,7 @@ body.barraCurvaURegister::after {
     width: 100%; /* Ensure the form takes up the full width of its parent */
 }
 
+.cardContainerURegister form input[type="tel"],
 .cardContainerURegister form input[type="text"], 
 .cardContainerURegister form input[type="email"],
 .cardContainerURegister form input[type="submit"],
