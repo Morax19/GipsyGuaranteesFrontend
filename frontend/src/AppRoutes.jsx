@@ -8,6 +8,7 @@ import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Warranty from './components/user/Warranty';
 import EditProfile from './components/user/EditProfile';
+import ChangePassword from './components/user/ChangePassword';
 import ForgotPassword from './components/user/ForgotPassword';
 import WarrantyHistory from './components/user/WarrantyHistory';
 import UserTechnicalService from './components/test/TechnicalServiceLogged';
@@ -35,6 +36,7 @@ export default function AppRoutes() {
       <Route path="/user/register"      element={<Register />} />
       <Route path="/user/warranty"      element={<Warranty />} />
       <Route path="/user/edit-profile"  element={<EditProfile />} />
+      <Route path="/user/change-password" element={<ChangePassword />} />
       <Route path="/user/forgot-password" element={<ForgotPassword />} />
       <Route path="/user/user-technical-service" element={<UserTechnicalService />} />
       <Route path="/user/warranties-history" element={<WarrantyHistory />} />

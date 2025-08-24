@@ -16,7 +16,7 @@ const WarrantyHistory = ({ userFirstName }) => {
     async function fetchHistory() {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/UserWarrantyHistoryView/`,
+          `${apiUrl}/api/warrantyHistory/`,
           {
             method: 'GET',
             headers: {
@@ -97,11 +97,11 @@ const WarrantyHistory = ({ userFirstName }) => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Código</th>
-                  <th>Fecha de Compra</th>
+                  <th>Usuario</th>
+                  <th>Fecha de Registro</th>
                   <th>Tienda</th>
                   <th>Marca</th>
-                  <th>Modelo</th>
+                  <th>Número de usos</th>
                   <th>Fecha de Vencimiento</th>
                   <th>Días Disponibles</th>
                   <th>Estado</th>
@@ -111,13 +111,13 @@ const WarrantyHistory = ({ userFirstName }) => {
                 {filteredHistoryWarranties.map(warranty => {
                   const { expirationDate, daysLeft, status } = getWarrantyStatus(warranty.purchaseDate);
                   return (
-                    <tr key={warranty.id}>
-                      <td>{warranty.id}</td>
-                      <td>{warranty.code}</td>
-                      <td>{warranty.purchaseDate}</td>
-                      <td>{warranty.storeName}</td>
+                    <tr key={warranty.WarrantyNumber}>
+                      <td>{warranty.WarrantyNumber}</td>
+                      <td>{warranty.registerID}</td>
+                      <td>{warranty.registrationDate}</td>
+                      <td>{warranty.branchID}</td>
                       <td>{warranty.productBrand}</td>
-                      <td>{warranty.productModel}</td>
+                      <td>{warranty.usedCount}</td>
                       <td>{expirationDate}</td>
                       <td>{daysLeft}</td>
                       <td>

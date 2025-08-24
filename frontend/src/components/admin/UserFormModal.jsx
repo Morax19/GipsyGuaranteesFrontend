@@ -94,7 +94,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
       return;
     }
     
-    const endpoint = isEditMode ? 'userEdit' : 'userRegister';
+    const endpoint = isEditMode ? 'adminEditUsers' : 'adminCreateUsers';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
       try {

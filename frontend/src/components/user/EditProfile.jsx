@@ -11,10 +11,8 @@ const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 const EditProfile = () => {
-
   const navigate = useNavigate();
-  const [user, setUser] = useState({ firstName: '', lastName: '', email: '', address: '' });
-  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
+  const [form, setForm] = useState({ FirstName: '', LastName: '', EmailAddress: '', PhoneNumber: '', Address: '',  Zip: '' });
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -23,19 +21,16 @@ const EditProfile = () => {
       //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
       //navigate('/user/login');
       return;
-    }
-    fetchWithAuth(`${apiUrl}/currentUser/`)
+    } else {
+      fetchWithAuth(`${apiUrl}/currentUser/`)
       .then(res => res.json())
-      .then(data => setUser(data))
-      .catch(() => setUser({ firstName: '', lastName: '', email: '', address: '' }));
+      .then(data => setForm(data))
+      .catch(() => setForm({ FirstName: '', LastName: '', EmailAddress: '', PhoneNumber: '', Address: '', Zip: '' }));
+    }
   }, [navigate]);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handlePasswordChange = (e) => {
-    setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -43,8 +38,8 @@ const EditProfile = () => {
     setMessage('');
     const token = localStorage.getItem('session_token');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/userEditProfile/`, {
-        method: 'POST',
+      const response = await fetchWithAuth(`${apiUrl}/userProfileEdit/`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -62,42 +57,13 @@ const EditProfile = () => {
     }
   };
 
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    const token = localStorage.getItem('session_token');
-    try {
-      const response = await fetchWithAuth(`${apiUrl}/api/userChangePassword/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          username: user.email,
-          old_password: passwords.oldPassword,
-          new_password: passwords.newPassword,
-        }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setMessage('Contraseña cambiada correctamente.');
-        setPasswords({ oldPassword: '', newPassword: '' });
-      } else {
-        setMessage(data.message || 'Error al cambiar la contraseña.');
-      }
-    } catch (error) {
-      setMessage('Error de conexión con el servidor.');
-    }
-  };
-
   const handleLogout = () => {
       localStorage.removeItem('session_token');
       localStorage.removeItem('refresh_token');
       navigate('/user/login');
     };
 
-    const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
+  const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
 
   return (
     <LayoutBase activePage="edit-profile">
@@ -106,59 +72,53 @@ const EditProfile = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="firstName"
+          name="FirstName"
           placeholder="Nombre"
-          value={user.firstName}
-          onChange={handleChange}
           required
+          value={form.FirstName}
+          onChange={handleChange}
         />
         <input
           type="text"
-          name="lastName"
+          name="LastName"
           placeholder="Apellido"
-          value={user.lastName}
-          onChange={handleChange}
           required
+          value={form.LastName}
+          onChange={handleChange}
         />
         <input
           type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          value={user.email}
-          onChange={handleChange}
+          name="EmailAddress"
+          placeholder="Email"
           required
+          value={form.EmailAddress}
+          onChange={handleChange}
         />
         <input
           type="text"
-          name="address"
-          placeholder="Dirección"
-          value={user.address || ''}
+          name="Address"
+          placeholder="Dirección (Opcional)"
+          value={form.Address}
+          onChange={handleChange}
+        />
+        <input
+        type="tel"
+        name="PhoneNumber"
+        placeholder="Teléfono (Opcional)"
+        value={form.PhoneNumber}
+        onChange={handleChange}          
+        />
+        <input
+          type="text"
+          name="Zip"
+          placeholder="Código Postal (Opcional)"
+          value={form.Zip}
           onChange={handleChange}
         />
       </form>
-      <h2>Cambiar contraseña</h2>
-      <form onSubmit={handlePasswordSubmit}>
-        <input
-          type="password"
-          name="oldPassword"
-          placeholder="Contraseña actual"
-          value={passwords.oldPassword}
-          onChange={handlePasswordChange}
-          required
-        />
-        <input
-          type="password"
-          name="newPassword"
-          placeholder="Nueva contraseña"
-          value={passwords.newPassword}
-          onChange={handlePasswordChange}
-          required
-        />
         <div className="ButtonGroupEditProfile">
-          <button type="submit">Guardar contraseña</button>
           <button type="submit">Guardar cambios</button>
         </div>
-      </form>
       {message && <p>{message}</p>}
     </div>
     </LayoutBase>

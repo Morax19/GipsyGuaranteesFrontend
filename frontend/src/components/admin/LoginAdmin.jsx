@@ -40,14 +40,17 @@ function LoginAdmin() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert("Epa la falla está en el token")
+        navigate('/admin/home');
       }
-        
-      if (response.ok && data.access) {
+      /*
+      else if (response.ok && data.access) {
+
         localStorage.setItem('session_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
         navigate('/admin/home');
-      } else {
+      }
+      */
+      else {
         alert(data.detail || data.message || 'Login failed');
       }
     } catch (error) {

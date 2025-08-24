@@ -48,6 +48,12 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
               </div>
             </li>
             <li>
+              {/* Cambiar Contraseña */}
+              <div className={`optionContainer ${isActive('change-password') ? 'active' : ''}`}>
+                <Link to="/user/change-password" className="optionLink" onClick={closeSidebar}>Cambiar Contraseña</Link>
+              </div>
+            </li>
+            <li>
               {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
                 <Link to="/" className="optionLink" onClick={onLogout}>Cerrar Sesión</Link>
