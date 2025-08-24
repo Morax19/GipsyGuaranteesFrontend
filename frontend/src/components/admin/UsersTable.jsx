@@ -10,48 +10,76 @@ const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
 
 const UsersTable = () => {
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/adminGetUsers/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setAllUsers(data);
-          setFilteredUsers(data);
-        } else {
-          console.error(data.message || 'Error fetching users');
-        }
-      } catch {
-        console.error('Error connecting to server');
-      }
-    }
-    fetchUsers();
-  }, []);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [roles, setRoles] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');
+  const [showPasswordFor, setShowPasswordFor] = useState(null);
   const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [showPasswordFor, setShowPasswordFor] = useState(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToEdit, setUserToEdit] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: 'userID', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({ key: 'userID', direction: 'ascending' });
 
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
+
+  const fetchUsers = async () => {
+    try{
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/adminGetUsers/`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      const data = await response.json()
+
+      if (response.ok) {
+        setAllUsers(data);
+        setFilteredUsers(data);
+      } else {
+        console.error(data.message || 'Error fetching users');
+      }
+    } catch {
+      console.error('Error connecting to server');
+    }
+  };
+
+  const fetchRoles = async () => {
+    try{
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/adminGetRoles/`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      const data = await response.json()
+
+      if (response.ok) {
+        setRoles(data);
+      } else {
+        console.error(data.message || 'Error fetching roles');
+      }
+    } catch {
+      console.error('Error connecting to server');
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchRoles();
+  }, []);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -155,6 +183,7 @@ const UsersTable = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setUserToEdit(null);
+    fetchUsers();
   };
 
   return (
@@ -270,6 +299,8 @@ const UsersTable = () => {
         onClose={handleCloseModal}
         userToEdit={userToEdit}
         onSave={handleSaveUser}
+        roles={roles}
+        onReload={fetchUsers}
       />
       
     </LayoutBaseAdmin>

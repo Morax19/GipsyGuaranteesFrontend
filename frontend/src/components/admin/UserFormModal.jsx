@@ -4,78 +4,68 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
-//import Cookies from 'js-cookie';
 
-const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
+const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload }) => {
   const [formData, setFormData] = useState({
     userID: '',
-    User: '',
+    FirstName: '',
+    LastName: '',
+    EmailAddress: '',
+    PhoneNumber: '',
+    Address: '',
+    Zip: '',
     Password: '',
-    registrationDate: new Date().toISOString().split('T')[0],
     CustomerID: '',
     roleID: '',
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [roles, setRoles] = useState([]);
-
-/*
-  async function fetchCSRFToken() {
-    try {
-      const response = await fetch(`${apiUrl}/api/token-getCSRF/`, {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return data.csrfToken; // Return the token directly
-      } else {
-        console.error(`Failed to fetch CSRF token: ${response.status}`);
-        return null;
-      }
-    } catch (error) {
-      console.error('Network error fetching CSRF token:', error);
-      return null;
-    }
-  }
-
-  function getCookie(name) {
-    return document.cookie
-      .split('; ')
-      .find(row => row.startsWith(name + '='))
-      ?.split('=')[1];
-  }
-*/
-  useEffect(() => {
-    async function fetchRoles() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/adminGetRoles/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setRoles(data);
-        } else {
-          console.error(data.message || 'Error fetching roles');
-        }
-      } catch {
-        console.error('Error connecting to server');
-      }
-    }
-    fetchRoles();
-  }, [])
 
   useEffect(() => {
     if (userToEdit) {
-      setFormData(userToEdit);
       setIsEditMode(true);
+      setFormData(prevData => ({
+        ...prevData,
+        userID: userToEdit.userID,
+        roleID: userToEdit.roleID,
+        Password: userToEdit.Password,
+    }));
+
+      if(userToEdit.CustomerID){
+        async function fetchCustomerDetail(){
+          try{
+            const response = await fetchWithAuth(
+              `${apiUrl}api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+                },
+              }
+            );
+            const customerData = await response.json();
+
+            if (response.ok){
+              setFormData(prevData => ({
+                ...prevData,
+                FirstName: customerData.FirstName,
+                LastName: customerData.LastName,
+                EmailAddress: customerData.EmailAddress,
+                PhoneNumber: customerData.PhoneNumber || '',
+                Address: customerData.Address || '',
+                Zip: customerData.Zip || '',
+              }));
+            } else {
+              console.error(customerData.message || 'Error fetching customer details');
+            }
+          } catch (error) {
+            console.error('Error connecting to the server', error);
+          }
+        }
+        fetchCustomerDetail();
+        
+      }
     } else {
       setFormData({
         userID: '',
@@ -102,9 +92,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
-
-    //await fetchCSRFToken();
-    //const csrfToken = Cookies.get('csrftoken')
     
     const endpoint = isEditMode ? 'userEdit' : 'userRegister';
     const method = isEditMode ? 'PUT' : 'POST';
@@ -116,7 +103,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
             method,
             headers: {
               'Content-Type': 'application/json',
-              //'X-CSRFToken': csrfToken,
               Authorization: `Bearer ${localStorage.getItem('session_token')}`,
             },
             credentials: 'include',
@@ -130,6 +116,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
             alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
             onSave(formData, isEditMode);
             onClose();
+            onReload();
           } else {
             alert(data.message || 'Error al guardar el usuario');
           }
