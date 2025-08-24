@@ -88,6 +88,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   };
 
   const handleSave = async () => {
+    alert(formData.roleID);
     if (!formData.FirstName || !formData.LastName || !formData.EmailAddress || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
