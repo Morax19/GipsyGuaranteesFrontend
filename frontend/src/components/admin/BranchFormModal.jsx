@@ -5,11 +5,11 @@ import '../../styles/admin/userFormModal.css';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) => {
+const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave }) => {
   const [formData, setFormData] = useState({
     branchID: '',
     customerID: '',
-    isRetail: 0,
+    isRetail: '',
     RIFtype: '',
     RIF: '',
     companyName: '',
@@ -38,7 +38,6 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
           setMainCustomers(data);
         } else {
           console.error(data.message || 'Error fetching MainCustomers');
-          setError(data.message || 'Error fetching MainCustomers');
         }
       } catch {
         console.error('Error connecting to server');
@@ -49,13 +48,18 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
 
   useEffect(() => {
     if (branchToEdit) {
-      setFormData(branchToEdit);
+      // Format the data to match the select value string
+      setFormData({
+        ...branchToEdit,
+        customerID: `${branchToEdit.customerID}-${branchToEdit.isRetail}`,
+        isRetail: `${branchToEdit.isRetail}`
+      });
       setIsEditMode(true);
     } else {
       setFormData({
         branchID: '',
         customerID: '',
-        isRetail: 0,
+        isRetail: '',
         RIFtype: '',
         RIF: '',
         companyName: '',
@@ -70,26 +74,17 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
     const { name, value, type, checked } = e.target;
     
     if (name === 'customerID') {
-      if (value === ''){
+        const [id, retail] = value.split('-');
         setFormData(prevData => ({
-          ...prevData,
-          customerID: '',
-          isRetail: 0
+            ...prevData,
+            customerID: value, 
+            isRetail: retail,
         }));
-      }
-      else {
-        const [customerID, isRetail] = value.split('-');
-        setFormData(prevData => ({
-          ...prevData,
-          customerID: parseInt(customerID),
-          isRetail: parseInt(isRetail)
-        }));
-      }
     } else {
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
-      }));
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? (checked ? '1' : '0') : value
+        }));
     }
   };
 
@@ -98,6 +93,16 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
       alert('Por favor, complete todos los campos obligatorios (ID de Cliente, Tipo RIF, RIF, Nombre de Compañía, Dirección).');
       return;
     }
+
+    // Convert string values back to numbers for the API call
+    const [customerID, isRetail] = formData.customerID.split('-');
+    
+    const dataToSend = {
+      ...formData,
+      customerID: parseInt(customerID),
+      isRetail: parseInt(isRetail), // Correctly include and parse isRetail
+    };
+
     const endpoint = isEditMode ? 'adminEditBranch' : 'adminCreateBranch';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
@@ -110,13 +115,13 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
               'Content-Type': 'application/json',
               Authorization: `Bearer ${localStorage.getItem('session_token')}`
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(dataToSend)
           }
         );
         const data = await response.json();
         if (response.ok) {
           alert(isEditMode ? 'Sucursal actualizada correctamente.' : 'Sucursal creada correctamente.');
-          onSave(formData, isEditMode);
+          onSave(data, isEditMode);
           onClose();
         } else {
           alert(data.message || 'Error al guardar la sucursal');
@@ -156,31 +161,35 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
             <select
               id="customerID"
               name="customerID"
-              value={formData.customerID ? `${formData.customerID}-${formData.isRetail}` : ''}
+              value={formData.customerID}
               onChange={handleChange}
               required
             >
-              <option value="">Seleccione una compañía</option>
+              <option value="" disabled>Seleccione una compañía</option>
               {mainCustomers.map(mainCustomer => (
-                <option key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}>
-                  {mainCustomer.FullName}
+                <option 
+                  key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} 
+                  value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}
+                >
+                  {`${mainCustomer.ID}-${mainCustomer.FullName}`}
                 </option>
               ))}
             </select>
           </div>
-
+          
+          {/* Note: the checkbox is now automatically handled by the select change */}
           <div className="form-group-user checkbox-group-user">
             <label htmlFor="isRetail">Es Minorista:</label>
             <input
               type="checkbox"
               id="isRetail"
               name="isRetail"
-              checked={formData.isRetail === 1}
+              checked={formData.isRetail === '1'}
               onChange={handleChange}
-              disabled={isEditMode}
+              disabled={true} // Disable since it's now driven by the select
             />
           </div>
-          
+
           <div className="form-group-user">
             <label htmlFor="RIFtype">Tipo RIF:</label>
             <select
@@ -199,7 +208,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, customers }) =
           <div className="form-group-user">
             <label htmlFor="RIF">RIF:</label>
             <input
-              type="number"
+              type="text"
               id="RIF"
               name="RIF"
               value={formData.RIF}
