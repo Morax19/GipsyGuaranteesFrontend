@@ -40,7 +40,7 @@ function Login() {
         navigate('/user/home');
       }
       else {
-        alert(data.detail || data.message || 'Login failed');
+        alert(data.detail || data.message || data.error || 'Login failed');
       }
     } catch (error) {
       alert('Error connecting to server');
