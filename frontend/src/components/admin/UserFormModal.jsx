@@ -38,10 +38,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
               `${apiUrl}/api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
               {
                 method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-                },
               }
             );
             const customerData = await response.json();
@@ -88,7 +84,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   };
 
   const handleSave = async () => {
-    alert(formData.roleID);
     if (!formData.FirstName || !formData.LastName || !formData.EmailAddress || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
@@ -102,10 +97,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           `${apiUrl}/api/${endpoint}/`,
           {
             method,
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-            },
             credentials: 'include',
             body: JSON.stringify(formData)
           }

@@ -10,19 +10,23 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 export default function Warranty() {
   const [formData, setFormData] = useState({
     mainCustomerID: '',
-    barCode: '',
+    branchID: '',
+    RIF:'',
+    RIFtype:'',
     purchaseDate: '',
-    storeName: '',
-    storeAddress: '',
-    invoiceNumber: null,
-    StoreID: '',
-    NroFactura: '',
-    MarcaProducto: '',
-    ModeloProducto: '',
+    purchaseDateFormatted: '',
+    invoiceNumber: '',
+    barCode: '',
+    invoiceIMG: '', 
   });
 
+  const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
   const [mainCustomers, setMainCustomers] = useState([]);
   const [branchAddresses, setBranchAddresses] = useState([]);
+  const validateInvoiceNumber = (value) => {
+    const pattern = /^[A-Za-z0-9\-\/]{5,20}$/;
+    return pattern.test(value.trim());
+  };
 
   const navigate = useNavigate();
 
@@ -67,21 +71,65 @@ export default function Warranty() {
   };
 
   // Handle form field changes
-  const handleChange = async ({ target: { name, value, files } }) => {
-    if (name === 'invoiceNumber') {
-      setFormData(f => ({ ...f, [name]: files[0] }));
-    } else if (name === 'mainCustomerID') {
-      // Correctly handle the mainCustomerID select
-      setFormData(f => ({ ...f, [name]: value }));
-      if (value) {
-        // Fetch branch addresses when a customer is selected
-        const [mainCustomerID, isRetail] = value.split('-');
-        fetchBranchAddresses(mainCustomerID, isRetail);
+  const handleChange = ({ target: { name, value, files } }) => {
+    if (name === 'mainCustomerID') {
+      const [id, retail] = value.split('-');
+
+      // Find the main customer object so we can grab RIF data for retail == 'true'
+      const selectedCustomer = mainCustomers.find(
+        mc => String(mc.ID) === String(id)
+      );
+
+      setFormData(prev => ({
+        ...prev,
+        mainCustomerID: id,
+        isRetail: retail,
+        branchID: '',
+        RIFtype: '',
+        RIF: '',
+      }));
+      if (value) fetchBranchAddresses(id, retail);
+      else setBranchAddresses([]);
+
+    } else if (name === 'branchID') {
+      const selectedBranch = branchAddresses.find(
+        b => String(b.branchID) === String(value)
+      );
+      if (selectedBranch) {
+        setFormData(prev => ({
+          ...prev,
+          branchID: selectedBranch.branchID,
+          RIFtype: selectedBranch.RIFtype,
+          RIF: selectedBranch.RIF
+        }));
       } else {
-        setBranchAddresses([]);
+        setFormData(prev => ({ ...prev, branchID: value }));
       }
+    } else if (name === 'RIF') {
+        // Filter out any non-numeric characters from the RIF input
+        const filteredValue = value.replace(/[^0-9]/g, '');
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: filteredValue
+        }));
+    } else if (name === 'purchaseDate') {
+      const og = value;
+      const [month, day, year] = og.split('/');
+      const formatted = `${day}/${month}/${year}`;
+
+      setFormData(prev => ({
+        ...prev,
+        purchaseDate: og,
+        purchaseDateFormatted: formatted
+      }))
+    } else if (name === 'barCode') {
+      const filteredValue = value.replace(/[^0-9]/g, '');
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: filteredValue
+        }));
     } else {
-      setFormData(f => ({ ...f, [name]: value }));
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
@@ -92,6 +140,12 @@ export default function Warranty() {
   // Submit warranty registration
   const handleSubmit = async e => {
     e.preventDefault();
+    
+    alert(`${purchaseDate} vs ${purchaseDateFormatted}`)
+    if (!validateInvoiceNumber(formData.invoiceNumber)) {
+      alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
+      return;
+    }
 
     try {
       // Use FormData to send both text and file data
@@ -125,90 +179,93 @@ export default function Warranty() {
       <div className="cardContainerWarranty">
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
-          {/* Customer Select List */}
+          {/* Customer Select */}
           <label htmlFor="mainCustomerID">Compañía asociada:</label>
           <select
             id="mainCustomerID"
             name="mainCustomerID"
-            value={`${formData.mainCustomerID}-${mainCustomers.find(c => c.ID === formData.mainCustomerID)?.isRetail || ''}`}
+            value={formData.mainCustomerID ? `${formData.mainCustomerID}-${formData.isRetail}` : ''}
             onChange={handleChange}
             required
           >
             <option value="" disabled>Tienda donde compró el producto</option>
-            {mainCustomers.map(mainCustomer => (
-              <option key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}>
-                {mainCustomer.FullName}
+            {mainCustomers.map(mc => (
+              <option key={`${mc.ID}-${mc.isRetail}`} value={`${mc.ID}-${mc.isRetail}`}>
+                {mc.FullName}
               </option>
             ))}
           </select>
 
-          {/* Branch Address Select List */}
-          <label htmlFor="storeAddress">Dirección de la tienda:</label>
+          <label htmlFor="branchID">Sucursal:</label>
           <select
-            id="storeAddress"
-            name="storeAddress"
+            id="branchID"
+            name="branchID"
             required
-            value={formData.storeAddress}
+            value={formData.branchID}
             onChange={handleChange}
             disabled={!formData.mainCustomerID}
           >
-            <option value="" disabled>Seleccione una dirección</option>
-            {branchAddresses.map((address, idx) => (
-              <option key={idx} value={address}>{address}</option>
+            <option value="" disabled>Seleccione una sucursal</option>
+            {branchAddresses.map(branch => (
+              <option key={branch.branchID} value={branch.branchID}>
+                {branch.companyName} - {branch.address}
+              </option>
             ))}
           </select>
-          
-          {/* Other Form Fields */}
-          <label htmlFor="StoreID">RIF de la tienda:</label>
+
+          {/* Auto-filled and locked RIFtype */}
+          <label htmlFor="RIFtype">Tipo RIF:</label>
+          <select
+            id="RIFtype"
+            name="RIFtype"
+            value={formData.RIFtype}
+            onChange={handleChange}
+            disabled={formData.isRetail === 'false'}
+          >
+            <option value="">Seleccione un tipo</option>
+            {RIFtypeOptions.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+
+          {/* Auto-filled RIF */}
+          <label htmlFor="RIF">RIF de la tienda:</label>
           <input
             type="text"
-            id="StoreID"
-            name="StoreID"
+            id="RIF"
+            name="RIF"
             placeholder="RIF de la tienda"
+            maxLength={10}
             required
-            value={formData.StoreID}
+            value={formData.RIF}
             onChange={handleChange}
+            disabled={formData.isRetail === 'false'}
           />
+
           <label htmlFor="purchaseDate">Fecha de compra:</label>
           <input
-            type="date"
+            type="text"
             id="purchaseDate"
             name="purchaseDate"
+            placeholder='DD/MM/YYYY'
             required
-            value={formData.purchaseDate}
-            onChange={handleChange}
+            value={formData.purchaseDateFormatted}
+            onChange={(e) => {
+              // optional: simple regex check or mask to keep format consistent
+              setFormData(prev => ({ ...prev, purchaseDateFormatted: e.target.value }));
+            }}
+            onBlur={() => {
+              // on blur, optionally parse and set the raw YYYY-MM-DD
+              const [day, month, year] = formData.purchaseDateFormatted.split('/');
+              setFormData(prev => ({
+                ...prev,
+                purchaseDate: `${year}-${month}-${day}`
+              }));
+            }}
           />
-          <label htmlFor="NroFactura">Número de Factura:</label>
-          <input
-            type="text"
-            id="NroFactura"
-            name="NroFactura"
-            placeholder="Número de Factura"
-            required
-            value={formData.NroFactura}
-            onChange={handleChange}
-          />
-          <label htmlFor="MarcaProducto">Marca del producto:</label>
-          <input
-            type="text"
-            id="MarcaProducto"
-            name="MarcaProducto"
-            placeholder="Marca del producto"
-            required
-            value={formData.MarcaProducto}
-            onChange={handleChange}
-          />
-          <label htmlFor="ModeloProducto">Modelo del producto:</label>
-          <input
-            type="text"
-            id="ModeloProducto"
-            name="ModeloProducto"
-            placeholder="Modelo del producto"
-            required
-            value={formData.ModeloProducto}
-            onChange={handleChange}
-          />
+
           <label htmlFor="barCode">Código de Barras:</label>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <input
             type="text"
             id="barCode"
@@ -217,12 +274,52 @@ export default function Warranty() {
             required
             value={formData.barCode}
             onChange={handleChange}
+            style={{ flex: 1 }}
           />
-          <label htmlFor="invoiceNumber">Factura del producto:</label>
+          <button
+          type='button'
+          className='inputWarranty'
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px 10px'
+          }}
+          >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="white"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 
+                    1.398h-.001l3.85 3.85a1 1 0 0 0 
+                    1.415-1.415l-3.85-3.85zm-5.242 
+                    1.656a5 5 0 1 1 0-10 5 5 0 0 1 
+                    0 10z"/>
+          </svg>
+          </button>
+          </div>
+
+          <label htmlFor="invoiceNumber">Número de Factura:</label>
           <input
-            type="file"
+            type="text"
             id="invoiceNumber"
             name="invoiceNumber"
+            placeholder="Número de Factura"
+            minLength={5}
+            maxLength={20}
+            required
+            value={formData.invoiceNumber}
+            onChange={handleChange}
+          />
+
+          <label htmlFor="invoiceIMG">Factura del producto:</label>
+          <input
+            type="file"
+            id="invoiceIMG"
+            name="invoiceIMG"
             accept="image/*"
             required
             onChange={handleChange}
