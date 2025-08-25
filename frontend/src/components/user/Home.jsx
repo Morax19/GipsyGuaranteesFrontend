@@ -1,6 +1,5 @@
 import React from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import { useSession } from '../../SessionContext';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBase from '../base/LayoutBaseUser';
 import image from '../../assets/IMG/WarrancyWallpaper.jpg';
 

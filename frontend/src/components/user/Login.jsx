@@ -22,15 +22,6 @@ function Login() {
   const [Password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  /*
-  useEffect(() => {
-    // If already logged in, redirect to home page
-    if (localStorage.getItem('session_token')) {
-      navigate('/user/home');
-    }
-  }, [navigate]);
-  */
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -41,17 +32,13 @@ function Login() {
         },
         body: JSON.stringify({ EmailAddress, Password }),
       });
+
       const data = await response.json();
       if (response.ok) {
+        const { access_token } = data;
+        sessionStorage.setItem('session_token', access_token);
         navigate('/user/home');
       }
-      /*
-      if (response.ok && data.access) {
-        localStorage.setItem('session_token', data.access);
-        localStorage.setItem('refresh_token', data.refresh);
-        navigate('/user/home');
-      } 
-      */
       else {
         alert(data.detail || data.message || 'Login failed');
       }

@@ -4,7 +4,7 @@ import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/usersTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 import UserFormModal from './UserFormModal';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
@@ -34,7 +34,7 @@ const UsersTable = () => {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
             'Content-Type': 'application/json'
           }
         }
@@ -59,7 +59,7 @@ const UsersTable = () => {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
             'Content-Type': 'application/json'
           }
         }

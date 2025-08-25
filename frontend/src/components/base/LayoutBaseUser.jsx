@@ -9,6 +9,10 @@ const LayoutBaseUser = ({ userFirstName, activePage, children }) => {
 
   const toggleSidebar = () => setSidebarActive(!sidebarActive);
   const closeSidebar = () => setSidebarActive(false);
+  const onLogout = () => {
+    sessionStorage.removeItem('session_token');
+    navigate('/');
+  }
 
   return (
     <div className="layout">
@@ -17,6 +21,7 @@ const LayoutBaseUser = ({ userFirstName, activePage, children }) => {
         activePage={activePage}
         sidebarActive={sidebarActive}
         closeSidebar={closeSidebar}
+        onLogout={onLogout}
       />
 
       {/* Contenido principal */}

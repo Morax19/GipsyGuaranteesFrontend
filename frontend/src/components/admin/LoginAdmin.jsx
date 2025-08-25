@@ -21,13 +21,6 @@ function LoginAdmin() {
   const [Password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // If already logged in, redirect to home page
-    if (localStorage.getItem('session_token')) {
-      navigate('/admin/home');
-    }
-  }, [navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -38,8 +31,11 @@ function LoginAdmin() {
         },
         body: JSON.stringify({ EmailAddress, Password }),
       });
+
       const data = await response.json();
       if (response.ok) {
+        const { access_token } = data;
+        sessionStorage.setItem('session_token', access_token);
         navigate('/admin/home');
       }
       /*

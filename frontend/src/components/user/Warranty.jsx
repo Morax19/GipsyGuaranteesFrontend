@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import { useSession } from '../../SessionContext';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBase from '../base/LayoutBaseUser';
 import '../../styles/user/warranty.css';
 
@@ -26,7 +25,6 @@ export default function Warranty() {
   const [branchAddresses, setBranchAddresses] = useState([]);
 
   const navigate = useNavigate();
-  const { onLogout } = useSession();
 
   // Fetch all main customers on component mount
   useEffect(() => {
@@ -37,7 +35,7 @@ export default function Warranty() {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
               'Content-Type': 'application/json'
             }
           }
@@ -82,7 +80,7 @@ export default function Warranty() {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
             'Content-Type': 'application/json'
           }
         }
@@ -114,7 +112,7 @@ export default function Warranty() {
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('session_token')}`
+            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`
           },
           body: formDataToSend
         }

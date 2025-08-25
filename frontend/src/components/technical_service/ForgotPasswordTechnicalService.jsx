@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/technical_service/forgotPasswordTechnicalService.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
@@ -33,7 +33,7 @@ const ForgotPasswordTechnicalService = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('session_token')}`,
+          'Authorization': `Bearer ${sessionStorage.getItem('session_token')}`,
         },
         body: JSON.stringify({ email }),
       });

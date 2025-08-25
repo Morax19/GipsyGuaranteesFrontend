@@ -1,6 +1,5 @@
 import React from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import { useSession } from '../../SessionContext';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 
 const HomeAdmin = ({ userFirstName }) => {

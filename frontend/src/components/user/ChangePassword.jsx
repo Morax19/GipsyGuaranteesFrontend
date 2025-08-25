@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import SessionModal from "../base/SessionModal";
-import { useSessionTimeout } from '../../useSessionTimeout';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/user/changePassword.css';
 import LayoutBase from '../base/LayoutBaseUser';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
@@ -17,10 +15,8 @@ const ChangePassword = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('session_token');
-    if (!token) {
-      //DESCOMENTAR ESTO AL TERMINAR DE AÑADIR ESTILOS
-      //navigate('/user/login');
+    if (!sessionStorage.getItem('session_token')) {
+      navigate('/');
       return;
     }
   }, [navigate]);
@@ -36,13 +32,12 @@ const ChangePassword = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-    const token = localStorage.getItem('session_token');
     try {
       const response = await fetchWithAuth(`${apiUrl}/api/userChangePassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${sessionStorage.getItem('session_token')}`,
         },
         body: JSON.stringify({
           username: user.email,
@@ -63,12 +58,9 @@ const ChangePassword = () => {
   };
 
   const handleLogout = () => {
-      localStorage.removeItem('session_token');
-      localStorage.removeItem('refresh_token');
-      navigate('/user/login');
-    };
-
-    const [showSessionModal, setShowSessionModal] = useSessionTimeout(handleLogout);
+    sessionStorage.removeItem('session_token');
+    navigate('/user/login');
+  };
 
   return (
     <LayoutBase activePage="change-password">

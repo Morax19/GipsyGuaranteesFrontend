@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
@@ -40,7 +40,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+                  Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
                 },
               }
             );
@@ -104,7 +104,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
             method,
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
             },
             credentials: 'include',
             body: JSON.stringify(formData)

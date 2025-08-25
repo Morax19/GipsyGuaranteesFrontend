@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/admin/userFormModal.css';
 
 const isDevelopment = import.meta.env.MODE === 'development';
@@ -93,7 +93,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             method,
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`
             },
             body: JSON.stringify(dataToSend)
           }

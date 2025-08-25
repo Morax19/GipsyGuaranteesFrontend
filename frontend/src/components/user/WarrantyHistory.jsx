@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBaseUser from '../base/LayoutBaseUser';
 import '../../styles/user/warrantyHistory.css';
 
@@ -20,7 +20,7 @@ const WarrantyHistory = ({ userFirstName }) => {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
               'Content-Type': 'application/json'
             }
           }
