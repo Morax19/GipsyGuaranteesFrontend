@@ -1,92 +1,110 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import { useSession } from '../../SessionContext';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBase from '../base/LayoutBaseUser';
 import '../../styles/user/warranty.css';
 
-const isDevelopment = import.meta.env.MODE === 'development'
-const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
-  const [branches, setBranches] = useState([]);
-
-  useEffect(() => {
-    async function fetchBranches() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/GetBranchView/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setBranches(data);
-        } else {
-          console.log(data.message || 'Error fetching branches');
-        }
-      } catch {
-        console.log('Error de conexión con el servidor');
-      }
-    }
-    fetchBranches();
-  }, []);
-  const navigate = useNavigate();
-  const { onLogout } = useSession();
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
+    mainCustomerID: '',
     barCode: '',
     purchaseDate: '',
     storeName: '',
     storeAddress: '',
-    invoiceNumber: null
+    invoiceNumber: null,
+    StoreID: '',
+    NroFactura: '',
+    MarcaProducto: '',
+    ModeloProducto: '',
   });
 
-  // Get addresses for selected branch
-  const selectedBranch = branches.find(branch => branch.name === form.storeName);
-  const branchAddresses = selectedBranch ? (Array.isArray(selectedBranch.address) ? selectedBranch.address : [selectedBranch.address]) : [];
+  const [mainCustomers, setMainCustomers] = useState([]);
+  const [branchAddresses, setBranchAddresses] = useState([]);
 
-  // Redirect if no token present
-/* Deshabilitado el redirect a login si no hay sesión iniciada
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!localStorage.getItem('session_token')) {
-      navigate('/user/login');
-    }
-  }, [navigate]);
-*/
+  const fetchMainCustomers = async () => {
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/adminGetMainCustomers/`,
+        {
+          method: 'GET',
+        }
+      );
 
-  // Handle form field changes
-  const handleChange = ({ target: { name, value, files } }) => {
-    if (name === 'invoiceNumber') {
-      setForm(f => ({ ...f, invoiceNumber: files[0] }));
-    } else {
-      setForm(f => ({ ...f, [name]: value }));
+      const data = await response.json();
+      if (response.ok) {
+        setMainCustomers(data);
+      } else {
+        console.error(data.message || 'Error fetching MainCustomers');
+      }
+    } catch {
+      console.error('Error de conexión con el servidor');
     }
   };
+
+  const fetchBranchAddresses = async (mainCustomerID, isRetail) => {
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/getBranchByCustomerID/?mainCustomerID=${mainCustomerID}&isRetail=${isRetail}`,
+        {
+          method: 'GET',
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setBranchAddresses(data);
+      } else {
+        console.error(data.message || 'Error fetching branch addresses');
+      }
+    } catch {
+      console.error('Error de conexión con el servidor');
+    }
+  };
+
+  // Handle form field changes
+  const handleChange = async ({ target: { name, value, files } }) => {
+    if (name === 'invoiceNumber') {
+      setFormData(f => ({ ...f, [name]: files[0] }));
+    } else if (name === 'mainCustomerID') {
+      // Correctly handle the mainCustomerID select
+      setFormData(f => ({ ...f, [name]: value }));
+      if (value) {
+        // Fetch branch addresses when a customer is selected
+        const [mainCustomerID, isRetail] = value.split('-');
+        fetchBranchAddresses(mainCustomerID, isRetail);
+      } else {
+        setBranchAddresses([]);
+      }
+    } else {
+      setFormData(f => ({ ...f, [name]: value }));
+    }
+  };
+
+  useEffect(() => {
+    fetchMainCustomers();
+  }, []);
 
   // Submit warranty registration
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      if (value !== null) formData.append(key, value);
-    });
-
     try {
+      // Use FormData to send both text and file data
+      const formDataToSend = new FormData();
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
+
       const response = await fetchWithAuth(
-        `${apiUrl}/api/userWarrantyRegistration/`,
+        `${apiUrl}/api/warrantyRegister/`,
         {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('session_token')}`
-          },
-          body: formData
+          body: formDataToSend
         }
       );
 
@@ -95,124 +113,124 @@ export default function Warranty() {
         console.log('¡Garantía guardada exitosamente!');
         // reset form or redirect here if desired
       } else {
-        console.log(data.message || 'Error al guardar la garantía');
+        console.error(data.message || 'Error al guardar la garantía');
       }
     } catch {
-      console.log('Error de conexión con el servidor');
+      console.error('Error de conexión con el servidor');
     }
   };
 
   return (
     <LayoutBase activePage="warranty">
-    <div className="cardContainerWarranty">
-      <h2>Registro de Garantía</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <label htmlFor="storeName"></label>
-        <select
-          id="storeName"
-          name="storeName"
-          required
-          value={form.storeName}
-          onChange={handleChange}
-        >
-          <option value="" disabled selected>Tienda donde compró el producto</option>
-          {branches.map(branch => (
-            <option key={branch.id} value={branch.name}>{branch.name}</option>
-          ))}
-        </select>
+      <div className="cardContainerWarranty">
+        <h2>Registro de Garantía</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Customer Select List */}
+          <label htmlFor="mainCustomerID">Compañía asociada:</label>
+          <select
+            id="mainCustomerID"
+            name="mainCustomerID"
+            value={`${formData.mainCustomerID}-${mainCustomers.find(c => c.ID === formData.mainCustomerID)?.isRetail || ''}`}
+            onChange={handleChange}
+            required
+          >
+            <option value="" disabled>Tienda donde compró el producto</option>
+            {mainCustomers.map(mainCustomer => (
+              <option key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}>
+                {mainCustomer.FullName}
+              </option>
+            ))}
+          </select>
 
-        <label htmlFor="storeAddress"></label>
-        <select
-          id="storeAddress"
-          name="storeAddress"
-          required
-          value={form.storeAddress}
-          onChange={handleChange}
-        >
-          <option value="" disabled selected>Dirección de la tienda</option>
-          {branchAddresses.map((address, idx) => (
-            <option key={idx} value={address}>{address}</option>
-          ))}
-        </select>
+          {/* Branch Address Select List */}
+          <label htmlFor="storeAddress">Dirección de la tienda:</label>
+          <select
+            id="storeAddress"
+            name="storeAddress"
+            required
+            value={formData.storeAddress}
+            onChange={handleChange}
+            disabled={!formData.mainCustomerID}
+          >
+            <option value="" disabled>Seleccione una dirección</option>
+            {branchAddresses.map((address, idx) => (
+              <option key={idx} value={address}>{address}</option>
+            ))}
+          </select>
+          
+          {/* Other Form Fields */}
+          <label htmlFor="StoreID">RIF de la tienda:</label>
+          <input
+            type="text"
+            id="StoreID"
+            name="StoreID"
+            placeholder="RIF de la tienda"
+            required
+            value={formData.StoreID}
+            onChange={handleChange}
+          />
+          <label htmlFor="purchaseDate">Fecha de compra:</label>
+          <input
+            type="date"
+            id="purchaseDate"
+            name="purchaseDate"
+            required
+            value={formData.purchaseDate}
+            onChange={handleChange}
+          />
+          <label htmlFor="NroFactura">Número de Factura:</label>
+          <input
+            type="text"
+            id="NroFactura"
+            name="NroFactura"
+            placeholder="Número de Factura"
+            required
+            value={formData.NroFactura}
+            onChange={handleChange}
+          />
+          <label htmlFor="MarcaProducto">Marca del producto:</label>
+          <input
+            type="text"
+            id="MarcaProducto"
+            name="MarcaProducto"
+            placeholder="Marca del producto"
+            required
+            value={formData.MarcaProducto}
+            onChange={handleChange}
+          />
+          <label htmlFor="ModeloProducto">Modelo del producto:</label>
+          <input
+            type="text"
+            id="ModeloProducto"
+            name="ModeloProducto"
+            placeholder="Modelo del producto"
+            required
+            value={formData.ModeloProducto}
+            onChange={handleChange}
+          />
+          <label htmlFor="barCode">Código de Barras:</label>
+          <input
+            type="text"
+            id="barCode"
+            name="barCode"
+            placeholder="Código de Barras"
+            required
+            value={formData.barCode}
+            onChange={handleChange}
+          />
+          <label htmlFor="invoiceNumber">Factura del producto:</label>
+          <input
+            type="file"
+            id="invoiceNumber"
+            name="invoiceNumber"
+            accept="image/*"
+            required
+            onChange={handleChange}
+          />
 
-        <label htmlFor="StoreID"></label>
-        <input
-          type="text"
-          id="StoreID"
-          name="StoreID"
-          placeholder="RIF de la tienda"
-          required
-          value={form.StoreID}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="purchaseDate">Fecha de compra:</label>
-        <input
-          type="date"
-          id="purchaseDate"
-          name="purchaseDate"
-          required
-          value={form.purchaseDate}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="NroFactura"></label>
-        <input
-          type="text"
-          id="NroFactura"
-          name="NroFactura"
-          placeholder="Número de Factura"
-          required
-          value={form.NroFactura}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="MarcaProducto"></label>
-        <input
-          type="text"
-          id="MarcaProducto"
-          name="MarcaProducto"
-          placeholder="Marca del producto"
-          required
-          value={form.MarcaProducto}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="ModeloProducto"></label>
-        <input
-          type="text"
-          id="ModeloProducto"
-          name="ModeloProducto"
-          placeholder="Modelo del producto"
-          required
-          value={form.ModeloProducto}
-          onChange={handleChange}
-        />
-        
-        <label htmlFor="barCode"></label>
-        <input
-          type="text"
-          id="barCode"
-          name="barCode"
-          placeholder="Código de Barras"
-          required
-          value={form.barCode}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="invoiceNumber">Factura del producto:</label>
-        <input
-          type="file"
-          id="invoiceNumber"
-          name="invoiceNumber"
-          accept="image/*"
-          required
-          onChange={handleChange}
-        />
-
-        <button className="inputWarranty" type="submit">Guardar Garantía</button>
-      </form>
-    </div>
+          <button className="inputWarranty" type="submit">Guardar Garantía</button>
+        </form>
+      </div>
     </LayoutBase>
   );
 }

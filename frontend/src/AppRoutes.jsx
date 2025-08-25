@@ -2,12 +2,14 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Welcome from './components/base/Welcome';
+import ProtectedRoute from './components/base/ProtectedRoute';
 
 import Home from './components/user/Home';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Warranty from './components/user/Warranty';
 import EditProfile from './components/user/EditProfile';
+import ChangePassword from './components/user/ChangePassword';
 import ForgotPassword from './components/user/ForgotPassword';
 import WarrantyHistory from './components/user/WarrantyHistory';
 import UserTechnicalService from './components/test/TechnicalServiceLogged';
@@ -27,31 +29,86 @@ import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Path from the Welcome */}
       <Route path="/"              element={<Welcome />} />
+      <Route path="/technical-service" element={<TechnicalService />} />
 
       {/* Path from User's Logic */}
-      <Route path="/user/home"          element={<Home />} />
-      <Route path="/user/login"         element={<Login />} />
-      <Route path="/user/register"      element={<Register />} />
-      <Route path="/user/warranty"      element={<Warranty />} />
-      <Route path="/user/edit-profile"  element={<EditProfile />} />
+      {/* Public paths from User's Logic */}
+      <Route path="/user/login" element={<Login />} />
+      <Route path="/user/register" element={<Register />} />
       <Route path="/user/forgot-password" element={<ForgotPassword />} />
-      <Route path="/user/user-technical-service" element={<UserTechnicalService />} />
-      <Route path="/user/warranties-history" element={<WarrantyHistory />} />
+      
+      {/* Protected paths from User's Logic */}
+      <Route path="/user/home" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <Home />
+        </ProtectedRoute>
+      }/>
+      <Route path="/user/warranty" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <Warranty />
+        </ProtectedRoute>
+      }/>
+      <Route path="/user/edit-profile" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <EditProfile />
+        </ProtectedRoute>
+      }/>
+      <Route path="/user/change-password" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <ChangePassword />
+        </ProtectedRoute>
+      }/>
+      <Route path="/user/user-technical-service" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <UserTechnicalService />
+        </ProtectedRoute>
+      }/>
+      <Route path="/user/warranties-history" element={
+        <ProtectedRoute requiredRole='Cliente'>
+          <WarrantyHistory />
+        </ProtectedRoute>
+      }/>
 
       {/* Path from Technical Service's Logic */}
-      <Route path="/technical-service" element={<TechnicalService />} />
-      <Route path="/technical-service/home" element={<HomeTechnicalService />} />
+      {/* Public paths from Technical Service's Logic */}
       <Route path="/technical-service/login" element={<LoginTechnicalService />} />
       <Route path="/technical-service/forgot-password" element={<ForgotPasswordTechnicalService />} />
-      <Route path="/technical-service/history-warranties" element={<WarrantiesListTechnicalService />} />
+
+      {/* Protected paths from Technical Service's Logic */}
+      <Route path="/technical-service/home" element={
+        <ProtectedRoute requiredRole='Servicio Técnico'>
+          <HomeTechnicalService />
+        </ ProtectedRoute>
+      }/>
+      <Route path="/technical-service/history-warranties" element={
+        <ProtectedRoute requiredRole='Servicio Técnico'>
+          <WarrantiesListTechnicalService />
+        </ProtectedRoute>
+      }/>
 
       {/* Path from Admin's Logic */}
+      {/* Public paths from Admin's Logic */}
       <Route path="/admin/login" element={<LoginAdmin />} />
       <Route path="/admin/forgot-password" element={<ForgotPasswordAdmin />} />
-      <Route path="/admin/home" element={<HomeAdmin />} />
-      <Route path="/admin/users-table" element={<UsersTable />} />
-      <Route path="/admin/branches-table" element={<BranchesTable />} />
+
+      {/* Protected paths from Admin's Logic */}
+      <Route path="/admin/home" element={
+        <ProtectedRoute requiredRole='Administrador'>
+          <HomeAdmin />
+        </ProtectedRoute>
+      }/>
+      <Route path="/admin/users-table" element={
+        <ProtectedRoute requiredRole='Administrador'>
+          <UsersTable />
+        </ProtectedRoute>
+      }/>
+      <Route path="/admin/branches-table" element={
+        <ProtectedRoute requiredRole='Administrador'>
+          <BranchesTable />
+        </ProtectedRoute>
+      }/>
     </Routes>
   );
 }

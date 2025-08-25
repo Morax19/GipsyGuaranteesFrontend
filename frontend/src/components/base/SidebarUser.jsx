@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSession } from '../../SessionContext';
 import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png'
 
-const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
+const SidebarUser = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
   const isActive = (page) => activePage === page;
-  const { onLogout } = useSession();
 
   return (
     <>
@@ -45,6 +43,12 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar }) => {
               {/* Editar Perfil */}
               <div className={`optionContainer ${isActive('edit-profile') ? 'active' : ''}`}>
                 <Link to="/user/edit-profile" className="optionLink" onClick={closeSidebar}>Editar Perfil</Link>
+              </div>
+            </li>
+            <li>
+              {/* Cambiar Contraseña */}
+              <div className={`optionContainer ${isActive('change-password') ? 'active' : ''}`}>
+                <Link to="/user/change-password" className="optionLink" onClick={closeSidebar}>Cambiar Contraseña</Link>
               </div>
             </li>
             <li>

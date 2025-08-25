@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSession } from '../../SessionContext';
 import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_medioBlanco.png'
 
-const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar }) => {
+const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
   const isActive = (page) => activePage === page;
-  const { onLogout } = useSession();
 
   return (
     <>

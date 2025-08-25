@@ -45,9 +45,9 @@ body {
     width: 100%; /* Ensure the form takes up the full width of its parent */
 }
 
+.cardContainerEditProfile form input[type="tel"],
 .cardContainerEditProfile form input[type="text"], 
-.cardContainerEditProfile form input[type="email"],
-.cardContainerEditProfile form input[type="password"] {
+.cardContainerEditProfile form input[type="email"] {
     width: 65%;
     padding: 10px;
     margin: 12px 0;

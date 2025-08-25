@@ -1,93 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
-//import Cookies from 'js-cookie';
 
-const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
+const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload }) => {
   const [formData, setFormData] = useState({
     userID: '',
-    User: '',
+    FirstName: '',
+    LastName: '',
+    EmailAddress: '',
+    PhoneNumber: '',
+    Address: '',
+    Zip: '',
     Password: '',
-    registrationDate: new Date().toISOString().split('T')[0],
     CustomerID: '',
     roleID: '',
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [customers, setCustomers] = useState([])
-
-  const roleOptions = [
-    'Administrador',
-    'Servicio Técnico',
-    'Cliente',
-  ];
-/*
-  async function fetchCSRFToken() {
-    try {
-      const response = await fetch(`${apiUrl}/api/token-getCSRF/`, {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return data.csrfToken; // Return the token directly
-      } else {
-        console.error(`Failed to fetch CSRF token: ${response.status}`);
-        return null;
-      }
-    } catch (error) {
-      console.error('Network error fetching CSRF token:', error);
-      return null;
-    }
-  }
-
-  function getCookie(name) {
-    return document.cookie
-      .split('; ')
-      .find(row => row.startsWith(name + '='))
-      ?.split('=')[1];
-  }
-*/
-  useEffect(() => {
-    async function fetchCustomers() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/adminGetCustomers/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setCustomers(data);
-        } else {
-          console.error(data.message || 'Error fetching customers');
-        }
-      } catch {
-        console.error('Error connecting to server');
-      }
-    }
-    fetchCustomers();
-  }, [])
 
   useEffect(() => {
     if (userToEdit) {
-      setFormData(userToEdit);
       setIsEditMode(true);
+      setFormData(prevData => ({
+        ...prevData,
+        userID: userToEdit.userID,
+        roleID: userToEdit.roleID,
+        Password: userToEdit.Password,
+    }));
+
+      if(userToEdit.CustomerID){
+        async function fetchCustomerDetail(){
+          try{
+            const response = await fetchWithAuth(
+              `${apiUrl}api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
+                },
+              }
+            );
+            const customerData = await response.json();
+
+            if (response.ok){
+              setFormData(prevData => ({
+                ...prevData,
+                FirstName: customerData.FirstName,
+                LastName: customerData.LastName,
+                EmailAddress: customerData.EmailAddress,
+                PhoneNumber: customerData.PhoneNumber || '',
+                Address: customerData.Address || '',
+                Zip: customerData.Zip || '',
+              }));
+            } else {
+              console.error(customerData.message || 'Error fetching customer details');
+            }
+          } catch (error) {
+            console.error('Error connecting to the server', error);
+          }
+        }
+        fetchCustomerDetail();
+        
+      }
     } else {
       setFormData({
         userID: '',
-        User: '',
+        FirstName: '',
+        LastName: '',
+        EmailAddress: '',
+        PhoneNumber: '',
+        Address: '',
+        Zip: '',
         Password: '',
-        registrationDate: new Date().toISOString().split('T')[0],
-        CustomerID: '',
         roleID: '',
       });
       setIsEditMode(false);
@@ -100,15 +88,13 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
   };
 
   const handleSave = async () => {
-    if (!formData.User || !formData.Password || !formData.CustomerID || !formData.roleID) {
+    alert(formData.roleID);
+    if (!formData.FirstName || !formData.LastName || !formData.EmailAddress || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
-
-    //await fetchCSRFToken();
-    //const csrfToken = Cookies.get('csrftoken')
     
-    const endpoint = isEditMode ? 'adminEditUser' : 'adminCreateUser';
+    const endpoint = isEditMode ? 'adminEditUsers' : 'adminCreateUsers';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
       try {
@@ -118,8 +104,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
             method,
             headers: {
               'Content-Type': 'application/json',
-              //'X-CSRFToken': csrfToken,
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
             },
             credentials: 'include',
             body: JSON.stringify(formData)
@@ -132,6 +117,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
             alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
             onSave(formData, isEditMode);
             onClose();
+            onReload();
           } else {
             alert(data.message || 'Error al guardar el usuario');
           }
@@ -178,14 +164,77 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
           )}
           
           <div className="form-group-user">
-            <label htmlFor="User">Usuario:</label>
+            <label htmlFor="FirstName">Nombre:</label>
             <input
               type="text"
-              id="User"
-              name="User"
-              value={formData.User}
+              id="FirstName"
+              name="FirstName"
+              required
+              value={formData.FirstName}
               onChange={handleChange}
-              placeholder="Ingrese el nombre de usuario"
+              placeholder="Ingrese el nombre del usuario"
+            />
+          </div>
+
+          <div className="form-group-user">
+            <label htmlFor="LastName">Apellido:</label>
+            <input
+              type="text"
+              id="LastName"
+              name="LastName"
+              required
+              value={formData.LastName}
+              onChange={handleChange}
+              placeholder="Ingrese el apellido del usuario"
+            />
+          </div>
+
+          <div className="form-group-user">
+            <label htmlFor="EmailAddress">Correo electrónico:</label>
+            <input
+              type="email"
+              id="EmailAddress"
+              name="EmailAddress"
+              required
+              value={formData.EmailAddress}
+              onChange={handleChange}
+              placeholder="Ingrese el correo electrónico del usuario"
+            />
+          </div>
+
+          <div className="form-group-user">
+            <label htmlFor="PhoneNumber">Teléfono:</label>
+            <input
+              type="tel"
+              id="PhoneNumber"
+              name="PhoneNumber"
+              value={formData.PhoneNumber}
+              onChange={handleChange}
+              placeholder="Ingrese el teléfono del usuario (Opcional)"
+            />
+          </div>
+
+          <div className="form-group-user">
+            <label htmlFor="Address">Dirección:</label>
+            <input
+              type="text"
+              id="Address"
+              name="Address"
+              value={formData.Address}
+              onChange={handleChange}
+              placeholder="Ingrese la dirección del usuario (Opcional)"
+            />
+          </div>
+
+          <div className="form-group-user">
+            <label htmlFor="Zip">Código Postal:</label>
+            <input
+              type="text"
+              id="Zip"
+              name="Zip"
+              value={formData.Zip}
+              onChange={handleChange}
+              placeholder="Ingrese el código postal del usuario (Opcional)"
             />
           </div>
 
@@ -212,21 +261,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="CustomerID">Cliente asociado:</label>
-            <select
-              id="CustomerID"
-              name="CustomerID"
-              value={formData.CustomerID}
-              onChange={handleChange}
-            >
-              <option value="">Seleccione un cliente</option>
-              {customers.map(customer => (
-                <option key={customer.ID} value={customer.ID}>{customer.FullName}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group-user">
             <label htmlFor="roleID">Rol:</label>
             <select
               id="roleID"
@@ -235,8 +269,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave }) => {
               onChange={handleChange}
             >
               <option value="">Seleccione un rol</option>
-              {roleOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
+              {roles.map(role => (
+                <option key={role.RoleID} value={role.RoleID}>{role.Description}</option>
               ))}
             </select>
           </div>

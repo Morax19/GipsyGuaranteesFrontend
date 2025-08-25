@@ -74,12 +74,14 @@
     font-size: 0.9em;
 }
 
-.modal-content-user input[type="text"],
-.modal-content-user input[type="password"],
-.modal-content-user input[type="date"],
 .modal-content-user select,
+.modal-content-user textarea,
+.modal-content-user input[type="tel"],
+.modal-content-user input[type="text"],
+.modal-content-user input[type="date"],
+.modal-content-user input[type="email"],
 .modal-content-user input[type="number"],
-.modal-content-user textarea {
+.modal-content-user input[type="password"] {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #ccc;

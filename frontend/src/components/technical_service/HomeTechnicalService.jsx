@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
@@ -24,7 +24,7 @@ const Home = ({ userFirstName }) => {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
               'Content-Type': 'application/json'
             }
           }
@@ -51,7 +51,7 @@ const Home = ({ userFirstName }) => {
             {
               method: 'GET',
               headers: {
-                Authorization: `Bearer ${localStorage.getItem('session_token')}`,
+                Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
                 'Content-Type': 'application/json'
               }
             }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '../../fetchWithAuth';
-import { useSession } from '../../SessionContext';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import eye from '../../assets/IMG/ojo.png';
 import '../../styles/technical_service/warrantiesList.css';
@@ -95,7 +94,6 @@ const mockWarranties = [
     fechaCierre: '2024-07-25',
   },
 ];
-
 
 const WarrantiesList = ({ userFirstName }) => {
   const [searchTerm, setSearchTerm] = useState('');
