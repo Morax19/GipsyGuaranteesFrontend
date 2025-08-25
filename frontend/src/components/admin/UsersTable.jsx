@@ -7,7 +7,7 @@ import UserFormModal from './UserFormModal';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 const isDevelopment = import.meta.env.MODE === 'development'
-const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : process.env.VITE_API_BASE_URL_PROD;
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const UsersTable = () => {
   const [roles, setRoles] = useState([]);
