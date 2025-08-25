@@ -57,9 +57,7 @@ function LoginAdmin() {
   return (
     <div className="cardContainerLoginAdmin">
       <img src={logo} alt="Logo" className="logoLoginAdmin" />
-      <Link to="/admin/home" className="no-underline-link"> 
-          <h2>Iniciar sesión como <br/> Administrador</h2>
-      </Link>
+      <h2>Iniciar sesión como <br/> Administrador</h2>
       <br />
       <form onSubmit={handleSubmit}>
         <input
