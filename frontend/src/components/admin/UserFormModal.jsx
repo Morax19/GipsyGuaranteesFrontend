@@ -35,7 +35,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
         async function fetchCustomerDetail(){
           try{
             const response = await fetchWithAuth(
-              `${apiUrl}api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
+              `${apiUrl}/api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
               {
                 method: 'GET',
                 headers: {
@@ -99,7 +99,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
     (async () => {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}api/${endpoint}/`,
+          `${apiUrl}/api/${endpoint}/`,
           {
             method,
             headers: {
