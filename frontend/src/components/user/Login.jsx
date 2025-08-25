@@ -50,9 +50,7 @@ function Login() {
   return (
     <div className="cardContainerLogin">
       <img src={logo} alt="Logo" className="logoLogin" />
-      <Link to="/user/home" className="no-underline-link"> 
-          <h2>Iniciar sesión como <br/> Cliente</h2>
-      </Link>
+      <h2>Iniciar sesión como <br/> Cliente</h2>
       <br />
       <form onSubmit={handleSubmit}>
         <input

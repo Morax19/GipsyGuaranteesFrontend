@@ -49,9 +49,7 @@ function LoginTechnicalService() {
   return (
     <div className="cardContainerLoginTechnicalService">
       <img src={logo} alt="Logo" className="logoLoginTechnicalService" />
-      <Link to="/technical-service/home" className="no-underline-link"> 
-          <h2>Iniciar sesión como <br/> Servicio Técnico</h2>
-      </Link>
+      <h2>Iniciar sesión como <br/> Servicio Técnico</h2>
       <br />
       <form onSubmit={handleSubmit}>
         <input
