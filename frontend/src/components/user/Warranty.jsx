@@ -9,7 +9,7 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 
 export default function Warranty() {
   const [formData, setFormData] = useState({
-    customerID: '',
+    mainCustomerID: '',
     barCode: '',
     purchaseDate: '',
     storeName: '',
@@ -26,65 +26,35 @@ export default function Warranty() {
 
   const navigate = useNavigate();
 
-  // Fetch all main customers on component mount
-  useEffect(() => {
-    async function fetchMainCustomers() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/adminGetMainCustomers/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setMainCustomers(data);
-        } else {
-          console.error(data.message || 'Error fetching MainCustomers');
+  const fetchMainCustomers = async () => {
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/adminGetMainCustomers/`,
+        {
+          method: 'GET',
         }
-      } catch {
-        console.error('Error de conexión con el servidor');
-      }
-    }
-    fetchMainCustomers();
-  }, []);
+      );
 
-  // Handle form field changes
-  const handleChange = async ({ target: { name, value, files } }) => {
-    if (name === 'invoiceNumber') {
-      setFormData(f => ({ ...f, [name]: files[0] }));
-    } else if (name === 'customerID') {
-      // Correctly handle the customerID select
-      setFormData(f => ({ ...f, [name]: value }));
-      if (value) {
-        // Fetch branch addresses when a customer is selected
-        const [customerID, isRetail] = value.split('-');
-        fetchBranchAddresses(customerID, isRetail);
+      const data = await response.json();
+      if (response.ok) {
+        setMainCustomers(data);
       } else {
-        setBranchAddresses([]);
+        console.error(data.message || 'Error fetching MainCustomers');
       }
-    } else {
-      setFormData(f => ({ ...f, [name]: value }));
+    } catch {
+      console.error('Error de conexión con el servidor');
     }
   };
 
-  // Function to fetch branch addresses based on customer ID
-  const fetchBranchAddresses = async (customerID, isRetail) => {
+  const fetchBranchAddresses = async (mainCustomerID, isRetail) => {
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/api/getBranchAddresses/${customerID}/${isRetail}`,
+        `${apiUrl}/api/getBranchByCustomerID/?mainCustomerID=${mainCustomerID}&isRetail=${isRetail}`,
         {
           method: 'GET',
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-            'Content-Type': 'application/json'
-          }
         }
       );
+
       const data = await response.json();
       if (response.ok) {
         setBranchAddresses(data);
@@ -95,6 +65,29 @@ export default function Warranty() {
       console.error('Error de conexión con el servidor');
     }
   };
+
+  // Handle form field changes
+  const handleChange = async ({ target: { name, value, files } }) => {
+    if (name === 'invoiceNumber') {
+      setFormData(f => ({ ...f, [name]: files[0] }));
+    } else if (name === 'mainCustomerID') {
+      // Correctly handle the mainCustomerID select
+      setFormData(f => ({ ...f, [name]: value }));
+      if (value) {
+        // Fetch branch addresses when a customer is selected
+        const [mainCustomerID, isRetail] = value.split('-');
+        fetchBranchAddresses(mainCustomerID, isRetail);
+      } else {
+        setBranchAddresses([]);
+      }
+    } else {
+      setFormData(f => ({ ...f, [name]: value }));
+    }
+  };
+
+  useEffect(() => {
+    fetchMainCustomers();
+  }, []);
 
   // Submit warranty registration
   const handleSubmit = async e => {
@@ -111,9 +104,6 @@ export default function Warranty() {
         `${apiUrl}/api/warrantyRegister/`,
         {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('session_token')}`
-          },
           body: formDataToSend
         }
       );
@@ -136,11 +126,11 @@ export default function Warranty() {
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
           {/* Customer Select List */}
-          <label htmlFor="customerID">Compañía asociada:</label>
+          <label htmlFor="mainCustomerID">Compañía asociada:</label>
           <select
-            id="customerID"
-            name="customerID"
-            value={formData.customerID}
+            id="mainCustomerID"
+            name="mainCustomerID"
+            value={`${formData.mainCustomerID}-${mainCustomers.find(c => c.ID === formData.mainCustomerID)?.isRetail || ''}`}
             onChange={handleChange}
             required
           >
@@ -153,14 +143,14 @@ export default function Warranty() {
           </select>
 
           {/* Branch Address Select List */}
-          <label htmlFor="address">Dirección de la tienda:</label>
+          <label htmlFor="storeAddress">Dirección de la tienda:</label>
           <select
-            id="address"
-            name="address"
+            id="storeAddress"
+            name="storeAddress"
             required
-            value={formData.address}
+            value={formData.storeAddress}
             onChange={handleChange}
-            disabled={!formData.customerID}
+            disabled={!formData.mainCustomerID}
           >
             <option value="" disabled>Seleccione una dirección</option>
             {branchAddresses.map((address, idx) => (
