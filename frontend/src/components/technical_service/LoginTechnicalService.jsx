@@ -39,7 +39,7 @@ function LoginTechnicalService() {
         sessionStorage.setItem('session_token', access_token);
         navigate('/technical-service/home');
       } else {
-        alert(data.detail || data.message || 'Login failed');
+        alert(data.error || data.detail || data.message || 'Login failed');
       }
     } catch (error) {
       alert('Error connecting to server');

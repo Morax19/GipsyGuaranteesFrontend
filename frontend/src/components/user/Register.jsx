@@ -54,7 +54,7 @@ function Register() {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        alert('Registration successful!');
+        alert('¡Registro éxitoso!');
         navigate('/user/login'); // Redirect to login page
       } else {
         setMessage(data.message || 'Registration failed');
