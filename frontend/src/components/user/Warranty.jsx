@@ -33,7 +33,6 @@ export default function Warranty() {
     ItemId: '',
     isRetail: '',
     productBrand: '',
-    invoiceCopyPath: '',
   }
 
   const [formData, setFormData] = useState({
@@ -48,7 +47,6 @@ export default function Warranty() {
     ItemId: '',
     isRetail: '',
     productBrand: '',
-    invoiceCopyPath: '',
   });
 
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
@@ -213,24 +211,25 @@ export default function Warranty() {
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
       return;
     }
-    
-    const warrantyData = {
-      registerID: user_id,
-      branchID: formData.branchID,
-      ItemId: formData.ItemId,
-      isRetail: formData.isRetail,
-      purchaseDate: formData.purchaseDate,
-      productBrand: formData.productBrand,
-      productBarcode: formData.barCode,
-      invoiceNumber: formData.invoiceNumber,
-    }
+
+    const img = document.getElementById("invoiceIMG").files[0];
+    const warrantyData = new FormData();
+    warrantyData.append('registerID', user_id);
+    warrantyData.append('branchID', formData.branchID);
+    warrantyData.append('ItemId', formData.ItemId);
+    warrantyData.append('isRetail', formData.isRetail);
+    warrantyData.append('purchaseDate', formData.purchaseDate);
+    warrantyData.append('productBrand', formData.productBrand);
+    warrantyData.append('productBarcode', formData.barCode);
+    warrantyData.append('invoiceNumber', formData.invoiceNumber);
+    warrantyData.append('invoiceIMG', img);
 
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/warrantyRegister/`,
         {
           method: 'POST',
-          body: JSON.stringify(warrantyData),
+          body: warrantyData,
         }
       );
 
@@ -404,8 +403,8 @@ export default function Warranty() {
             type="file"
             id="invoiceIMG"
             name="invoiceIMG"
-            accept="image/*"
-            //required
+            accept="image/*, .pdf"
+            required
             onChange={handleChange}
           />
 
