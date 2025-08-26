@@ -131,7 +131,7 @@ const WarrantyHistory = () => {
                       <td>{warranty.productBrand}</td>
                       <td>{warranty.usedCount}</td>
                       <td>{expirationDate}</td>
-                      <td>{daysLeft}</td>
+                      <td>{daysLeft >= 0 ? daysLeft : 0}</td>
                       <td>
                         <span className={`status-${status === 'Vigente' ? 'Abierto' : 'Cerrado'}`}>
                           {status}
