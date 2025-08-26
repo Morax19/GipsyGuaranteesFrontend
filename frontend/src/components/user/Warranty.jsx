@@ -33,6 +33,8 @@ export default function Warranty() {
     ItemId: '',
     isRetail: '',
     productBrand: '',
+    productCategory: '',
+    invoiceIMG: '',
   }
 
   const [formData, setFormData] = useState({
