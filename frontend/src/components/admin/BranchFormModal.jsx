@@ -105,7 +105,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
           onClose();
           onReload();
         } else {
-          alert(data.message || 'Error al guardar la sucursal');
+          alert(data.error || 'Error al guardar la sucursal');
         }
       } catch {
         alert('Error de conexión con el servidor');

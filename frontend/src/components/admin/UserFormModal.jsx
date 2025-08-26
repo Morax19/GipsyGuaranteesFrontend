@@ -25,10 +25,13 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   useEffect(() => {
     if (userToEdit) {
       setIsEditMode(true);
+
+      const matchedRoleID = userToEdit.roleID || roles.find(r => r.Description === userToEdit.Description)?.RoleID || '';
+
       setFormData(prevData => ({
         ...prevData,
         userID: userToEdit.userID,
-        roleID: userToEdit.roleID,
+        roleID: matchedRoleID,
         Password: userToEdit.Password,
     }));
 
@@ -111,7 +114,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
             onClose();
             onReload();
           } else {
-            alert(data.message || 'Error al guardar el usuario');
+            alert(data.error || 'Error al guardar el usuario');
           }
         } else {
           const text = await response.text();

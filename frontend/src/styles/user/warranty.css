@@ -50,8 +50,7 @@ body {
 }
 
 
-.cardContainerWarranty form input[type="text"],
-.cardContainerWarranty form div input[type="text"] {
+.cardContainerWarranty form input[type="text"] {
     width: 70%;
     padding: 15px;
     margin: 12px 0;
@@ -105,10 +104,33 @@ body {
 
 .search-container {
     display: flex;
+    align-items: center;
+    width: 76%;
     gap: 8px;
+    justify-content: center;
+}
+.search-container input {
+    flex: 1;
+    margin: 0;
+    height: 35%;
+}
+
+.search-button {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 76%;
+    padding: 0 15px;
+    background-color: #4068f8;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.search-button:hover {
+    background-color: #5b7efa;
 }
 
 .inputWarranty {

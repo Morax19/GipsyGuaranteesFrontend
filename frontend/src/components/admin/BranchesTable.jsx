@@ -26,7 +26,6 @@ const BranchesTable = () => {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
               'Content-Type': 'application/json'
             }
           }

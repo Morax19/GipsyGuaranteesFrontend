@@ -37,17 +37,8 @@ function LoginAdmin() {
         const { access_token } = data;
         sessionStorage.setItem('session_token', access_token);
         navigate('/admin/home');
-      }
-      /*
-      else if (response.ok && data.access) {
-
-        localStorage.setItem('session_token', data.access);
-        localStorage.setItem('refresh_token', data.refresh);
-        navigate('/admin/home');
-      }
-      */
-      else {
-        alert(data.detail || data.message || 'Login failed');
+      } else {
+        alert(data.error || data.detail || data.message || 'Login failed');
       }
     } catch (error) {
       alert('Error connecting to server');
