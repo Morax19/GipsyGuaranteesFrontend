@@ -14,7 +14,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
   const usedCount = warranty.usedCount !== undefined ? warranty.usedCount : 0;
   const validityStatus = isWarrantyValid(warranty.purchaseDate, usedCount) ? 'Válida' : 'No Válida';
-  const canOpenCase = warranty.estado !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
+  const canOpenCase = warranty.TechnicalServiceStatus !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
 
 
   const handleOpenCaseClick = () => {
@@ -32,7 +32,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
         <div className="modal-body">
           <div className="detail-row">
-            <strong>Código de Garantía:</strong> <span>{warranty.codigo}</span>
+            <strong>Código de Garantía:</strong> <span>{warranty.WarrantyNumber}</span>
           </div>
           <div className="detail-row">
             <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span> {/* Asumiendo 'purchaseDate' es la fecha de registro */}
@@ -41,7 +41,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
             <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
           </div>
           <div className="detail-row">
-            <strong>Producto:</strong> <span>{warranty.MarcaProducto} - {warranty.ModeloProducto}</span>
+            <strong>Producto:</strong> <span>{warranty.Brand} - {warranty.Model}</span>
           </div>
           <div className="detail-row">
             <strong>Estatus (Vigencia):</strong> 

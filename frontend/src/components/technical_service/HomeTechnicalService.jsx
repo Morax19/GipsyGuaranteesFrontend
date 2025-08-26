@@ -18,37 +18,12 @@ const Home = () => {
   const [allWarranties, setAllWarranties] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchWarranties() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/TechnicalServicesWarrantyView/`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setAllWarranties(data);
-        } else {
-          console.log(data.error || 'Error al obtener garantías');
-        }
-      } catch {
-        console.log('Error de conexión con el servidor');
-      }
-    }
-    fetchWarranties();
-  }, []);
-
   const handleSearch = () => {
     if (searchTerm.trim()) {
       async function fetchWarrantyById() {
         try {
           const response = await fetchWithAuth(
-            `${apiUrl}/api/TechnicalServicesWarrantyView/${searchTerm.trim()}/`,
+            `${apiUrl}/api/technicalServiceGetWarrantyByID/?WarrantyNumber=${searchTerm.trim()}`,
             {
               method: 'GET',
               headers: {
@@ -81,10 +56,34 @@ const Home = () => {
     }
   };
 
-  const handleOpenCaseFromModal = (warrantyToOpenCase) => {
-    console.log('Solicitud para abrir caso para:', warrantyToOpenCase.codigo);
-    alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.codigo}.`);
-    setIsModalOpen(false);
+  const handleOpenCaseFromModal = async (warrantyToOpenCase) => {
+    console.log('Solicitud para abrir caso para:', warrantyToOpenCase.WarrantyNumber);
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/technicalServiceOpenCaseWarranty/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            registerID: user_id,
+            WarrantyID: warrantyToOpenCase.WarrantyNumber
+          })
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.WarrantyNumber}.`);
+        setIsModalOpen(false);
+      } else {
+        alert(data.error || 'Error al abrir el caso. Intente nuevamente.');
+      }
+    } catch (error) {
+      console.error('Error de conexión con el servidor:', error);
+      alert('Error de conexión con el servidor');
+    }
   };
 
   const handleCloseModal = () => {

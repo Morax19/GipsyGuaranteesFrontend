@@ -93,7 +93,6 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             method,
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`
             },
             body: JSON.stringify(dataToSend)
           }
