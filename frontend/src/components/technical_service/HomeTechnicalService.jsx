@@ -11,12 +11,21 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const Home = () => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);
+
   const {user_id, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
   const [allWarranties, setAllWarranties] = useState([]);
-  const navigate = useNavigate();
 
   const handleSearch = () => {
     if (searchTerm.trim()) {

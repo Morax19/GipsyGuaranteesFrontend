@@ -72,9 +72,11 @@ function LoginTechnicalService() {
         <br />
         <button type="submit">Iniciar Sesión</button>
       </form>
+      {/* 
       <p>
         <a href="#" onClick={e => { e.preventDefault(); navigate('/technical-service/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
+      */}
 
       <div className="login-footer">
         <Link to="/user/login" className="login-link"> 

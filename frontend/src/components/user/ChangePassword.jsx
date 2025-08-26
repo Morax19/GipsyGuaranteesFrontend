@@ -10,16 +10,19 @@ const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const ChangePassword = () => {
-  const {user_id, email_address, role} = getCurrentUserInfo();
-  const navigate = useNavigate();
-  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
-  const [message, setMessage] = useState('');
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (!sessionStorage.getItem('session_token')) {
-      navigate('/');
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/user/login');
+      return null;
     }
   }, [navigate]);
+
+  const {user_id, email_address, role} = getCurrentUserInfo();
+  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
+  const [message, setMessage] = useState('');
 
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });

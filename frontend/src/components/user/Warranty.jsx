@@ -10,6 +10,17 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/user/login');
+      return null;
+    }
+  }, [navigate]);
+
+  const {user_id, email_address, role} = getCurrentUserInfo();
   const initialFormData = {
     mainCustomerID: '',
     branchID: '',
@@ -202,7 +213,6 @@ export default function Warranty() {
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
       return;
     }
-    const {user_id, email_address, role} = getCurrentUserInfo();
     
     const warrantyData = {
       registerID: user_id,

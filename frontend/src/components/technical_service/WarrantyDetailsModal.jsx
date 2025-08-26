@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/technical_service/warrantyDetailsModal.css';
 
 const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) => {
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);  
+  
   // Estado local para los campos editables del modal
   const [currentStatus, setCurrentStatus] = useState('');
   const [currentDiagnosis, setCurrentDiagnosis] = useState('');

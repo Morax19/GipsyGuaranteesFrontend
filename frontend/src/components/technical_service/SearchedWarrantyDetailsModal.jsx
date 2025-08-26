@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/technical_service/warrantyDetailsModal.css';
 
 const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase }) => {
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);
+  
   if (!isOpen || !warranty) return null;
 
   const isWarrantyValid = (purchaseDate, usedCount) => {
@@ -55,8 +66,8 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
           </div>
           <div className="detail-row">
             <strong>Estado Actual del Caso:</strong> 
-            <span className={`status-${warranty.estado ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
-                {warranty.estado || 'N/A'}
+            <span className={`status-${warranty.statusID ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
+                {warranty.statusID || 'N/A'}
             </span>
           </div>
 
