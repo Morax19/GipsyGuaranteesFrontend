@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/technical_service/technicalService.css';
 import { Link } from 'react-router-dom';
 import backIcon from '../../assets/IMG/back.png';
