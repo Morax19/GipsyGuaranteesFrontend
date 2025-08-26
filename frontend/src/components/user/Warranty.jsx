@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
+import { jwtDecode } from 'jwt-decode';
 import LayoutBase from '../base/LayoutBaseUser';
 import '../../styles/user/warranty.css';
 
@@ -8,27 +10,88 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
+  const initialFormData = {
+    mainCustomerID: '',
+    branchID: '',
+    RIF:'',
+    RIFtype:'',
+    purchaseDate: '',
+    invoiceNumber: '',
+    barCode: '',
+    invoiceIMG: '',
+    ItemId: '',
+    isRetail: '',
+    productBrand: '',
+    invoiceCopyPath: '',
+  }
+
   const [formData, setFormData] = useState({
     mainCustomerID: '',
     branchID: '',
     RIF:'',
     RIFtype:'',
     purchaseDate: '',
-    purchaseDateFormatted: '',
     invoiceNumber: '',
     barCode: '',
-    invoiceIMG: '', 
+    invoiceIMG: '',
+    ItemId: '',
+    isRetail: '',
+    productBrand: '',
+    invoiceCopyPath: '',
   });
 
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
   const [mainCustomers, setMainCustomers] = useState([]);
   const [branchAddresses, setBranchAddresses] = useState([]);
+  const [products, setProducts] = useState([]);
+
   const validateInvoiceNumber = (value) => {
     const pattern = /^[A-Za-z0-9\-\/]{5,20}$/;
     return pattern.test(value.trim());
   };
 
-  const navigate = useNavigate();
+  const fetchProductByBarCode = async (barCode) => {
+    const bar_code = barCode.trim()
+    if (!bar_code){
+      alert('Por favor, ingrese un código de barras antes de buscar')
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      ItemId: '',
+      productBrand: '',
+      productCategory: ''
+    }));
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/getProductByBarCode/?barCode=${bar_code}`,
+        {
+          method: 'GET',
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setProducts(data);
+
+        if (data && data.ID && data.Brand && data.Category){
+
+          setFormData(prev => ({
+            ...prev,
+            ItemId: data.ID,
+            productBrand: data.Brand || 'Marca del producto',
+            productCategory: data.Category || 'Categoría del producto'
+          }));
+        }
+      } else {
+        console.error(data.error || 'Error al obtener los productos');
+      }
+    } catch {
+      console.error('Error de conexión con el servidor');
+    }
+  };
 
   const fetchMainCustomers = async () => {
     try {
@@ -43,7 +106,7 @@ export default function Warranty() {
       if (response.ok) {
         setMainCustomers(data);
       } else {
-        console.error(data.message || 'Error fetching MainCustomers');
+        console.error(data.error || 'Error fetching MainCustomers');
       }
     } catch {
       console.error('Error de conexión con el servidor');
@@ -74,11 +137,6 @@ export default function Warranty() {
   const handleChange = ({ target: { name, value, files } }) => {
     if (name === 'mainCustomerID') {
       const [id, retail] = value.split('-');
-
-      // Find the main customer object so we can grab RIF data for retail == 'true'
-      const selectedCustomer = mainCustomers.find(
-        mc => String(mc.ID) === String(id)
-      );
 
       setFormData(prev => ({
         ...prev,
@@ -113,15 +171,12 @@ export default function Warranty() {
             [name]: filteredValue
         }));
     } else if (name === 'purchaseDate') {
-      const og = value;
-      const [month, day, year] = og.split('/');
-      const formatted = `${day}/${month}/${year}`;
-
+      // Ensure the date is always in YYYY-MM-DD format
+      const formattedDate = value;
       setFormData(prev => ({
         ...prev,
-        purchaseDate: og,
-        purchaseDateFormatted: formatted
-      }))
+        purchaseDate: formattedDate
+      }));
     } else if (name === 'barCode') {
       const filteredValue = value.replace(/[^0-9]/g, '');
         setFormData(prevData => ({
@@ -141,33 +196,40 @@ export default function Warranty() {
   const handleSubmit = async e => {
     e.preventDefault();
     
-    alert(`${purchaseDate} vs ${purchaseDateFormatted}`)
     if (!validateInvoiceNumber(formData.invoiceNumber)) {
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
       return;
     }
+    const {user_id, email_address, role} = getCurrentUserInfo();
+    
+    const warrantyData = {
+      registerID: user_id,
+      branchID: formData.branchID,
+      ItemId: formData.ItemId,
+      isRetail: formData.isRetail,
+      purchaseDate: formData.purchaseDate,
+      productBrand: formData.productBrand,
+      productBarcode: formData.barCode,
+      invoiceNumber: formData.invoiceNumber,
+    }
 
     try {
-      // Use FormData to send both text and file data
-      const formDataToSend = new FormData();
-      for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
-
       const response = await fetchWithAuth(
         `${apiUrl}/api/warrantyRegister/`,
         {
           method: 'POST',
-          body: formDataToSend
+          body: JSON.stringify(warrantyData),
         }
       );
 
       const data = await response.json();
       if (response.ok) {
-        console.log('¡Garantía guardada exitosamente!');
-        // reset form or redirect here if desired
+        console.log(data.message || '¡Garantía guardada exitosamente!');
+        alert(data.message || '¡Garantía guardada exitosamente!');
+        setFormData(initialFormData);
       } else {
-        console.error(data.message || 'Error al guardar la garantía');
+        console.error(data.error || 'Error al guardar la garantía');
+        alert(data.error || 'Error al guardar la garantía');
       }
     } catch {
       console.error('Error de conexión con el servidor');
@@ -244,28 +306,17 @@ export default function Warranty() {
 
           <label htmlFor="purchaseDate">Fecha de compra:</label>
           <input
-            type="text"
+            type="date"
             id="purchaseDate"
             name="purchaseDate"
-            placeholder='DD/MM/YYYY'
             required
-            value={formData.purchaseDateFormatted}
-            onChange={(e) => {
-              // optional: simple regex check or mask to keep format consistent
-              setFormData(prev => ({ ...prev, purchaseDateFormatted: e.target.value }));
-            }}
-            onBlur={() => {
-              // on blur, optionally parse and set the raw YYYY-MM-DD
-              const [day, month, year] = formData.purchaseDateFormatted.split('/');
-              setFormData(prev => ({
-                ...prev,
-                purchaseDate: `${year}-${month}-${day}`
-              }));
-            }}
+            value={formData.purchaseDate}
+            onChange={handleChange}
+            max={new Date().toISOString().split('T')[0]} // Prevent future dates
           />
 
           <label htmlFor="barCode">Código de Barras:</label>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="search-container">
           <input
             type="text"
             id="barCode"
@@ -279,12 +330,7 @@ export default function Warranty() {
           <button
           type='button'
           className='inputWarranty'
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px 10px'
-          }}
+          onClick={() => fetchProductByBarCode(formData.barCode)}
           >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -301,6 +347,30 @@ export default function Warranty() {
           </svg>
           </button>
           </div>
+          
+          <label htmlFor="productBrand">Marca del producto:</label>
+          <input
+            type="text"
+            id="productBrand"
+            name="productBrand"
+            placeholder="Marca del producto"
+            required
+            value={formData.productBrand}
+            onChange={handleChange}
+            disabled={!!formData.productBrand}
+          />
+
+          <label htmlFor="productCategory">Categoría del producto:</label>
+          <input
+            type="text"
+            id="productCategory"
+            name="productCategory"
+            placeholder="Categoría del producto"
+            required
+            value={formData.productCategory}
+            onChange={handleChange}
+            disabled={!!formData.productCategory}
+          />
 
           <label htmlFor="invoiceNumber">Número de Factura:</label>
           <input
@@ -321,7 +391,7 @@ export default function Warranty() {
             id="invoiceIMG"
             name="invoiceIMG"
             accept="image/*"
-            required
+            //required
             onChange={handleChange}
           />
 

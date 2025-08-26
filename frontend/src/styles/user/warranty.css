@@ -103,6 +103,14 @@ body {
     transition: background-color 0.3s ease;
 }
 
+.search-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    width: 76%;
+}
+
 .inputWarranty {
     display: block;
     width: 35%;
@@ -124,4 +132,8 @@ body {
 
 .inputWarranty:hover {
     background-color: #5b7efa;
+}
+
+#barCode {
+    margin: 0;
 }

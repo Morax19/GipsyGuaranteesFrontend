@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
+import { jwtDecode } from 'jwt-decode';
 import LayoutBaseUser from '../base/LayoutBaseUser';
 import '../../styles/user/warrantyHistory.css';
 
@@ -7,29 +9,30 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 // Historial real de garantías del usuario
-const WarrantyHistory = ({ userFirstName }) => {
+const WarrantyHistory = () => {
+
   const [historyWarranties, setHistoryWarranties] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
   const [filteredHistoryWarranties, setFilteredHistoryWarranties] = useState([]);
 
   useEffect(() => {
     async function fetchHistory() {
+      const { user_id, email_address, role} = getCurrentUserInfo();
+
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/warrantyHistory/`,
+          `${apiUrl}/api/warrantyHistory/?userID=${user_id}`,
           {
             method: 'GET',
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
           }
         );
         const data = await response.json();
         if (response.ok) {
           setHistoryWarranties(data);
+          
         } else {
-          console.log(data.message || 'Error fetching warranty history');
+          console.log(data.error || 'Error fetching warranty history');
+          alert(data.error || 'Error al obtener sus garantías')
         }
       } catch {
         console.log('Error de conexión con el servidor');
@@ -51,7 +54,7 @@ const WarrantyHistory = ({ userFirstName }) => {
     const timeLeftMs = expirationDate.getTime() - today.getTime();
     const daysLeft = Math.ceil(timeLeftMs / (1000 * 60 * 60 * 24));
 
-    const status = daysLeft > 0 ? 'Disponible' : 'Vencida';
+    const status = daysLeft > 0 ? 'Vigente' : 'Vencida';
 
     return { expirationDate: expirationDate.toISOString().split('T')[0], daysLeft, status };
   };
@@ -61,7 +64,7 @@ const WarrantyHistory = ({ userFirstName }) => {
 
     if (filterStatus) {
       currentHistoryWarranties = currentHistoryWarranties.filter(warranty => {
-        const { status } = getWarrantyStatus(warranty.fechaCompra);
+        const { status } = getWarrantyStatus(warranty.purchaseDate);
         return status === filterStatus;
       });
     }
@@ -86,7 +89,7 @@ const WarrantyHistory = ({ userFirstName }) => {
             onChange={(e) => setFilterStatus(e.target.value)}
           >
             <option value="">Todos los estados</option>
-            <option value="Disponible">Disponible</option>
+            <option value="Vigente">Vigente</option>
             <option value="Vencida">Vencida</option>
           </select>
         </div>
@@ -121,7 +124,7 @@ const WarrantyHistory = ({ userFirstName }) => {
                       <td>{expirationDate}</td>
                       <td>{daysLeft}</td>
                       <td>
-                        <span className={`status-${status === 'Disponible' ? 'abierto' : 'cerrado'}`}>
+                        <span className={`status-${status === 'Vigente' ? 'Abierto' : 'Cerrado'}`}>
                           {status}
                         </span>
                       </td>

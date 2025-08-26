@@ -1,9 +1,11 @@
 import React from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBase from '../base/LayoutBaseUser';
 import image from '../../assets/IMG/WarrancyWallpaper.jpg';
 
-const Home = ({ userFirstName }) => {
+const Home = () => {
+  const {user_id, email_address, role} = getCurrentUserInfo();
   return (
     <LayoutBase activePage="home">
       <div className="content">
@@ -12,7 +14,7 @@ const Home = ({ userFirstName }) => {
             <h2>Control de Garantías Gipsy</h2>
           </div>
           <div className="title-center">
-            <h3>Bienvenido(a), {userFirstName}</h3>
+            <h3>Bienvenido(a), {email_address}</h3>
           </div>
         </div>
         <img
