@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
@@ -9,7 +10,8 @@ import SearchedWarrantyDetailsModal from './SearchedWarrantyDetailsModal';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const Home = ({ userFirstName }) => {
+const Home = () => {
+  const {user_id, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
@@ -24,7 +26,6 @@ const Home = ({ userFirstName }) => {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
               'Content-Type': 'application/json'
             }
           }
@@ -33,7 +34,7 @@ const Home = ({ userFirstName }) => {
         if (response.ok) {
           setAllWarranties(data);
         } else {
-          console.log(data.message || 'Error fetching warranties');
+          console.log(data.error || 'Error al obtener garantías');
         }
       } catch {
         console.log('Error de conexión con el servidor');
@@ -51,7 +52,6 @@ const Home = ({ userFirstName }) => {
             {
               method: 'GET',
               headers: {
-                Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
                 'Content-Type': 'application/json'
               }
             }
@@ -97,7 +97,7 @@ const Home = ({ userFirstName }) => {
       <div className="home-tech-container">
         <div className="greeting-section">
           <h2>Servicio Técnico de Garantías Gipsy</h2>
-          <h3>Bienvenido(a), {userFirstName || "Usuario"}</h3>
+          <h3>Bienvenido(a), { email_address }</h3>
         </div>
 
         <div className="search-and-label-wrapper">

@@ -87,9 +87,11 @@ export default function Warranty() {
         }
       } else {
         console.error(data.error || 'Error al obtener los productos');
+        alert(data.error || 'Error al obtener los productos');
       }
     } catch {
       console.error('Error de conexión con el servidor');
+      aler('Error de conexión con el servidor');
     }
   };
 
