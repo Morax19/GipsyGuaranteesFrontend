@@ -1,9 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
 
 const HomeAdmin = () => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/admin/login');
+      return null;
+    }
+  }, [navigate]);
+
   const {user_id, email_address, role} = getCurrentUserInfo();
   return (
     <LayoutBaseAdmin activePage="home">

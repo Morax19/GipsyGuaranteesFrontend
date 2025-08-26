@@ -1,11 +1,23 @@
 import React from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
+import { useNavigate } from 'react-router-dom';
 import LayoutBase from '../base/LayoutBaseUser';
 import image from '../../assets/IMG/WarrancyWallpaper.jpg';
 
 const Home = () => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/user/login');
+      return null;
+    }
+  }, [navigate]);
+
   const {user_id, email_address, role} = getCurrentUserInfo();
+
   return (
     <LayoutBase activePage="home">
       <div className="content">

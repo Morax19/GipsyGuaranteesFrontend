@@ -9,9 +9,19 @@ import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
+
 const EditProfile = () => {
-  const {user_id, email_address, role } = getCurrentUserInfo();
+
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/user/login');
+      return null;
+    }
+  }, [navigate]);
+
+  const {user_id, email_address, role } = getCurrentUserInfo();
   const [form, setForm] = useState({
     userID: user_id,
     FirstName: '',

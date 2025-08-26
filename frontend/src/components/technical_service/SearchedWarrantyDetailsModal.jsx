@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/technical_service/warrantyDetailsModal.css';
 
 const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase }) => {
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);
+  
   if (!isOpen || !warranty) return null;
 
   const isWarrantyValid = (purchaseDate, usedCount) => {
@@ -14,7 +25,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
   const usedCount = warranty.usedCount !== undefined ? warranty.usedCount : 0;
   const validityStatus = isWarrantyValid(warranty.purchaseDate, usedCount) ? 'Válida' : 'No Válida';
-  const canOpenCase = warranty.estado !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
+  const canOpenCase = warranty.TechnicalServiceStatus !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
 
 
   const handleOpenCaseClick = () => {
@@ -32,7 +43,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
         <div className="modal-body">
           <div className="detail-row">
-            <strong>Código de Garantía:</strong> <span>{warranty.codigo}</span>
+            <strong>Código de Garantía:</strong> <span>{warranty.WarrantyNumber}</span>
           </div>
           <div className="detail-row">
             <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span> {/* Asumiendo 'purchaseDate' es la fecha de registro */}
@@ -41,7 +52,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
             <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
           </div>
           <div className="detail-row">
-            <strong>Producto:</strong> <span>{warranty.MarcaProducto} - {warranty.ModeloProducto}</span>
+            <strong>Producto:</strong> <span>{warranty.Brand} - {warranty.Model}</span>
           </div>
           <div className="detail-row">
             <strong>Estatus (Vigencia):</strong> 
@@ -55,8 +66,8 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
           </div>
           <div className="detail-row">
             <strong>Estado Actual del Caso:</strong> 
-            <span className={`status-${warranty.estado ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
-                {warranty.estado || 'N/A'}
+            <span className={`status-${warranty.statusID ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
+                {warranty.statusID || 'N/A'}
             </span>
           </div>
 

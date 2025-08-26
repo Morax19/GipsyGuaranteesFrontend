@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import eye from '../../assets/IMG/ojo.png';
@@ -96,6 +97,16 @@ const mockWarranties = [
 ];
 
 const WarrantiesList = ({ userFirstName }) => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');

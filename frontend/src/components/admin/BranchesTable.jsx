@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/usersTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
@@ -9,6 +10,16 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const BranchesTable = () => {
+
+    const navigate = useNavigate();
+    useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+        alert('Por favor, inicie sesión para acceder a esta página.');
+        navigate('/admin/login');
+        return null;
+    }
+    }, [navigate]);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [isRetailFilter, setIsRetailFilter] = useState('');
     const [allBranches, setAllBranches] = useState([]);

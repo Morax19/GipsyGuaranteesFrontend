@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { jwtDecode } from 'jwt-decode';
@@ -11,14 +12,22 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 // Historial real de garantías del usuario
 const WarrantyHistory = () => {
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/user/login');
+      return null;
+    }
+  }, [navigate]);
+
+  const { user_id, email_address, role} = getCurrentUserInfo();
   const [historyWarranties, setHistoryWarranties] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
   const [filteredHistoryWarranties, setFilteredHistoryWarranties] = useState([]);
 
   useEffect(() => {
     async function fetchHistory() {
-      const { user_id, email_address, role} = getCurrentUserInfo();
-
       try {
         const response = await fetchWithAuth(
           `${apiUrl}/api/warrantyHistory/?userID=${user_id}`,

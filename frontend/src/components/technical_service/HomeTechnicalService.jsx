@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
@@ -9,49 +10,32 @@ import SearchedWarrantyDetailsModal from './SearchedWarrantyDetailsModal';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const Home = ({ userFirstName }) => {
+const Home = () => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/technical-service/login');
+      return null;
+    }
+  }, [navigate]);
+
+  const {user_id, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
   const [allWarranties, setAllWarranties] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    async function fetchWarranties() {
-      try {
-        const response = await fetchWithAuth(
-          `${apiUrl}/api/TechnicalServicesWarrantyView/`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setAllWarranties(data);
-        } else {
-          console.log(data.message || 'Error fetching warranties');
-        }
-      } catch {
-        console.log('Error de conexión con el servidor');
-      }
-    }
-    fetchWarranties();
-  }, []);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
       async function fetchWarrantyById() {
         try {
           const response = await fetchWithAuth(
-            `${apiUrl}/api/TechnicalServicesWarrantyView/${searchTerm.trim()}/`,
+            `${apiUrl}/api/technicalServiceGetWarrantyByID/?WarrantyNumber=${searchTerm.trim()}`,
             {
               method: 'GET',
               headers: {
-                Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
                 'Content-Type': 'application/json'
               }
             }
@@ -81,10 +65,34 @@ const Home = ({ userFirstName }) => {
     }
   };
 
-  const handleOpenCaseFromModal = (warrantyToOpenCase) => {
-    console.log('Solicitud para abrir caso para:', warrantyToOpenCase.codigo);
-    alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.codigo}.`);
-    setIsModalOpen(false);
+  const handleOpenCaseFromModal = async (warrantyToOpenCase) => {
+    console.log('Solicitud para abrir caso para:', warrantyToOpenCase.WarrantyNumber);
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/technicalServiceOpenCaseWarranty/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            registerID: user_id,
+            WarrantyID: warrantyToOpenCase.WarrantyNumber
+          })
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.WarrantyNumber}.`);
+        setIsModalOpen(false);
+      } else {
+        alert(data.error || 'Error al abrir el caso. Intente nuevamente.');
+      }
+    } catch (error) {
+      console.error('Error de conexión con el servidor:', error);
+      alert('Error de conexión con el servidor');
+    }
   };
 
   const handleCloseModal = () => {
@@ -97,7 +105,7 @@ const Home = ({ userFirstName }) => {
       <div className="home-tech-container">
         <div className="greeting-section">
           <h2>Servicio Técnico de Garantías Gipsy</h2>
-          <h3>Bienvenido(a), {userFirstName || "Usuario"}</h3>
+          <h3>Bienvenido(a), { email_address }</h3>
         </div>
 
         <div className="search-and-label-wrapper">

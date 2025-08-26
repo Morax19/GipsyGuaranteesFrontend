@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/admin/userFormModal.css';
 
@@ -6,6 +7,16 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers, onReload }) => {
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionStorage.getItem('session_token')) {
+      alert('Por favor, inicie sesión para acceder a esta página.');
+      navigate('/admin/login');
+      return null;
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
     branchID: '',
     customerID: '',
@@ -93,7 +104,6 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             method,
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`
             },
             body: JSON.stringify(dataToSend)
           }
