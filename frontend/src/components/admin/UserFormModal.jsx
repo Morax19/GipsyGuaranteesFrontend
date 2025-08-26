@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
-const isDevelopment = import.meta.env.MODE === 'development';
-const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 import '../../styles/admin/userFormModal.css';
 import eye from '../../assets/IMG/ojo.png';
+
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload }) => {
   const [formData, setFormData] = useState({
@@ -38,10 +39,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
               `${apiUrl}/api/adminGetCustomerByID/?customerID=${userToEdit.CustomerID}`,
               {
                 method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-                },
               }
             );
             const customerData = await response.json();
@@ -88,7 +85,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   };
 
   const handleSave = async () => {
-    alert(formData.roleID);
     if (!formData.FirstName || !formData.LastName || !formData.EmailAddress || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
@@ -102,10 +98,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           `${apiUrl}/api/${endpoint}/`,
           {
             method,
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${sessionStorage.getItem('session_token')}`,
-            },
             credentials: 'include',
             body: JSON.stringify(formData)
           }
