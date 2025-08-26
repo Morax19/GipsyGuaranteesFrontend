@@ -24,7 +24,6 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
-  const [allWarranties, setAllWarranties] = useState([]);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
@@ -87,6 +86,30 @@ const Home = () => {
         setIsModalOpen(false);
       } else {
         alert(data.error || 'Error al abrir el caso. Intente nuevamente.');
+      }
+    } catch (error) {
+      console.error('Error de conexión con el servidor:', error);
+      alert('Error de conexión con el servidor');
+    }
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/updateWarrantyUsedCount/`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            WarrantyID: foundWarranty.WarrantyNumber
+          })
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        console.log(`Se ha actualizado el conteo de usos para la garantía: ${foundWarranty.WarrantyNumber}.`);
+      } else {
+        alert(data.error || 'Error al actualizar el conteo de usos. Intente nuevamente.');
       }
     } catch (error) {
       console.error('Error de conexión con el servidor:', error);
