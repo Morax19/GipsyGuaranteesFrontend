@@ -66,8 +66,8 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
           </div>
           <div className="detail-row">
             <strong>Estado Actual del Caso:</strong> 
-            <span className={`status-${warranty.statusID ? warranty.estado.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
-                {warranty.statusID || 'N/A'}
+            <span className={`status-${warranty.TechnicalServiceStatus ? warranty.TechnicalServiceStatus.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
+                {warranty.TechnicalServiceStatus || 'N/A'}
             </span>
           </div>
 
