@@ -108,14 +108,12 @@ const WarrantyHistory = () => {
             <table className="warranty-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Usuario</th>
+                  <th>Nº</th>
                   <th>Fecha de Registro</th>
                   <th>Tienda</th>
-                  <th>Marca</th>
+                  <th>Producto</th>
                   <th>Número de usos</th>
                   <th>Fecha de Vencimiento</th>
-                  <th>Días Disponibles</th>
                   <th>Estado</th>
                 </tr>
               </thead>
@@ -125,13 +123,11 @@ const WarrantyHistory = () => {
                   return (
                     <tr key={warranty.WarrantyNumber}>
                       <td>{warranty.WarrantyNumber}</td>
-                      <td>{warranty.registerID}</td>
                       <td>{warranty.registrationDate}</td>
-                      <td>{warranty.branchID}</td>
-                      <td>{warranty.productBrand}</td>
+                      <td>{warranty.companyName}</td>
+                      <td>{warranty.ProductName}</td>
                       <td>{warranty.usedCount}</td>
                       <td>{expirationDate}</td>
-                      <td>{daysLeft >= 0 ? daysLeft : 0}</td>
                       <td>
                         <span className={`status-${status === 'Vigente' ? 'Abierto' : 'Cerrado'}`}>
                           {status}

@@ -29,7 +29,6 @@ export default function Warranty() {
     purchaseDate: '',
     invoiceNumber: '',
     barCode: '',
-    invoiceIMG: '',
     ItemId: '',
     isRetail: '',
     productBrand: '',
@@ -62,9 +61,9 @@ export default function Warranty() {
   };
 
   const fetchProductByBarCode = async (barCode) => {
-    const bar_code = barCode.trim()
-    if (!bar_code){
-      alert('Por favor, ingrese un código de barras antes de buscar')
+    const bar_code = barCode.trim();
+    if (!bar_code) {
+      alert('Por favor, ingrese un código de barras antes de buscar');
       return;
     }
 
@@ -72,28 +71,30 @@ export default function Warranty() {
       ...prev,
       ItemId: '',
       productBrand: '',
-      productCategory: ''
+      brandCategory: '',
+      productCategory: '',
+      productDetail: ''
     }));
 
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/getProductByBarCode/?barCode=${bar_code}`,
-        {
-          method: 'GET',
-        }
+        { method: 'GET' }
       );
 
       const data = await response.json();
+
       if (response.ok) {
         setProducts(data);
 
-        if (data && data.ID && data.Brand && data.Category){
-
+        if (data && data.ID && data.Brand && data.Category && data.productDetail) {
           setFormData(prev => ({
             ...prev,
             ItemId: data.ID,
             productBrand: data.Brand || 'Marca del producto',
-            productCategory: data.Category || 'Categoría del producto'
+            brandCategory: `${data.Brand} - ${data.Category}` || 'Marca del producto - Categoría del producto',
+            productCategory: data.Category || 'Categoría del producto',
+            productDetail: data.productDetail || 'Detalles del producto',
           }));
         }
       } else {
@@ -102,9 +103,11 @@ export default function Warranty() {
       }
     } catch {
       console.error('Error de conexión con el servidor');
-      aler('Error de conexión con el servidor');
+      alert('Error de conexión con el servidor');
     }
   };
+
+
 
   const fetchMainCustomers = async () => {
     try {
@@ -363,28 +366,28 @@ export default function Warranty() {
           </div>
           <br />
           
-          <label htmlFor="productBrand">Marca del producto:</label>
+          <label htmlFor="brandCategory">Marca y categoría del producto:</label>
           <input
             type="text"
-            id="productBrand"
-            name="productBrand"
-            placeholder="Marca del producto"
+            id="brandCategory"
+            name="brandCategory"
+            placeholder="Marca del producto - Categoría del producto"
             required
-            value={formData.productBrand}
+            value={formData.brandCategory}
             onChange={handleChange}
-            disabled={!!formData.productBrand}
+            disabled={!!formData.brandCategory}
           />
 
-          <label htmlFor="productCategory">Categoría del producto:</label>
+          <label htmlFor="productDetail">Descripción del producto:</label>
           <input
             type="text"
-            id="productCategory"
-            name="productCategory"
-            placeholder="Categoría del producto"
+            id="productDetail"
+            name="productDetail"
+            placeholder="Detalles del producto"
             required
-            value={formData.productCategory}
+            value={formData.productDetail}
             onChange={handleChange}
-            disabled={!!formData.productCategory}
+            disabled={!!formData.productDetail}
           />
 
           <label htmlFor="invoiceNumber">Número de Factura:</label>
