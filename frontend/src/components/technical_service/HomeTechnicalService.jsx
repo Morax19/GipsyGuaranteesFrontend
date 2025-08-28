@@ -101,7 +101,7 @@ const Home = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            WarrantyID: foundWarranty.WarrantyNumber
+            WarrantyNumber: foundWarranty.WarrantyNumber
           })
         }
       );

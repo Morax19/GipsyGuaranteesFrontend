@@ -34,7 +34,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
       setCurrentStatus(warranty.estado);
       // Puedes inicializar diagnosis y description si tus datos de garantía los tienen,
       // de lo contrario, comienzan vacíos o con valores por defecto.
-      setCurrentDiagnosis(''); // O warranty.diagnostico si existiera
+      setCurrentDiagnosis(''); // O warranty.issueDescription si existiera
       setActionDescription(''); // O warranty.descripcionAccion si existiera
     }
   }, [warranty]);
@@ -51,7 +51,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
     const updatedWarranty = {
       ...warranty,
       estado: 'Cerrado', // Forzamos el estado a 'Cerrado' al cerrar el caso
-      diagnostico: currentDiagnosis,
+      issueDescription: currentDiagnosis,
       descripcionAccion: actionDescription,
       fechaCierre: new Date().toISOString().split('T')[0], // Añade la fecha de cierre
     };
@@ -66,7 +66,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
     const updatedWarranty = {
       ...warranty,
       estado: currentStatus,
-      diagnostico: currentDiagnosis,
+      issueDescription: currentDiagnosis,
       descripcionAccion: actionDescription,
     };
     onUpdateWarranty(updatedWarranty);
@@ -79,33 +79,35 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h3>Detalles de Garantía: {warranty.codigo}</h3>
+          <h3>Detalles de Garantía: {warranty.warrantyID}</h3>
           <button className="close-button" onClick={onClose}>&times;</button> {/* Botón de cerrar */}
         </div>
 
         <div className="modal-body">
           <div className="detail-row">
-            <strong>Código de Garantía:</strong> <span>{warranty.codigo}</span>
+            <strong>Código del caso:</strong> <span>{warranty.CaseNumber}</span>
           </div>
           <div className="detail-row">
-            <strong>Cliente:</strong> <span>{warranty.nombreCliente}</span>
+            <strong>Cliente:</strong> <span>{warranty.Customer}</span>
           </div>
           <div className="detail-row">
-            <strong>Tienda:</strong> <span>{warranty.tienda}</span>
+            <strong>Tienda:</strong> <span>{warranty.companyName}</span>
           </div>
           <div className="detail-row">
-            <strong>Fecha de Recepción:</strong> <span>{warranty.fechaRecepcion}</span>
+            <strong>Fecha de Recepción:</strong> <span>{warranty.receptionDate}</span>
           </div>
+          {/* 
           <div className="detail-row">
-            <strong>Fecha de Revisión:</strong> <span>{warranty.fechaRevision || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
+            <strong>Fecha de Revisión:</strong> <span>{warranty.fechaRevision || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión 
           </div>
+          */}
           {warranty.fechaCierre && ( // Muestra fecha de cierre si existe
              <div className="detail-row">
                 <strong>Fecha de Cierre:</strong> <span>{warranty.fechaCierre}</span>
             </div>
           )}
          <div className="detail-row">
-            <strong>Producto:</strong> <span>{warranty.producto}</span>
+            <strong>Producto:</strong> <span>{warranty.Description}</span>
           </div>
 
           <hr /> {/* Separador visual */}

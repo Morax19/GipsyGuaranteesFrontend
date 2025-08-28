@@ -1,102 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import eye from '../../assets/IMG/ojo.png';
 import '../../styles/technical_service/warrantiesList.css';
 import WarrantyDetailsModal from './WarrantyDetailsModal';
 
-// --- Data de ejemplo ---
-const mockWarranties = [
-  {
-    id: 'G001',
-    codigo: 'ABC-123-X',
-    fechaRecepcion: '2024-07-01',
-    fechaRevision: null,
-    nombreCliente: 'Juan Pérez',
-    tienda: 'ElectroMega',
-    producto: 'Lavadora XYZ',
-    estado: 'Abierto',
-    diagnostico: '',
-    descripcionAccion: '',
-  },
-  {
-    id: 'G002',
-    codigo: 'DEF-456-Y',
-    fechaRecepcion: '2024-07-05',
-    fechaRevision: '2024-07-10',
-    nombreCliente: 'María López',
-    tienda: 'TecnoGlobal',
-    producto: 'Televisor QLED',
-    estado: 'En Revisión',
-    diagnostico: 'Falla de conexión',
-    descripcionAccion: 'Se restableció la conexión y se probó el equipo.',
-  },
-  {
-    id: 'G003',
-    codigo: 'GHI-789-Z',
-    fechaRecepcion: '2024-06-10',
-    fechaRevision: null,
-    nombreCliente: 'Carlos García',
-    tienda: 'MegaHogar',
-    producto: 'Refrigerador Cool',
-    estado: 'Abierto',
-    diagnostico: '',
-    descripcionAccion: '',
-  },
-  {
-    id: 'G004',
-    codigo: 'JKL-012-A',
-    fechaRecepcion: '2024-08-12',
-    fechaRevision: null,
-    nombreCliente: 'Ana Fernández',
-    tienda: 'ElectroMega',
-    producto: 'Microondas Smart',
-    estado: 'En Revisión',
-    diagnostico: '',
-    descripcionAccion: '',
-  },
-  {
-    id: 'G005',
-    codigo: 'MNO-345-B',
-    fechaRecepcion: '2024-07-15',
-    fechaRevision: null,
-    nombreCliente: 'Luis Martínez',
-    tienda: 'TecnoGlobal',
-    producto: 'Aspiradora Robótica',
-    estado: 'Abierto',
-    diagnostico: '',
-    descripcionAccion: '',
-  },
-  {
-    id: 'G006',
-    codigo: 'PQR-678-C',
-    fechaRecepcion: '2024-08-20',
-    fechaRevision: '2024-08-25',
-    nombreCliente: 'Sofía Díaz',
-    tienda: 'MegaHogar',
-    producto: 'Horno Eléctrico',
-    estado: 'Cerrado',
-    diagnostico: 'Sin errores',
-    descripcionAccion: 'El equipo funciona correctamente después de la revisión.',
-    fechaCierre: '2024-08-25',
-  },
-  {
-    id: 'G007',
-    codigo: 'STU-901-D',
-    fechaRecepcion: '2024-07-22',
-    fechaRevision: null,
-    nombreCliente: 'Pedro Gómez',
-    tienda: 'ElectroMega',
-    producto: 'Cafetera Express',
-    estado: 'Cerrado',
-    diagnostico: 'Falla de encendido',
-    descripcionAccion: 'Se reemplazó el fusible y se probó la cafetera.',
-    fechaCierre: '2024-07-25',
-  },
-];
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const WarrantiesList = ({ userFirstName }) => {
+const WarrantiesList = () => {
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -107,12 +21,13 @@ const WarrantiesList = ({ userFirstName }) => {
     }
   }, [navigate]);
 
+  const {user_id, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');
   const [secondaryFilterOptions, setSecondaryFilterOptions] = useState([]);
-  const [allWarranties, setAllWarranties] = useState(mockWarranties);
-  const [filteredWarranties, setFilteredWarranties] = useState(mockWarranties);
+  const [allWarranties, setAllWarranties] = useState([]);
+  const [filteredWarranties, setFilteredWarranties] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedwarranty, setSelectedwarranty] = useState(null);
@@ -122,38 +37,63 @@ const WarrantiesList = ({ userFirstName }) => {
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
+  // Fetch warranties only once when component mounts
+  useEffect(() => {
+    async function fetchAllWarranties() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/technicalServiceHistory/?userID=${user_id}`,
+          {
+            method: 'GET',
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setAllWarranties(data);
+        } else {
+          console.log(data.error || 'Error fetching warranties');
+          alert(data.error || 'Error al obtener las garantías')
+        }
+      } catch {
+        console.log('Error de conexión con el servidor');
+      }
+    }
+    fetchAllWarranties();
+  }, []);
+
+  // Filtering and sorting logic
   useEffect(() => {
     let currentWarranties = allWarranties;
 
     // --- Ordenar por fecha si no hay filtro primario ---
     if (!primaryFilter) {
       currentWarranties = [...currentWarranties].sort(
-        (a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion)
+        (a, b) => new Date(a.receptionDate) - new Date(b.receptionDate)
       );
     }
 
     // --- Búsqueda de Código de Garantía ---
     if (searchTerm) {
       currentWarranties = currentWarranties.filter(warranty =>
-        warranty.codigo.toLowerCase().includes(searchTerm.toLowerCase())
+        String(warranty.warrantyID).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // --- Poblado de opciones del filtro secundario ---
     let newSecondaryOptions = [];
     if (primaryFilter === 'fecha') {
-      const months = [...new Set(currentWarranties.map(g => new Date(g.fechaRecepcion).getMonth()))]
+      const months = [...new Set(currentWarranties.map(g => new Date(g.receptionDate).getMonth()))]
         .sort((a, b) => a - b)
         .map(monthNum => ({ value: String(monthNum), label: monthNames[monthNum] }));
       newSecondaryOptions = months;
-    } else if (primaryFilter === 'producto') {
-      const products = [...new Set(currentWarranties.map(g => g.producto))].sort();
+    } else if (primaryFilter === 'Description') {
+      const products = [...new Set(currentWarranties.map(g => g.Description))].sort();
       newSecondaryOptions = products.map(p => ({ value: p, label: p }));
-    } else if (primaryFilter === 'tienda') {
-      const stores = [...new Set(currentWarranties.map(g => g.tienda))].sort();
+    } else if (primaryFilter === 'companyName') {
+      const stores = [...new Set(currentWarranties.map(g => g.companyName))].sort();
       newSecondaryOptions = stores.map(s => ({ value: s, label: s }));
-    } else if (primaryFilter === 'estado') {
-      const statuses = [...new Set(currentWarranties.map(g => g.estado))].sort();
+    } else if (primaryFilter === 'statusDescription') {
+      const statuses = [...new Set(currentWarranties.map(g => g.statusDescription))].sort();
       newSecondaryOptions = statuses.map(s => ({ value: s, label: s }));
     }
     setSecondaryFilterOptions(newSecondaryOptions);
@@ -167,41 +107,40 @@ const WarrantiesList = ({ userFirstName }) => {
     if (primaryFilter && secondaryFilter !== '') {
       if (primaryFilter === 'fecha') {
         currentWarranties = currentWarranties.filter(warranty =>
-          String(new Date(warranty.fechaRecepcion).getMonth()) === secondaryFilter
+          String(new Date(warranty.receptionDate).getMonth()) === secondaryFilter
         );
-      } else if (primaryFilter === 'producto') {
+      } else if (primaryFilter === 'Description') {
         currentWarranties = currentWarranties.filter(warranty =>
-          warranty.producto === secondaryFilter
+          warranty.Description === secondaryFilter
         );
-      } else if (primaryFilter === 'tienda') {
+      } else if (primaryFilter === 'companyName') {
         currentWarranties = currentWarranties.filter(warranty =>
-          warranty.tienda === secondaryFilter
+          warranty.companyName === secondaryFilter
         );
-      } else if (primaryFilter === 'estado') {
+      } else if (primaryFilter === 'statusDescription') {
         currentWarranties = currentWarranties.filter(warranty =>
-          warranty.estado === secondaryFilter
+          warranty.statusDescription === secondaryFilter
         );
       }
     }
 
-    if (primaryFilter === 'producto') {
-      currentWarranties.sort((a, b) => a.producto.localeCompare(b.producto));
+    if (primaryFilter === 'Description') {
+      currentWarranties.sort((a, b) => a.Description.localeCompare(b.Description));
     } else if (primaryFilter === 'fecha') {
-      currentWarranties.sort((a, b) => new Date(a.fechaRecepcion) - new Date(b.fechaRecepcion));
-    } else if (primaryFilter === 'tienda') {
-      currentWarranties.sort((a, b) => a.tienda.localeCompare(b.tienda));
-    } else if (primaryFilter === 'estado') {
-        currentWarranties.sort((a, b) => a.estado.localeCompare(b.estado));
+      currentWarranties.sort((a, b) => new Date(a.receptionDate) - new Date(b.receptionDate));
+    } else if (primaryFilter === 'companyName') {
+      currentWarranties.sort((a, b) => a.companyName.localeCompare(b.companyName));
+    } else if (primaryFilter === 'statusDescription') {
+        currentWarranties.sort((a, b) => a.statusDescription.localeCompare(b.statusDescription));
     }
 
     setFilteredWarranties(currentWarranties);
   }, [searchTerm, primaryFilter, secondaryFilter, allWarranties]);
 
-
   // --- Detalles de la Garantía ---
 
-  const handleViewDetails = (warrantyId) => {
-    const warranty = allWarranties.find(g => g.id === warrantyId);
+  const handleViewDetails = (warrantyCaseNumber) => {
+    const warranty = allWarranties.find(g => g.CaseNumber === warrantyCaseNumber);
     setSelectedwarranty(warranty);
     setIsModalOpen(true);
   };
@@ -213,7 +152,7 @@ const WarrantiesList = ({ userFirstName }) => {
 
   const handleUpdatewarrantyInList = (updatedwarranty) => {
     setAllWarranties(prevWarranties =>
-      prevWarranties.map(g => (g.id === updatedwarranty.id ? updatedwarranty : g))
+      prevWarranties.map(g => (g.CaseNumber === updatedwarranty.CaseNumber ? updatedwarranty : g))
     );
   };
 
@@ -238,10 +177,10 @@ const WarrantiesList = ({ userFirstName }) => {
             onChange={(e) => setPrimaryFilter(e.target.value)}
           >
             <option value="">Filtrar por...</option>
-            <option value="producto">Producto</option>
+            <option value="Description">Producto</option>
             <option value="fecha">Fecha</option>
-            <option value="tienda">Tienda</option>
-            <option value="estado">Estado</option>
+            <option value="companyName">Compañía</option>
+            <option value="statusDescription">Estado</option>
           </select>
 
           {/* El filtro secundario solo es visible si se elige un filtro primario y hay opciones */}
@@ -254,9 +193,9 @@ const WarrantiesList = ({ userFirstName }) => {
             >
               <option value="">
                 {primaryFilter === 'fecha' && 'Seleccione un mes'}
-                {primaryFilter === 'producto' && 'Seleccione un producto'}
-                {primaryFilter === 'tienda' && 'Seleccione una tienda'}
-                {primaryFilter === 'estado' && 'Seleccione un estado'}
+                {primaryFilter === 'Description' && 'Seleccione un Description'}
+                {primaryFilter === 'companyName' && 'Seleccione una companyName'}
+                {primaryFilter === 'statusDescription' && 'Seleccione un statusDescription'}
                 {!primaryFilter && 'Seleccione una opción...'}
               </option>
               {secondaryFilterOptions.map(option => (
@@ -276,7 +215,7 @@ const WarrantiesList = ({ userFirstName }) => {
                   <th>Código de Garantía</th>
                   <th>Fecha de Recepción</th>
                   <th>Cliente</th>
-                  <th>Tienda</th>
+                  <th>Compañía</th>
                   <th>Producto</th>
                   <th>Estado</th>
                   <th>Acciones</th>
@@ -284,17 +223,17 @@ const WarrantiesList = ({ userFirstName }) => {
               </thead>
               <tbody>
                 {filteredWarranties.map(warranty => (
-                  <tr key={warranty.id}>
-                    <td>{warranty.codigo}</td>
-                    <td>{warranty.fechaRecepcion}</td>
-                    <td>{warranty.nombreCliente}</td>
-                    <td>{warranty.tienda}</td>
-                    <td>{warranty.producto}</td>
-                    <td><span className={`status-${warranty.estado.replace(/\s+/g, '-').toLowerCase()}`}>{warranty.estado}</span></td>
+                  <tr key={warranty.CaseNumber}>
+                    <td>{warranty.warrantyID}</td>
+                    <td>{warranty.receptionDate}</td>
+                    <td>{warranty.Customer}</td>
+                    <td>{warranty.companyName}</td>
+                    <td>{warranty.Description}</td>
+                    <td><span className={`status-${warranty.statusDescription.replace(/\s+/g, '-').toLowerCase()}`}>{warranty.statusDescription}</span></td>
                     <td>
                       <button
                         className="details-button"
-                        onClick={() => handleViewDetails(warranty.id)}
+                        onClick={() => handleViewDetails(warranty.CaseNumber)}
                         title="Ver detalles"
                       >
                         <img src={eye} alt="Ver detalles" />
