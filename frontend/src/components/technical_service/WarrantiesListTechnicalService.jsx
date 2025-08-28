@@ -56,6 +56,7 @@ const WarrantiesList = () => {
         }
       } catch {
         console.log('Error de conexión con el servidor');
+        alert('Error de conexión con el servidor')
       }
     }
     fetchAllWarranties();
