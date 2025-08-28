@@ -194,9 +194,9 @@ const WarrantiesList = () => {
             >
               <option value="">
                 {primaryFilter === 'fecha' && 'Seleccione un mes'}
-                {primaryFilter === 'Description' && 'Seleccione un Description'}
-                {primaryFilter === 'companyName' && 'Seleccione una companyName'}
-                {primaryFilter === 'statusDescription' && 'Seleccione un statusDescription'}
+                {primaryFilter === 'Description' && 'Seleccione un producto'}
+                {primaryFilter === 'companyName' && 'Seleccione una compañía'}
+                {primaryFilter === 'statusDescription' && 'Seleccione un estado'}
                 {!primaryFilter && 'Seleccione una opción...'}
               </option>
               {secondaryFilterOptions.map(option => (
