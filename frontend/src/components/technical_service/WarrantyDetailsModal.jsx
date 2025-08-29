@@ -262,7 +262,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
                 <button className="modal-button update-button" onClick={handleUpdateCase}>Actualizar Caso</button>
               )}
               
-              {currentStatus === 'Cerrado' && (
+              {warranty.statusDescription !== 'Cerrado' && currentStatus === 'Cerrado' && (
                 <button className="modal-button close-case-button" onClick={handleCloseCase}>Cerrar Caso</button>
               )}
             </>
