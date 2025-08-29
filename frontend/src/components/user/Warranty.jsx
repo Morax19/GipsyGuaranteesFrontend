@@ -291,33 +291,36 @@ export default function Warranty() {
           </select>
 
           {/* Auto-filled and locked RIFtype */}
-          <label htmlFor="RIFtype">Tipo RIF:</label>
-          <select
-            id="RIFtype"
-            name="RIFtype"
-            value={formData.RIFtype}
-            onChange={handleChange}
-            disabled={formData.isRetail === 'false'}
-          >
-            <option value="">Seleccione un tipo</option>
-            {RIFtypeOptions.map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-
-          {/* Auto-filled RIF */}
-          <label htmlFor="RIF">RIF de la tienda:</label>
-          <input
-            type="text"
-            id="RIF"
-            name="RIF"
-            placeholder="RIF de la tienda"
-            maxLength={10}
-            required
-            value={formData.RIF}
-            onChange={handleChange}
-            disabled={formData.isRetail === 'false'}
-          />
+          <label htmlFor="RIFtype">RIF de la tienda:</label>
+            <div className="rif-container">
+                <div className="rif-type">
+                    <select
+                      id="RIFtype"
+                      name="RIFtype"
+                      value={formData.RIFtype}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    >
+                      <option value="">Tipo</option>
+                      {RIFtypeOptions.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                </div>
+                <div className="rif-number">
+                    <input
+                      type="number"
+                      id="RIF"
+                      name="RIF"
+                      placeholder="Número de RIF"
+                      maxLength={10}
+                      required
+                      value={formData.RIF}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    />
+                </div>
+          </div>
 
           <label htmlFor="purchaseDate">Fecha de compra:</label>
           <input

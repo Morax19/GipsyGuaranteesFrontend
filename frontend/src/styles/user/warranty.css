@@ -50,7 +50,8 @@ body {
 }
 
 
-.cardContainerWarranty form input[type="text"] {
+.cardContainerWarranty form input[type="text"],
+.cardContainerWarranty form input[type="number"] {
     width: 70%;
     padding: 15px;
     margin: 12px 0;
@@ -158,4 +159,33 @@ body {
 
 #barCode {
     margin: 0;
+}
+
+.rif-container {
+    display: flex;
+    width: 76%;
+    margin: 12px 0;
+    gap: 8px;
+    align-items: center;
+}
+
+.rif-type {
+    flex: 2;
+}
+
+.rif-number{
+    flex: 5;
+}
+
+.rif-container select,
+.rif-container input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    margin: 0;
+    height: 100% !important;
+    width: 100% !important;
 }
