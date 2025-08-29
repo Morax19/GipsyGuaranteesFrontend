@@ -9,6 +9,9 @@ import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
+// Regex para validar el formato de un correo electrónico.
+const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
 function Register() {
     /* Añade y elimina la barra curva de la parte inferior */
     useEffect(() => {
@@ -43,6 +46,10 @@ function Register() {
       alert('Las contraseñas deben coincidir.');
       return;
     }
+    if (!emailRegex.test(form.EmailAddress)) {
+        setMessage('El formato del correo electrónico no es válido. Por favor, ingresar una dirección usuario@dominio.com');
+        return;
+    }
     try {
       const response = await fetch(`${apiUrl}/api/publicRegister/`, {
         method: 'POST',
@@ -54,7 +61,7 @@ function Register() {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        alert('¡Registro éxitoso!');
+        alert('Se ha registrado exitosamente en Gipsy Garantías. Por favor, inicie sesión.');
         navigate('/user/login'); // Redirect to login page
       } else {
         setMessage(data.message || 'Registration failed');
@@ -80,7 +87,7 @@ function Register() {
         <input
           type="text"
           name="FirstName"
-          placeholder="Nombre"
+          placeholder="Nombre *"
           required
           value={form.FirstName}
           onChange={handleChange}
@@ -88,7 +95,7 @@ function Register() {
         <input
           type="text"
           name="LastName"
-          placeholder="Apellido"
+          placeholder="Apellido *"
           required
           value={form.LastName}
           onChange={handleChange}
@@ -96,7 +103,7 @@ function Register() {
         <input
           type="email"
           name="EmailAddress"
-          placeholder="Email"
+          placeholder="Correo Electrónico *"
           required
           value={form.EmailAddress}
           onChange={handleChange}
@@ -108,13 +115,25 @@ function Register() {
           value={form.Address}
           onChange={handleChange}
         />
-        <input
-        type="tel"
-        name="PhoneNumber"
-        placeholder="Teléfono (Opcional)"
-        value={form.PhoneNumber}
-        onChange={handleChange}          
-        />
+        <div className="phone-container">
+          <select className="phone-type" id="Phonetype" name="Phonetype">
+            <option value="">Prefijo</option>
+            <option value="0412">0412</option>
+            <option value="0422">0422</option>
+            <option value="0414">0414</option>
+            <option value="0424">0424</option>
+            <option value="0416">0416</option>
+            <option value="0426">0426</option>
+          </select>
+          <input
+            className="phone-number"
+            type="number"
+            id="Phone"
+            name="Phone"
+            placeholder="Número Telefónico"
+            length="7"
+          />
+        </div>
         <input
           type="text"
           name="Zip"
@@ -125,7 +144,7 @@ function Register() {
         <input
           type="password"
           name="Password"
-          placeholder="Contraseña"
+          placeholder="Contraseña *"
           required
           value={form.Password}
           onChange={handleChange}
@@ -133,7 +152,7 @@ function Register() {
         <input
           type="password"
           name="confirmPassword"
-          placeholder="Confirmar Contraseña"
+          placeholder="Confirmar Contraseña *"
           required
           value={form.confirmPassword}
           onChange={handleChange}
