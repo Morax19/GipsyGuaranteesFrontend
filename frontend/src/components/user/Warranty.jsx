@@ -242,6 +242,9 @@ export default function Warranty() {
       if (response.ok) {
         alert(data.message);
         setFormData(initialFormData);
+        // Reset file input
+        const fileInput = document.getElementById('invoiceIMG');
+        if (fileInput) fileInput.value = '';
       } else {
         console.error(data.error);
         alert(data.warning);
@@ -257,7 +260,9 @@ export default function Warranty() {
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
           {/* Customer Select */}
-          <label htmlFor="mainCustomerID">Compañía asociada:</label>
+          <label htmlFor="mainCustomerID">
+            Compañía asociada <span className="required-asterisk">*</span>
+            </label>
           <select
             id="mainCustomerID"
             name="mainCustomerID"
@@ -273,7 +278,9 @@ export default function Warranty() {
             ))}
           </select>
 
-          <label htmlFor="branchID">Sucursal:</label>
+          <label htmlFor="branchID">
+            Sucursal <span className="required-asterisk">*</span>
+            </label>
           <select
             id="branchID"
             name="branchID"
@@ -291,35 +298,42 @@ export default function Warranty() {
           </select>
 
           {/* Auto-filled and locked RIFtype */}
-          <label htmlFor="RIFtype">Tipo RIF:</label>
-          <select
-            id="RIFtype"
-            name="RIFtype"
-            value={formData.RIFtype}
-            onChange={handleChange}
-            disabled={formData.isRetail === 'false'}
-          >
-            <option value="">Seleccione un tipo</option>
-            {RIFtypeOptions.map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
+          <label htmlFor="RIFtype">
+            RIF de la tienda <span className="required-asterisk">*</span>
+            </label>
+            <div className="rif-container">
+                <div className="rif-type">
+                    <select
+                      id="RIFtype"
+                      name="RIFtype"
+                      value={formData.RIFtype}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    >
+                      <option value="">Tipo</option>
+                      {RIFtypeOptions.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                </div>
+                <div className="rif-number">
+                    <input
+                      type="number"
+                      id="RIF"
+                      name="RIF"
+                      placeholder="Número de RIF"
+                      maxLength={10}
+                      required
+                      value={formData.RIF}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    />
+                </div>
+          </div>
 
-          {/* Auto-filled RIF */}
-          <label htmlFor="RIF">RIF de la tienda:</label>
-          <input
-            type="text"
-            id="RIF"
-            name="RIF"
-            placeholder="RIF de la tienda"
-            maxLength={10}
-            required
-            value={formData.RIF}
-            onChange={handleChange}
-            disabled={formData.isRetail === 'false'}
-          />
-
-          <label htmlFor="purchaseDate">Fecha de compra:</label>
+          <label htmlFor="purchaseDate">
+            Fecha de compra <span className="required-asterisk">*</span>
+            </label>
           <input
             type="date"
             id="purchaseDate"
@@ -330,7 +344,9 @@ export default function Warranty() {
             max={new Date().toISOString().split('T')[0]} // Prevent future dates
           />
 
-          <label htmlFor="barCode">Código de Barras:</label>
+          <label htmlFor="barCode">
+            Código de Barras <span className="required-asterisk">*</span>
+            </label>
           <br />
           <div className="search-container">
             <input
@@ -389,7 +405,9 @@ export default function Warranty() {
             disabled={!!formData.productDetail}
           />
 
-          <label htmlFor="invoiceNumber">Número de Factura:</label>
+          <label htmlFor="invoiceNumber">
+            Número de Factura <span className="required-asterisk">*</span>
+            </label>
           <input
             type="text"
             id="invoiceNumber"
@@ -402,7 +420,9 @@ export default function Warranty() {
             onChange={handleChange}
           />
 
-          <label htmlFor="invoiceIMG">Factura del producto:</label>
+          <label htmlFor="invoiceIMG">
+            Factura del producto <span className="required-asterisk">*</span>
+            </label>
           <input
             type="file"
             id="invoiceIMG"

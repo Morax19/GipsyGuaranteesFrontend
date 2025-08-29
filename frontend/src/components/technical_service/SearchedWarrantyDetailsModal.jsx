@@ -25,7 +25,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
   const usedCount = warranty.usedCount !== undefined ? warranty.usedCount : 0;
   const validityStatus = isWarrantyValid(warranty.purchaseDate, usedCount) ? 'Válida' : 'No Válida';
-  const canOpenCase = warranty.TechnicalServiceStatus !== 'Cerrado' && usedCount < 2 && validityStatus === 'Válida';
+  const canOpenCase = (usedCount < 2 && validityStatus === 'Válida' && (warranty.TechnicalServiceStatus === 'N/A' || warranty.TechnicalServiceStatus === 'Cerrado'));
 
 
   const handleOpenCaseClick = () => {
@@ -81,7 +81,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
             ) : (
               <span className="case-closed-message" style={{ textAlign: 'center' }}>
                 No es posible abrir un caso para esta garantía.
-                <br/> (Usos: {usedCount}/2, Vigencia: {validityStatus})
+                <br/> (Usos: {usedCount}/2, Vigencia: {validityStatus}, Estado del Caso: {warranty.TechnicalServiceStatus})
               </span>
             )}
           </div>

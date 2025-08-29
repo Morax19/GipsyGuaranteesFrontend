@@ -139,7 +139,6 @@ const WarrantiesList = () => {
   }, [searchTerm, primaryFilter, secondaryFilter, allWarranties]);
 
   // --- Detalles de la Garantía ---
-
   const handleViewDetails = (warrantyCaseNumber) => {
     const warranty = allWarranties.find(g => g.CaseNumber === warrantyCaseNumber);
     setSelectedwarranty(warranty);
