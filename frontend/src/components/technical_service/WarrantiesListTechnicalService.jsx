@@ -255,7 +255,7 @@ const WarrantiesList = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         warranty={selectedwarranty}
-        onUpdatewarranty={handleUpdatewarrantyInList}
+        onUpdateWarranty={handleUpdatewarrantyInList}
       />
 
     </LayoutBaseTechServ>
