@@ -15,7 +15,7 @@ const HomeAdmin = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   return (
     <LayoutBaseAdmin activePage="home">
       <div className="content">
@@ -24,7 +24,7 @@ const HomeAdmin = () => {
             <h2>Control de Garantías Gipsy</h2>
           </div>
           <div className="title-center">
-            <h3>Bienvenido(a), Administrador(a): {email_address}</h3>
+            <h3>Bienvenido(a), Administrador(a): {user_first_name}</h3>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const Home = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
 
   return (
     <LayoutBase activePage="home">
@@ -26,7 +26,7 @@ const Home = () => {
             <h2>Control de Garantías Gipsy</h2>
           </div>
           <div className="title-center">
-            <h3>Bienvenido(a), {email_address}</h3>
+            <h3>Bienvenido(a), {user_first_name}</h3>
           </div>
         </div>
         <img

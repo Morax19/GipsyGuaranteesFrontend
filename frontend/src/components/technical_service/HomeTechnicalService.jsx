@@ -20,7 +20,7 @@ const Home = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
@@ -129,7 +129,7 @@ const Home = () => {
       <div className="home-tech-container">
         <div className="greeting-section">
           <h2>Servicio Técnico de Garantías Gipsy</h2>
-          <h3>Bienvenido(a), { email_address }</h3>
+          <h3>Bienvenido(a), { user_first_name }</h3>
         </div>
 
         <div className="search-and-label-wrapper">

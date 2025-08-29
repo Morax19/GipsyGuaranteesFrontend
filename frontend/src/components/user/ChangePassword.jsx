@@ -20,7 +20,7 @@ const ChangePassword = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
   const [message, setMessage] = useState('');
 
