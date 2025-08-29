@@ -54,10 +54,10 @@ function Register() {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        alert('¡Registro éxitoso!');
+        alert(data.message);
         navigate('/user/login'); // Redirect to login page
       } else {
-        setMessage(data.message || 'Registration failed');
+        setMessage(data.warning);
       }
     } catch (error) {
       console.log(apiUrl);

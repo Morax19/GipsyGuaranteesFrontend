@@ -38,7 +38,7 @@ function LoginAdmin() {
         sessionStorage.setItem('session_token', access_token);
         navigate('/admin/home');
       } else {
-        alert(data.error || data.detail || data.message || 'Login failed');
+        alert(data.warning);
       }
     } catch (error) {
       alert('Error connecting to server');

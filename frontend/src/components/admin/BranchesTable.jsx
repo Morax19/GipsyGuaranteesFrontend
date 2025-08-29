@@ -46,7 +46,7 @@ const BranchesTable = () => {
           setAllBranches(data);
           setFilteredBranches(data);
         } else {
-          console.error(data.message || 'Error fetching branches');
+          console.error(data.error);
         }
       } catch {
         console.error('Error connecting to server');
@@ -69,7 +69,7 @@ const BranchesTable = () => {
         if (response.ok) {
           setCustomers(data); // Populate the customers state
         } else {
-          console.error(data.message || 'Error fetching customers');
+          console.error(data.error);
         }
       } catch {
         console.error('Error connecting to server');

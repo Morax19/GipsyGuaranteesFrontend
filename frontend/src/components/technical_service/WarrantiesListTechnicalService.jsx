@@ -51,8 +51,8 @@ const WarrantiesList = () => {
         if (response.ok) {
           setAllWarranties(data);
         } else {
-          console.log(data.error || 'Error fetching warranties');
-          alert(data.error || 'Error al obtener las garantías')
+          console.log(data.error);
+          alert(data.warning)
         }
       } catch {
         console.log('Error de conexión con el servidor');

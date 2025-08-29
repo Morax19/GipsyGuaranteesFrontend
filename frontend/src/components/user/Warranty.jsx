@@ -98,16 +98,14 @@ export default function Warranty() {
           }));
         }
       } else {
-        console.error(data.error || 'Error al obtener los productos');
-        alert(data.error || 'Error al obtener los productos');
+        console.error(data.error);
+        alert(data.warning);
       }
     } catch {
       console.error('Error de conexión con el servidor');
       alert('Error de conexión con el servidor');
     }
   };
-
-
 
   const fetchMainCustomers = async () => {
     try {
@@ -122,7 +120,8 @@ export default function Warranty() {
       if (response.ok) {
         setMainCustomers(data);
       } else {
-        console.error(data.error || 'Error fetching MainCustomers');
+        console.error(data.error);
+        alert(data.warning)
       }
     } catch {
       console.error('Error de conexión con el servidor');
@@ -142,7 +141,8 @@ export default function Warranty() {
       if (response.ok) {
         setBranchAddresses(data);
       } else {
-        console.error(data.message || 'Error fetching branch addresses');
+        console.error(data.error);
+        setBranchAddresses([]);
       }
     } catch {
       console.error('Error de conexión con el servidor');
@@ -240,12 +240,11 @@ export default function Warranty() {
 
       const data = await response.json();
       if (response.ok) {
-        console.log(data.message || '¡Garantía guardada exitosamente!');
-        alert(data.message || '¡Garantía guardada exitosamente!');
+        alert(data.message);
         setFormData(initialFormData);
       } else {
-        console.error(data.error || 'Error al guardar la garantía');
-        alert(data.error || 'Error al guardar la garantía');
+        console.error(data.error);
+        alert(data.warning);
       }
     } catch {
       console.error('Error de conexión con el servidor');

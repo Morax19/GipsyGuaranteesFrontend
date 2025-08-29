@@ -85,7 +85,8 @@ const Home = () => {
         alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.WarrantyNumber}.`);
         setIsModalOpen(false);
       } else {
-        alert(data.error || 'Error al abrir el caso. Intente nuevamente.');
+        console.log(data.error)
+        alert(data.warning);
       }
     } catch (error) {
       console.error('Error de conexión con el servidor:', error);
@@ -109,7 +110,8 @@ const Home = () => {
       if (response.ok) {
         console.log(`Se ha actualizado el conteo de usos para la garantía: ${foundWarranty.WarrantyNumber}.`);
       } else {
-        alert(data.error || 'Error al actualizar el conteo de usos. Intente nuevamente.');
+        console.log(data.error)
+        alert(data.warning);
       }
     } catch (error) {
       console.error('Error de conexión con el servidor:', error);
