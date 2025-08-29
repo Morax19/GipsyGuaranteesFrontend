@@ -170,14 +170,15 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             </select>
           </div>
 
-          <label htmlFor="RIFtype">
-            RIF de la tienda <span className="required-asterisk">*</span>
+          <div className="form-group-user">
+            <label htmlFor="RIFtype">
+              RIF de la tienda <span className="required-asterisk">*</span>
             </label>
             <div className="rif-container">
-                <div className="rif-type">
-                    <select
-                      id="RIFtype"
-                      name="RIFtype"
+              <div className="rif-type">
+                  <select
+                    id="RIFtype"
+                    name="RIFtype"
                       value={formData.RIFtype}
                       onChange={handleChange}
                       disabled={formData.isRetail === 'false'}
@@ -201,8 +202,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                       disabled={formData.isRetail === 'false'}
                     />
                 </div>
+            </div>
           </div>
-
+             
           <div className="form-group-user">
             <label htmlFor="companyName">
               Nombre de la sucursal <span className="required-asterisk">*</span>

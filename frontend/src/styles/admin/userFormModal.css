@@ -252,7 +252,7 @@ input[type="password"]::-webkit-reveal {
 
 .phone-container {
     display: flex;
-    width: 69%;
+    width: 100%;
     margin: 12px 0;
     gap: 8px;
     align-items: center;
@@ -280,7 +280,7 @@ input[type="password"]::-webkit-reveal {
 
 .rif-container {
     display: flex;
-    width: 76%;
+    width: 100%;
     gap: 8px;
     align-items: center;
 }
