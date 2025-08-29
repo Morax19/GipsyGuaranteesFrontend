@@ -216,14 +216,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
 
           <div className="form-group-user">
             <label htmlFor="PhoneNumber">Teléfono</label>
-            <input
-              type="tel"
-              id="PhoneNumber"
-              name="PhoneNumber"
-              value={formData.PhoneNumber}
-              onChange={handleChange}
-              placeholder="Ingrese el teléfono del usuario (Opcional)"
-            />
             <div className="phone-container">
               <select className="phone-type" id="Phonetype" name="Phonetype">
                 <option value="">Prefijo</option>
