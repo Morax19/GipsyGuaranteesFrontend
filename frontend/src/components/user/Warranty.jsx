@@ -257,7 +257,9 @@ export default function Warranty() {
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
           {/* Customer Select */}
-          <label htmlFor="mainCustomerID">Compañía asociada:</label>
+          <label htmlFor="mainCustomerID">
+            Compañía asociada <span className="required-asterisk">*</span>
+            </label>
           <select
             id="mainCustomerID"
             name="mainCustomerID"
@@ -273,7 +275,9 @@ export default function Warranty() {
             ))}
           </select>
 
-          <label htmlFor="branchID">Sucursal:</label>
+          <label htmlFor="branchID">
+            Sucursal <span className="required-asterisk">*</span>
+            </label>
           <select
             id="branchID"
             name="branchID"
@@ -291,7 +295,9 @@ export default function Warranty() {
           </select>
 
           {/* Auto-filled and locked RIFtype */}
-          <label htmlFor="RIFtype">RIF de la tienda:</label>
+          <label htmlFor="RIFtype">
+            RIF de la tienda <span className="required-asterisk">*</span>
+            </label>
             <div className="rif-container">
                 <div className="rif-type">
                     <select
@@ -322,7 +328,9 @@ export default function Warranty() {
                 </div>
           </div>
 
-          <label htmlFor="purchaseDate">Fecha de compra:</label>
+          <label htmlFor="purchaseDate">
+            Fecha de compra <span className="required-asterisk">*</span>
+            </label>
           <input
             type="date"
             id="purchaseDate"
@@ -333,7 +341,9 @@ export default function Warranty() {
             max={new Date().toISOString().split('T')[0]} // Prevent future dates
           />
 
-          <label htmlFor="barCode">Código de Barras:</label>
+          <label htmlFor="barCode">
+            Código de Barras <span className="required-asterisk">*</span>
+            </label>
           <br />
           <div className="search-container">
             <input
@@ -392,7 +402,9 @@ export default function Warranty() {
             disabled={!!formData.productDetail}
           />
 
-          <label htmlFor="invoiceNumber">Número de Factura:</label>
+          <label htmlFor="invoiceNumber">
+            Número de Factura <span className="required-asterisk">*</span>
+            </label>
           <input
             type="text"
             id="invoiceNumber"
@@ -405,7 +417,9 @@ export default function Warranty() {
             onChange={handleChange}
           />
 
-          <label htmlFor="invoiceIMG">Factura del producto:</label>
+          <label htmlFor="invoiceIMG">
+            Factura del producto <span className="required-asterisk">*</span>
+            </label>
           <input
             type="file"
             id="invoiceIMG"

@@ -192,3 +192,9 @@ hr {
 .modal-button.open-case-button:hover {
     background-color: #19762f;
 }
+
+.required-asterisk {
+  color: #ff4d4f;
+  margin-left: 3px;
+  font-weight: bold;
+}

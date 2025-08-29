@@ -210,7 +210,9 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           <h4>Gestión del Caso</h4>
 
           <div className="form-group">
-            <label htmlFor="status-select">Estado del Caso:</label>
+            <label htmlFor="status-select">
+              Estado del Caso <span className="required-asterisk">*</span>
+            </label>
             <select
               id="status-select"
               value={currentStatus}
@@ -226,7 +228,9 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           </div>
 
           <div className="form-group">
-            <label htmlFor="diagnosis-select">Diagnóstico:</label>
+            <label htmlFor="diagnosis-select">
+              Diagnóstico <span className="required-asterisk">*</span>
+            </label>
             <select
               id="diagnosis-select"
               value={currentDiagnosis}
@@ -242,7 +246,9 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           </div>
 
           <div className="form-group">
-            <label htmlFor="action-description">Descripción de la Acción Realizada:</label>
+            <label htmlFor="action-description">
+              Descripción de la Acción Realizada <span className="required-asterisk">*</span>
+            </label>
             <textarea
               id="action-description"
               value={actionDescription}
