@@ -55,7 +55,7 @@ const UsersTable = () => {
         setAllUsers(data);
         setFilteredUsers(data);
       } else {
-        console.error(data.message || 'Error fetching users');
+        console.error(data.error);
       }
     } catch {
       console.error('Error connecting to server');
@@ -78,7 +78,7 @@ const UsersTable = () => {
       if (response.ok) {
         setRoles(data);
       } else {
-        console.error(data.message || 'Error fetching roles');
+        console.error(data.error);
       }
     } catch {
       console.error('Error connecting to server');

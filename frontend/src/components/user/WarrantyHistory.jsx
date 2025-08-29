@@ -40,8 +40,8 @@ const WarrantyHistory = () => {
           setHistoryWarranties(data);
           
         } else {
-          console.log(data.error || 'Error fetching warranty history');
-          alert(data.error || 'Error al obtener sus garantías')
+          console.log(data.error);
+          alert(data.warning)
         }
       } catch {
         console.log('Error de conexión con el servidor');

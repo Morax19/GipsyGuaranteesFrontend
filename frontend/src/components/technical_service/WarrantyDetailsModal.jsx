@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import '../../styles/technical_service/warrantyDetailsModal.css';
+
+const isDevelopment = import.meta.env.MODE === 'development';
+const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) => {
   
@@ -17,25 +22,64 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const [currentStatus, setCurrentStatus] = useState('');
   const [currentDiagnosis, setCurrentDiagnosis] = useState('');
   const [actionDescription, setActionDescription] = useState('');
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [diagnosisOptions, setDiagnosisOptions] = useState([]);
 
   // Opciones de diagnóstico (puedes cargarlas de una API en un caso real)
-  const diagnosisOptions = [
-    'Sin errores',
-    'Falla de encendido',
-    'Problema de batería',
-    'Defecto de pantalla',
-    'Falla de conexión',
-    'Otro (especificar en descripción)'
-  ];
+  useEffect(() => {
+    async function fetchAllStatuses() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/technicalServiceGetStatus/`,
+          {
+            method: 'GET',
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setStatusOptions(data); // Save array of statuses
+        } else {
+          console.log(data.error);
+          alert(data.warning)
+        }
+      } catch (error) {
+        console.log('Error de conexión con el servidor');
+        alert('Error de conexión con el servidor')
+      }
+    }
+
+    async function fetchAllIssues() {
+      try {
+        const response = await fetchWithAuth(
+          `${apiUrl}/api/technicalServiceGetIssue/`,
+          {
+            method: 'GET',
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setDiagnosisOptions(data); // Save array of diagnosis options
+        } else {
+
+          console.log(data.error);
+          alert(data.warning)
+        }
+      } catch (error) {
+        console.log(`Error de conexión con el servidor: ${error}`);
+        alert('Error de conexión con el servidor')
+      }
+    }
+
+    fetchAllStatuses();
+    fetchAllIssues();
+  }, []);
 
   // Actualiza los estados internos del modal cuando la prop 'warranty' cambie
   useEffect(() => {
     if (warranty) {
-      setCurrentStatus(warranty.estado);
-      // Puedes inicializar diagnosis y description si tus datos de garantía los tienen,
-      // de lo contrario, comienzan vacíos o con valores por defecto.
-      setCurrentDiagnosis(''); // O warranty.issueDescription si existiera
-      setActionDescription(''); // O warranty.descripcionAccion si existiera
+      setCurrentStatus(warranty.statusDescription || '');
+      setCurrentDiagnosis(warranty.issueDescription || ''); // O warranty.issueDescription si existiera
+      setActionDescription(warranty.issueResolutionDetails || ''); 
     }
   }, [warranty]);
 
@@ -45,34 +89,88 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const handleDiagnosisChange = (e) => setCurrentDiagnosis(e.target.value);
   const handleActionDescriptionChange = (e) => setActionDescription(e.target.value);
 
-  const handleCloseCase = () => {
-    // Aquí puedes realizar la lógica para "cerrar" el caso.
-    // En una aplicación real, esto implicaría una llamada a la API.
-    const updatedWarranty = {
-      ...warranty,
-      estado: 'Cerrado', // Forzamos el estado a 'Cerrado' al cerrar el caso
-      issueDescription: currentDiagnosis,
-      descripcionAccion: actionDescription,
-      fechaCierre: new Date().toISOString().split('T')[0], // Añade la fecha de cierre
-    };
-    onUpdateWarranty(updatedWarranty); // Llama a la función prop para actualizar en la lista principal
-    onClose(); // Cierra el modal
-    alert('Caso cerrado exitosamente para la garantía: ' + warranty.codigo);
-    console.log('Caso Cerrado:', updatedWarranty);
+  const handleCloseCase = async () => {
+    const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
+    const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
+ 
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/technicalServiceCloseCase/`, // Replace with your actual endpoint
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            CaseNumber: warranty.CaseNumber,
+            statusID: selectedStatus,
+            issueID: selectedDiagnosis.IssueId,
+            issueResolutionDetails: actionDescription,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+
+        const updatedWarranty = {
+          ...warranty,
+          statusID: selectedStatus,
+          issueID: selectedDiagnosis,
+          issueResolutionDetails: actionDescription,
+          closedDate: new Date().toISOString().split('T')[0],
+        };
+        onUpdateWarranty(updatedWarranty);
+        onClose();
+        alert('Caso cerrado exitosamente para la garantía: ' + warranty.warrantyID);
+        console.log('Caso Cerrado:', updatedWarranty);
+      } else {
+        alert(data.warning);
+      }
+    } catch (error) {
+      alert('Error de conexión con el servidor');
+      console.log(`Error de conexión con el servidor: ${error}`);
+    }
   };
 
-  const handleUpdateCase = () => {
-    // Lógica para actualizar el caso sin cerrarlo
-    const updatedWarranty = {
-      ...warranty,
-      estado: currentStatus,
-      issueDescription: currentDiagnosis,
-      descripcionAccion: actionDescription,
-    };
-    onUpdateWarranty(updatedWarranty);
-    onClose();
-    alert('Caso actualizado para la garantía: ' + warranty.codigo);
-    console.log('Caso Actualizado:', updatedWarranty);
+  const handleUpdateCase = async () => {
+    // Find the selected status and diagnosis objects
+    const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
+    const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/technicalServiceUpdateCase/`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            CaseNumber: warranty.CaseNumber,
+            statusID: selectedStatus ? selectedStatus.statusID : null,
+            issueID: selectedDiagnosis ? selectedDiagnosis.IssueId : null,
+            issueResolutionDetails: actionDescription,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        // Update local state only if backend update succeeded
+        const updatedWarranty = {
+          ...warranty,
+          statusDescription: currentStatus,
+          issueDescription: currentDiagnosis,
+          issueResolutionDetails: actionDescription,
+        };
+        onUpdateWarranty(updatedWarranty);
+        onClose();
+        alert('Caso actualizado para la garantía: ' + warranty.warrantyID);
+        console.log('Caso Actualizado:', updatedWarranty);
+      } else {
+        cosole.log(data.error)
+        alert(data.warning);
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Error de conexión con el servidor');
+      
+    }
   };
 
   return (
@@ -96,11 +194,9 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           <div className="detail-row">
             <strong>Fecha de Recepción:</strong> <span>{warranty.receptionDate}</span>
           </div>
-          {/* 
           <div className="detail-row">
-            <strong>Fecha de Revisión:</strong> <span>{warranty.fechaRevision || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión 
+            <strong>Fecha de Revisión:</strong> <span>{warranty.lasUpdated || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
           </div>
-          */}
           {warranty.fechaCierre && ( // Muestra fecha de cierre si existe
              <div className="detail-row">
                 <strong>Fecha de Cierre:</strong> <span>{warranty.fechaCierre}</span>
@@ -123,9 +219,10 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               className="modal-select"
               disabled={warranty.estado === 'Cerrado' || warranty.estado === 'Finalizado'} // No editar si ya está cerrado/finalizado
             >
-              <option value="Abierto">Abierto</option>
-              <option value="En Revisión">En Revisión</option>
-              <option value="Cerrado">Cerrado</option>
+              <option value="">Seleccione un estado</option>
+              {statusOptions.map(option => (
+                <option key={option.statusID} value={option.statusDescription}>{option.statusDescription}</option>
+              ))}
             </select>
           </div>
 
@@ -140,7 +237,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             >
               <option value="">Seleccione un diagnóstico</option>
               {diagnosisOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
+                <option key={option.IssueId} value={option.IssueDescription}>{option.IssueDescription}</option>
               ))}
             </select>
           </div>
@@ -162,8 +259,13 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         <div className="modal-footer">
           {warranty.estado !== 'Cerrado' && warranty.estado !== 'Finalizado' ? (
             <>
-              <button className="modal-button update-button" onClick={handleUpdateCase}>Actualizar Caso</button>
-              <button className="modal-button close-case-button" onClick={handleCloseCase}>Cerrar Caso</button>
+              {currentStatus !== 'Cerrado' && (
+                <button className="modal-button update-button" onClick={handleUpdateCase}>Actualizar Caso</button>
+              )}
+              
+              {currentStatus === 'Cerrado' && (
+                <button className="modal-button close-case-button" onClick={handleCloseCase}>Cerrar Caso</button>
+              )}
             </>
           ) : (
             <span className="case-closed-message">Este caso ya está {warranty.estado.toLowerCase()}.</span>

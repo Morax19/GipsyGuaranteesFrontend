@@ -39,10 +39,11 @@ function LoginTechnicalService() {
         sessionStorage.setItem('session_token', access_token);
         navigate('/technical-service/home');
       } else {
-        alert(data.error || data.detail || data.message || 'Login failed');
+        console.log(data.error)
+        alert(data.warning);
       }
     } catch (error) {
-      alert('Error connecting to server');
+      alert(`Error connecting to server: ${error}`);
     }
   };
 
