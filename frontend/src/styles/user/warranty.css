@@ -164,7 +164,6 @@ body {
 .rif-container {
     display: flex;
     width: 76%;
-    margin: 12px 0;
     gap: 8px;
     align-items: center;
 }
@@ -188,4 +187,10 @@ body {
     margin: 0;
     height: 100% !important;
     width: 100% !important;
+}
+
+.required-asterisk {
+  color: #ff4d4f;
+  margin-left: 3px;
+  font-weight: bold;
 }
