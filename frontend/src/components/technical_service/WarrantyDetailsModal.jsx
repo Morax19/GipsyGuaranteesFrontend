@@ -108,15 +108,15 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
       );
       const data = await response.json();
       if (response.ok) {
-
+        // Update local state only if backend update succeeded
         const updatedWarranty = {
           ...warranty,
-          statusID: selectedStatus,
-          issueID: selectedDiagnosis,
+          statusDescription: 'Cerrado',
+          issueDescription: currentDiagnosis,
           issueResolutionDetails: actionDescription,
           closedDate: new Date().toISOString().split('T')[0],
         };
-        onUpdateWarranty(updatedWarranty);
+        onUpdateWarranty(updatedWarranty); // Ensure this updates the parent list
         onClose();
         alert('Caso cerrado exitosamente para la garantía: ' + warranty.warrantyID);
         console.log('Caso Cerrado:', updatedWarranty);
@@ -194,7 +194,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             <strong>Fecha de Recepción:</strong> <span>{warranty.receptionDate}</span>
           </div>
           <div className="detail-row">
-            <strong>Fecha de Revisión:</strong> <span>{warranty.lasUpdated || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
+            <strong>Fecha de Revisión:</strong> <span>{warranty.lastUpdated || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
           </div>
           {warranty.fechaCierre && ( // Muestra fecha de cierre si existe
              <div className="detail-row">

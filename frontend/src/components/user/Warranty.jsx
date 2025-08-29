@@ -242,6 +242,9 @@ export default function Warranty() {
       if (response.ok) {
         alert(data.message);
         setFormData(initialFormData);
+        // Reset file input
+        const fileInput = document.getElementById('invoiceIMG');
+        if (fileInput) fileInput.value = '';
       } else {
         console.error(data.error);
         alert(data.warning);
