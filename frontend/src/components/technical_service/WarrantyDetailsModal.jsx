@@ -25,7 +25,6 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const [statusOptions, setStatusOptions] = useState([]);
   const [diagnosisOptions, setDiagnosisOptions] = useState([]);
 
-  // Opciones de diagnóstico (puedes cargarlas de una API en un caso real)
   useEffect(() => {
     async function fetchAllStatuses() {
       try {
@@ -58,7 +57,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         );
         const data = await response.json();
         if (response.ok) {
-          setDiagnosisOptions(data); // Save array of diagnosis options
+          setDiagnosisOptions(data);
         } else {
 
           console.log(data.error);
@@ -217,7 +216,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               value={currentStatus}
               onChange={handleStatusChange}
               className="modal-select"
-              disabled={warranty.estado === 'Cerrado' || warranty.estado === 'Finalizado'} // No editar si ya está cerrado/finalizado
+              disabled={warranty.statusDescription === 'Cerrado' || warranty.statusDescription === 'Finalizado'} // No editar si ya está cerrado/finalizado
             >
               <option value="">Seleccione un estado</option>
               {statusOptions.map(option => (
@@ -233,7 +232,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               value={currentDiagnosis}
               onChange={handleDiagnosisChange}
               className="modal-select"
-              disabled={warranty.estado === 'Cerrado' || warranty.estado === 'Finalizado'}
+              disabled={warranty.statusDescription === 'Cerrado' || warranty.statusDescription === 'Finalizado'}
             >
               <option value="">Seleccione un diagnóstico</option>
               {diagnosisOptions.map(option => (
@@ -251,13 +250,13 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               className="modal-textarea"
               placeholder="Describa las acciones tomadas o el resultado de la revisión..."
               rows="4"
-              disabled={warranty.estado === 'Cerrado' || warranty.estado === 'Finalizado'}
+              disabled={warranty.statusDescription === 'Cerrado' || warranty.statusDescription === 'Finalizado'}
             ></textarea>
           </div>
         </div>
 
         <div className="modal-footer">
-          {warranty.estado !== 'Cerrado' && warranty.estado !== 'Finalizado' ? (
+          {warranty.s !== 'Cerrado' && warranty.statusDescription !== 'Finalizado' ? (
             <>
               {currentStatus !== 'Cerrado' && (
                 <button className="modal-button update-button" onClick={handleUpdateCase}>Actualizar Caso</button>
@@ -268,7 +267,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               )}
             </>
           ) : (
-            <span className="case-closed-message">Este caso ya está {warranty.estado.toLowerCase()}.</span>
+            <span className="case-closed-message">Este caso ya está {warranty.statusDescription.toLowerCase()}.</span>
           )}
         </div>
       </div>
