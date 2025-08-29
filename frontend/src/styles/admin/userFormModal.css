@@ -243,3 +243,37 @@ input[type="password"]::-webkit-reveal {
 .modal-button-user.cancel-button-user:hover {
     background-color: #5a6268;
 }
+
+.required-asterisk {
+  color: #ff4d4f;
+  margin-left: 3px;
+  font-weight: bold;
+}
+
+.phone-container {
+    display: flex;
+    width: 69%;
+    margin: 12px 0;
+    gap: 8px;
+    align-items: center;
+}
+
+.phone-container select,
+.phone-container input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    height: auto;
+    margin: 0;
+}
+
+.phone-container .phone-type {
+  flex: 1.5;
+}
+
+.phone-container .phone-number {
+  flex: 3.2;
+}

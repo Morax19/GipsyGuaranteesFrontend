@@ -170,7 +170,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           )}
           
           <div className="form-group-user">
-            <label htmlFor="FirstName">Nombre:</label>
+            <label htmlFor="FirstName">
+              Nombre <span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               id="FirstName"
@@ -183,7 +185,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="LastName">Apellido:</label>
+            <label htmlFor="LastName">
+              Apellido <span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               id="LastName"
@@ -196,7 +200,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="EmailAddress">Correo electrónico:</label>
+            <label htmlFor="EmailAddress">
+              Correo electrónico <span className="required-asterisk">*</span>
+            </label>
             <input
               type="email"
               id="EmailAddress"
@@ -209,7 +215,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="PhoneNumber">Teléfono:</label>
+            <label htmlFor="PhoneNumber">Teléfono</label>
             <input
               type="tel"
               id="PhoneNumber"
@@ -218,10 +224,31 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
               onChange={handleChange}
               placeholder="Ingrese el teléfono del usuario (Opcional)"
             />
+            <div className="phone-container">
+              <select className="phone-type" id="Phonetype" name="Phonetype">
+                <option value="">Prefijo</option>
+                <option value="0412">0412</option>
+                <option value="0422">0422</option>
+                <option value="0414">0414</option>
+                <option value="0424">0424</option>
+                <option value="0416">0416</option>
+                <option value="0426">0426</option>
+              </select>
+              <input
+                className="phone-number"
+                type="number"
+                id="PhoneNumber"
+                name="PhoneNumber"
+                value={formData.PhoneNumber}
+                onChange={handleChange}
+                placeholder="Ingrese el teléfono del usuario (Opcional)"
+                length="7"
+              />
+            </div>
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="Address">Dirección:</label>
+            <label htmlFor="Address">Dirección</label>
             <input
               type="text"
               id="Address"
@@ -233,7 +260,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="Zip">Código Postal:</label>
+            <label htmlFor="Zip">Código Postal</label>
             <input
               type="text"
               id="Zip"
@@ -245,7 +272,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="Password">Contraseña:</label>
+            <label htmlFor="Password">
+              Contraseña <span className="required-asterisk">*</span>
+            </label>
             <div className="password-input-container">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -267,7 +296,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="roleID">Rol:</label>
+            <label htmlFor="roleID">
+              Rol <span className="required-asterisk">*</span>
+            </label>
             <select
               id="roleID"
               name="roleID"
