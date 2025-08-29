@@ -68,7 +68,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 Zip: customerData.Zip || '',
               }));
             } else {
-              console.error(customerData.message || 'Error fetching customer details');
+              console.error(customerData.error);
             }
           } catch (error) {
             console.error('Error connecting to the server', error);
@@ -125,7 +125,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
             onClose();
             onReload();
           } else {
-            alert(data.error || 'Error al guardar el usuario');
+            alert(data.warning);
           }
         } else {
           const text = await response.text();

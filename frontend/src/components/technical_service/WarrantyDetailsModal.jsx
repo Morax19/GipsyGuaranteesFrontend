@@ -39,12 +39,10 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         if (response.ok) {
           setStatusOptions(data); // Save array of statuses
         } else {
-          alert(error)
-          console.log(data.error || 'Error al obtener los estados');
-          alert(data.error || 'Error al obtener los estados')
+          console.log(data.error);
+          alert(data.warning)
         }
       } catch (error) {
-        alert(error)
         console.log('Error de conexión con el servidor');
         alert('Error de conexión con el servidor')
       }
@@ -63,12 +61,11 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           setDiagnosisOptions(data); // Save array of diagnosis options
         } else {
 
-          console.log(data.error || 'Error al obtener los diagnósticos');
-          alert(data.error || 'Error al obtener los diagnósticos')
+          console.log(data.error);
+          alert(data.warning)
         }
       } catch (error) {
-        alert(error)
-        console.log('Error de conexión con el servidor');
+        console.log(`Error de conexión con el servidor: ${error}`);
         alert('Error de conexión con el servidor')
       }
     }
@@ -105,7 +102,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           body: JSON.stringify({
             CaseNumber: warranty.CaseNumber,
             statusID: selectedStatus,
-            issueID: selectedDiagnosis,
+            issueID: selectedDiagnosis.IssueId,
             issueResolutionDetails: actionDescription,
           }),
         }
@@ -125,12 +122,11 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         alert('Caso cerrado exitosamente para la garantía: ' + warranty.warrantyID);
         console.log('Caso Cerrado:', updatedWarranty);
       } else {
-        alert(data.error || 'Error al cerrar el caso');
+        alert(data.warning);
       }
     } catch (error) {
-      alert(error)
       alert('Error de conexión con el servidor');
-      console.log(error);
+      console.log(`Error de conexión con el servidor: ${error}`);
     }
   };
 
@@ -167,11 +163,13 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         alert('Caso actualizado para la garantía: ' + warranty.warrantyID);
         console.log('Caso Actualizado:', updatedWarranty);
       } else {
-        alert(data.error || 'Error al actualizar el caso');
+        cosole.log(data.error)
+        alert(data.warning);
       }
     } catch (error) {
-      alert('Error de conexión con el servidor');
       console.log(error);
+      alert('Error de conexión con el servidor');
+      
     }
   };
 

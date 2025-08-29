@@ -62,9 +62,10 @@ function Register() {
       if (response.ok) {
         setMessage(data.message);
         alert('Se ha registrado exitosamente en Gipsy Garantías. Por favor, inicie sesión.');
+        alert(data.message);
         navigate('/user/login'); // Redirect to login page
       } else {
-        setMessage(data.message || 'Registration failed');
+        setMessage(data.warning);
       }
     } catch (error) {
       console.log(apiUrl);

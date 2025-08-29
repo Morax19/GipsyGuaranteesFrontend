@@ -41,7 +41,7 @@ const ForgotPasswordTechnicalService = () => {
       if (response.ok) {
         setMessage(data.message);
       } else {
-        setMessage(data.message || 'Error sending reset email');
+        setMessage(data.warning);
       }
     } catch (error) {
       setMessage('Network error');

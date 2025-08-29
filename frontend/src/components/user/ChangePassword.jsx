@@ -54,7 +54,7 @@ const ChangePassword = () => {
         setMessage('Contraseña cambiada correctamente.');
         setPasswords({ oldPassword: '', newPassword: '' });
       } else {
-        setMessage(data.error || 'Error al cambiar la contraseña.');
+        setMessage(data.warning);
       }
     } catch {
       setMessage('Error de conexión con el servidor.');

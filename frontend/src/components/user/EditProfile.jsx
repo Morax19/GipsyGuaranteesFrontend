@@ -9,7 +9,6 @@ import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-
 const EditProfile = () => {
 
   const navigate = useNavigate();
@@ -72,7 +71,7 @@ const EditProfile = () => {
       if (response.ok) {
         setMessage('Perfil actualizado correctamente.');
       } else {
-        setMessage(data.error || 'Error al actualizar el perfil.');
+        setMessage(data.warning);
       }
     } catch (error) {
       setMessage('Error de conexión con el servidor.');
