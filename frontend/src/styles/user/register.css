@@ -135,7 +135,7 @@ body.barraCurvaURegister::after {
 
 .phone-container {
     display: flex;
-    width: 69%;
+    width: 69% !important;
     margin: 12px 0;
     gap: 8px;
     align-items: center;

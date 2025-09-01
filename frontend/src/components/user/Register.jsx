@@ -55,7 +55,7 @@ function Register() {
     // Concatenate prefix and phone number
     const submitForm = {
       ...form,
-      PhoneNumber: form.Phonetype + form.Phone
+      PhoneNumber: form.Phonetype + '-' + form.Phone
     };
 
     try {

@@ -98,3 +98,31 @@ body {
 .cardContainerEditProfile button:hover {
     background-color: #5b7efa;
 }
+
+.phone-container {
+    display: flex;
+    width: 69% !important;
+    margin: 0 !important;
+    gap: 8px;
+    align-items: center;
+}
+
+.phone-container select,
+.phone-container input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    height: auto;
+    margin: 0;
+}
+
+.phone-container .phone-type {
+  flex: 1.5;
+}
+
+.phone-container .phone-number {
+  flex: 3.2;
+}

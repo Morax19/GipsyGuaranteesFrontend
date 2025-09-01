@@ -174,7 +174,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             <label htmlFor="RIFtype">
               RIF de la tienda <span className="required-asterisk">*</span>
             </label>
-            <div className="rif-container">
+            <div className="rif-container-modal">
               <div className="rif-type">
                   <select
                     id="RIFtype"

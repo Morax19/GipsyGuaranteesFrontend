@@ -23,7 +23,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
     FirstName: '',
     LastName: '',
     EmailAddress: '',
-    PhoneNumber: '',
+    Phonetype: '', // prefix
+    PhoneNumber: '', // number only
     Address: '',
     Zip: '',
     Password: '',
@@ -58,12 +59,22 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
             const customerData = await response.json();
 
             if (response.ok){
+              let prefix = '';
+              let number = '';
+              if (customerData.PhoneNumber) {
+                const parts = customerData.PhoneNumber.split('-');
+                if (parts.length === 2) {
+                  prefix = parts[0];
+                  number = parts[1];
+                }
+              }
               setFormData(prevData => ({
                 ...prevData,
                 FirstName: customerData.FirstName,
                 LastName: customerData.LastName,
                 EmailAddress: customerData.EmailAddress,
-                PhoneNumber: customerData.PhoneNumber || '',
+                Phonetype: prefix,
+                PhoneNumber: number,
                 Address: customerData.Address || '',
                 Zip: customerData.Zip || '',
               }));
@@ -83,6 +94,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
         FirstName: '',
         LastName: '',
         EmailAddress: '',
+        Phonetype: '',
         PhoneNumber: '',
         Address: '',
         Zip: '',
@@ -104,6 +116,12 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
       return;
     }
     
+    // Concatenate prefix and number for backend
+    const submitData = {
+      ...formData,
+      PhoneNumber: formData.Phonetype && formData.PhoneNumber ? `${formData.Phonetype}-${formData.PhoneNumber}` : ''
+    };
+
     const endpoint = isEditMode ? 'adminEditUsers' : 'adminCreateUsers';
     const method = isEditMode ? 'PUT' : 'POST';
     (async () => {
@@ -113,7 +131,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           {
             method,
             credentials: 'include',
-            body: JSON.stringify(formData)
+            body: JSON.stringify(submitData)
           }
         );
         const contentType = response.headers.get("content-type");
@@ -216,8 +234,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
 
           <div className="form-group-user">
             <label htmlFor="PhoneNumber">Teléfono</label>
-            <div className="phone-container">
-              <select className="phone-type" id="Phonetype" name="Phonetype">
+            <div className="phone-container-modal">
+              <select className="phone-type" id="Phonetype" name="Phonetype" value={formData.Phonetype} onChange={handleChange}>
                 <option value="">Prefijo</option>
                 <option value="0412">0412</option>
                 <option value="0422">0422</option>
@@ -225,6 +243,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 <option value="0424">0424</option>
                 <option value="0416">0416</option>
                 <option value="0426">0426</option>
+                <option value="0212">0212</option>
               </select>
               <input
                 className="phone-number"

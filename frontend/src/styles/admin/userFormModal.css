@@ -250,7 +250,7 @@ input[type="password"]::-webkit-reveal {
   font-weight: bold;
 }
 
-.phone-container {
+.phone-container-modal {
     display: flex;
     width: 100%;
     margin: 12px 0;
@@ -258,8 +258,8 @@ input[type="password"]::-webkit-reveal {
     align-items: center;
 }
 
-.phone-container select,
-.phone-container input {
+.phone-container-modal select,
+.phone-container-modal input {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -270,15 +270,15 @@ input[type="password"]::-webkit-reveal {
     margin: 0;
 }
 
-.phone-container .phone-type {
+.phone-container-modal .phone-type {
   flex: 1.5;
 }
 
-.phone-container .phone-number {
+.phone-container-modal .phone-number {
   flex: 3.2;
 }
 
-.rif-container {
+.rif-container-modal {
     display: flex;
     width: 100%;
     gap: 8px;
@@ -293,8 +293,8 @@ input[type="password"]::-webkit-reveal {
     flex: 5;
 }
 
-.rif-container select,
-.rif-container input {
+.rif-container-modal select,
+.rif-container-modal input {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
