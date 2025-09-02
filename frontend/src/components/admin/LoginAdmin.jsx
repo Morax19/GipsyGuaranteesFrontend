@@ -85,7 +85,7 @@ function LoginAdmin() {
           </button>
         </div>
         <br />
-        <button type="submit">Iniciar Sesión</button>
+        <button className="submit-button-admin" type="submit">Iniciar Sesión</button>
       </form>
       
       {/* 

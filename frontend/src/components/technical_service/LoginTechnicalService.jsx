@@ -87,7 +87,7 @@ function LoginTechnicalService() {
           </button>
         </div>
         <br />
-        <button type="submit">Iniciar Sesión</button>
+        <button className="submit-button-techServ" type="submit">Iniciar Sesión</button>
       </form>
       {/* 
       <p>
