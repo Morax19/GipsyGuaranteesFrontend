@@ -68,7 +68,7 @@ function LoginAdmin() {
         <br />
         <div className="password-input-container">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="Password"
             placeholder="Contraseña"
             required
