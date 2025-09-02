@@ -24,6 +24,9 @@ const ChangePassword = () => {
   const [passwords, setPasswords] = useState({ oldPassword1: '', oldPassword2: '', newPassword: '' });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [showNewPasswordConfirmation, setShowNewPasswordConfirmation] = useState(false);
 
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -71,14 +74,28 @@ const ChangePassword = () => {
     setShowPassword(!showPassword);
   };
 
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const togglePasswordConfirmationVisibility = () => {
+    setShowPasswordConfirmation(!showPasswordConfirmation);
+  };
+
+  const toggleNewPasswordConfirmationVisibility = () => {
+    setShowNewPasswordConfirmation(!showNewPasswordConfirmation);
+  };
+
   return (
     <LayoutBase activePage="change-password">
       <div className="cardContainerChangePassword">
         <h2>Cambiar contraseña</h2>
         <form onSubmit={handlePasswordSubmit}>
-          <br />
-          <div className="password-input-container">
-            <label htmlFor="oldPassword1">Contraseña actual</label>
+          <br /><br />
+          <label htmlFor="oldPassword1">
+              Contraseña actual <span className="required-asterisk">*</span>
+          </label>
+          <div className="changePassword-input-container small-margin">
             <input
               type={showPassword ? 'text' : 'password'}
               name="oldPassword1"
@@ -89,16 +106,16 @@ const ChangePassword = () => {
             />
             <button
               type="button"
-              className="password-toggle-button"
+              className="changePassword-toggle-button"
               onClick={togglePasswordVisibility}
               title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               <img src={eye} alt="Toggle password visibility" />
             </button>
-            </div >
-          <div className="password-input-container">
+          </div>
+          <div className="changePassword-input-container small-margin">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPasswordConfirmation ? 'text' : 'password'}
               name="oldPassword2"
               placeholder="Confirmar contraseña"
               value={passwords.oldPassword2}
@@ -107,18 +124,20 @@ const ChangePassword = () => {
             />
             <button
               type="button"
-              className="password-toggle-button"
-              onClick={togglePasswordVisibility}
-              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              className="changePassword-toggle-button"
+              onClick={togglePasswordConfirmationVisibility}
+              title={showPasswordConfirmation ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               <img src={eye} alt="Toggle password visibility" />
             </button>
-            </div >
-            <br />
-          <div className="password-input-container">
-            <label htmlFor="newPassword">Contraseña nueva</label>
+          </div>
+          <br />
+          <label htmlFor="newPassword">
+              Contraseña nueva <span className="required-asterisk">*</span>
+          </label>
+          <div className="changePassword-input-container small-margin">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showNewPassword ? 'text' : 'password'}
               name="newPassword"
               placeholder="Nueva contraseña"
               value={passwords.newPassword}
@@ -127,15 +146,33 @@ const ChangePassword = () => {
             />
             <button
               type="button"
-              className="password-toggle-button"
-              onClick={togglePasswordVisibility}
-              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              className="changePassword-toggle-button"
+              onClick={toggleNewPasswordVisibility}
+              title={showNewPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               <img src={eye} alt="Toggle password visibility" />
             </button>
-          </ div>
+          </div>
+          <div className="changePassword-input-container small-margin">
+            <input
+              type={showNewPasswordConfirmation ? 'text' : 'password'}
+              name="newPassword2"
+              placeholder="Confirmar nueva contraseña"
+              value={passwords.oldPassword2}
+              onChange={handlePasswordChange}
+              required
+            />
+            <button
+              type="button"
+              className="changePassword-toggle-button"
+              onClick={toggleNewPasswordConfirmationVisibility}
+              title={showNewPasswordConfirmation ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <img src={eye} alt="Toggle password visibility" />
+            </button>
+          </div>
           <div className="ButtonGroupChangePassword">
-            <button type="submit">Guardar contraseña</button>
+            <button className="savePassword-button" type="submit">Guardar contraseña</button>
           </div>
         </form>
         {message && <p>{message}</p>}

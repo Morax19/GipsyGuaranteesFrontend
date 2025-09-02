@@ -96,7 +96,7 @@ body.barraCurvaLoginTechnicalService::after {
     background: #fff;
 }
 
-.cardContainerLoginTechnicalService button {
+.cardContainerLoginTechnicalService .submit-button-techServ {
     display: block;
     width: 35%;
     padding: 12px;
@@ -115,7 +115,7 @@ body.barraCurvaLoginTechnicalService::after {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.cardContainerLoginTechnicalService button:hover {
+.cardContainerLoginTechnicalService .submit-button-techServ:hover {
     background-color: #b0bec5;
 }
 
@@ -130,3 +130,6 @@ p {
     margin-top: 10px;
     font-size: 1rem;
 }
+
+
+/* Los estilos de password-input-container son los mismos del archivo user/login.css */

@@ -36,6 +36,7 @@ function Register() {
   });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -44,6 +45,10 @@ function Register() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };  
+
+  const togglePasswordConfirmationVisibility = () => {
+    setShowPasswordConfirmation(!showPasswordConfirmation);
   };  
 
   const handleSubmit = async (e) => {
@@ -161,7 +166,7 @@ function Register() {
         />
         <div className="password-input-container">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="Password"
             placeholder="Contraseña *"
             required
@@ -170,7 +175,7 @@ function Register() {
           />
           <button
             type="button"
-            className="password-toggle-button"
+            className="registerPassword-toggle-button"
             onClick={togglePasswordVisibility}
             title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
@@ -179,7 +184,7 @@ function Register() {
         </div>
         <div className="password-input-container">
           <input
-            type="password"
+            type={showPasswordConfirmation ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirmar Contraseña *"
             required
@@ -188,15 +193,15 @@ function Register() {
           />
           <button
             type="button"
-            className="password-toggle-button"
-            onClick={togglePasswordVisibility}
-            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            className="registerPassword-toggle-button"
+            onClick={togglePasswordConfirmationVisibility}
+            title={showPasswordConfirmation ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             <img src={eye} alt="Toggle password visibility" />
           </button>
         </div>
         <br />
-        <button type="submit">Registrarse</button>
+        <button className="register-button" type="submit">Registrarse</button>
       </form>
       {message && <p>{message}</p>}
     </div>

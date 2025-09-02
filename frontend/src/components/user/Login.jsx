@@ -70,7 +70,7 @@ function Login() {
         <br />
         <div className="password-input-container">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="Password"
             placeholder="Contraseña"
             required
@@ -87,7 +87,7 @@ function Login() {
           </button>
         </div>
         <br />
-        <button type="submit">Iniciar Sesión</button>
+        <button className="submit-button" type="submit">Iniciar Sesión</button>
       </form>
       <p>
         ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/user/register/'); }}>Regístrate</a>
