@@ -4,7 +4,7 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import '../../styles/user/changePassword.css';
 import LayoutBase from '../base/LayoutBaseUser';
-import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
+import eye from '../../assets/IMG/ojo.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
@@ -21,8 +21,9 @@ const ChangePassword = () => {
   }, [navigate]);
 
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
-  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
+  const [passwords, setPasswords] = useState({ oldPassword1: '', oldPassword2: '', newPassword: '' });
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -37,13 +38,18 @@ const ChangePassword = () => {
       return;
     }
 
+    if (passwords.oldPassword1 !== passwords.oldPassword2) {
+      setMessage('Las contraseñas actuales no coinciden. Por favor, verifique.');
+      return;
+    }
+
     try {
       const response = await fetchWithAuth(`${apiUrl}/api/userChangePassword/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userID: user_id,
-          old_password: passwords.oldPassword,
+          old_password: passwords.oldPassword1,
           new_password: passwords.newPassword,
         }),
       });
@@ -52,7 +58,7 @@ const ChangePassword = () => {
 
       if (response.ok) {
         setMessage('Contraseña cambiada correctamente.');
-        setPasswords({ oldPassword: '', newPassword: '' });
+        setPasswords({ oldPassword1: '', oldPassword2: '', newPassword: '' });
       } else {
         setMessage(data.warning);
       }
@@ -61,27 +67,73 @@ const ChangePassword = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <LayoutBase activePage="change-password">
       <div className="cardContainerChangePassword">
         <h2>Cambiar contraseña</h2>
         <form onSubmit={handlePasswordSubmit}>
-          <input
-            type="password"
-            name="oldPassword"
-            placeholder="Contraseña actual"
-            value={passwords.oldPassword}
-            onChange={handlePasswordChange}
-            required
-          />
-          <input
-            type="password"
-            name="newPassword"
-            placeholder="Nueva contraseña"
-            value={passwords.newPassword}
-            onChange={handlePasswordChange}
-            required
-          />
+          <br />
+          <div className="password-input-container">
+            <label htmlFor="oldPassword1">Contraseña actual</label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="oldPassword1"
+              placeholder="Contraseña actual"
+              value={passwords.oldPassword1}
+              onChange={handlePasswordChange}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-button"
+              onClick={togglePasswordVisibility}
+              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <img src={eye} alt="Toggle password visibility" />
+            </button>
+            </div >
+          <div className="password-input-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="oldPassword2"
+              placeholder="Confirmar contraseña"
+              value={passwords.oldPassword2}
+              onChange={handlePasswordChange}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-button"
+              onClick={togglePasswordVisibility}
+              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <img src={eye} alt="Toggle password visibility" />
+            </button>
+            </div >
+            <br />
+          <div className="password-input-container">
+            <label htmlFor="newPassword">Contraseña nueva</label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="newPassword"
+              placeholder="Nueva contraseña"
+              value={passwords.newPassword}
+              onChange={handlePasswordChange}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-button"
+              onClick={togglePasswordVisibility}
+              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <img src={eye} alt="Toggle password visibility" />
+            </button>
+          </ div>
           <div className="ButtonGroupChangePassword">
             <button type="submit">Guardar contraseña</button>
           </div>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/user/register.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
+import eye from '../../assets/IMG/ojo.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
@@ -34,11 +35,16 @@ function Register() {
     Phone: '' // Add phone number field
   });
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,22 +159,42 @@ function Register() {
           value={form.zip_code}
           onChange={handleChange}
         />
-        <input
-          type="password"
-          name="Password"
-          placeholder="Contraseña *"
-          required
-          value={form.Password}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar Contraseña *"
-          required
-          value={form.confirmPassword}
-          onChange={handleChange}
-        />
+        <div className="password-input-container">
+          <input
+            type="password"
+            name="Password"
+            placeholder="Contraseña *"
+            required
+            value={form.Password}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className="password-toggle-button"
+            onClick={togglePasswordVisibility}
+            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            <img src={eye} alt="Toggle password visibility" />
+          </button>
+        </div>
+        <div className="password-input-container">
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmar Contraseña *"
+            required
+            value={form.confirmPassword}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className="password-toggle-button"
+            onClick={togglePasswordVisibility}
+            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            <img src={eye} alt="Toggle password visibility" />
+          </button>
+        </div>
         <br />
         <button type="submit">Registrarse</button>
       </form>

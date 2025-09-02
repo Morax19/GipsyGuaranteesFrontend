@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../../styles/admin/LoginAdmin.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
+import eye from '../../assets/IMG/ojo.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
@@ -19,7 +20,12 @@ function LoginAdmin() {
 
   const [EmailAddress, setEmailAddress] = useState('');
   const [Password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,14 +66,24 @@ function LoginAdmin() {
           onChange={e => setEmailAddress(e.target.value)}
         />
         <br />
-        <input
-          type="password"
-          name="Password"
-          placeholder="Contraseña"
-          required
-          value={Password}
-          onChange={e => setPassword(e.target.value)}
-        />
+        <div className="password-input-container">
+          <input
+            type="password"
+            name="Password"
+            placeholder="Contraseña"
+            required
+            value={Password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            className="password-toggle-button"
+            onClick={togglePasswordVisibility}
+            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            <img src={eye} alt="Toggle password visibility" />
+          </button>
+        </div>
         <br />
         <button type="submit">Iniciar Sesión</button>
       </form>
