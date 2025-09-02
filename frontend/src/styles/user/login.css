@@ -70,12 +70,12 @@ body.barraCurvaLogin::after {
 .cardContainerLogin form {
     display: flex;
     flex-direction: column;
-    align-items: center; /* This will center the inputs horizontally */
-    width: 100%; /* Ensure the form takes up the full width of its parent */
+    align-items: center;
+    width: 100%;
 }
 
 .cardContainerLogin form input[type="text"],
-.cardContainerLogin form input[type="password"] {
+.cardContainerLogin form .password-input-container input {
     width: 70%;
     padding: 10px;
     margin: 5px 0;
@@ -94,7 +94,7 @@ body.barraCurvaLogin::after {
     background: #fff;
 }
 
-.cardContainerLogin button {
+.cardContainerLogin .submit-button {
     display: block;
     width: 35%;
     padding: 12px;
@@ -113,7 +113,7 @@ body.barraCurvaLogin::after {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.cardContainerLogin button:hover {
+.cardContainerLogin .submit-button:hover {
     background-color: #5b7efa;
 }
 
@@ -150,4 +150,47 @@ p {
 .login-link:hover {
     color: #b7b8bd;
     text-decoration: underline;
+}
+
+/* Estilo para contraseña */
+.password-input-container {
+    position: relative;
+    width: 106%;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-input-container input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.password-toggle-button {
+    position: absolute;
+    right: 85px !important;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-button:hover {
+    background-color: transparent;
+}
+
+.password-toggle-button img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.password-toggle-button:hover img {
+    transform: scale(1.1);
 }
