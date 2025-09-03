@@ -105,7 +105,7 @@ body.barraCurvaURegister::after {
     background: #fff;
 }
 
-.cardContainerURegister button {
+.cardContainerURegister .register-button {
     display: block;
     width: 35%;
     padding: 12px;
@@ -124,7 +124,7 @@ body.barraCurvaURegister::after {
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.cardContainerURegister button:hover {
+.cardContainerURegister .register-button:hover {
     background-color: #5b7efa;
 }
 
@@ -135,7 +135,7 @@ body.barraCurvaURegister::after {
 
 .phone-container {
     display: flex;
-    width: 69%;
+    width: 69% !important;
     margin: 12px 0;
     gap: 8px;
     align-items: center;
@@ -159,4 +159,36 @@ body.barraCurvaURegister::after {
 
 .phone-container .phone-number {
   flex: 3.2;
+}
+
+/* Los otros estilos de password-input-container son los mismos del archivo user/login.css */
+
+.registerPassword-toggle-button {
+    position: absolute;
+    right: 100px !important;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registerPassword-toggle-button:hover {
+    background-color: transparent;
+}
+
+.registerPassword-toggle-button img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.registerPassword-toggle-button:hover img {
+    transform: scale(1.1);
 }

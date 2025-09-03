@@ -148,7 +148,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
           )}
           
           <div className="form-group-user">
-            <label htmlFor="customerID">Compañía asociada:</label>
+            <label htmlFor="customerID">
+              Compañía asociada <span className="required-asterisk">*</span>
+            </label>
             <select
               id="customerID"
               name="customerID"
@@ -169,35 +171,44 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="RIFtype">Tipo RIF:</label>
-            <select
-              id="RIFtype"
-              name="RIFtype"
-              value={formData.RIFtype}
-              onChange={handleChange}
-            >
-              <option value="">Seleccione un tipo</option>
-              {RIFtypeOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            <label htmlFor="RIFtype">
+              RIF de la tienda <span className="required-asterisk">*</span>
+            </label>
+            <div className="rif-container-modal">
+              <div className="rif-type">
+                  <select
+                    id="RIFtype"
+                    name="RIFtype"
+                      value={formData.RIFtype}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    >
+                      <option value="">Tipo</option>
+                      {RIFtypeOptions.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                </div>
+                <div className="rif-number">
+                    <input
+                      type="number"
+                      id="RIF"
+                      name="RIF"
+                      placeholder="Número de RIF"
+                      maxLength={10}
+                      required
+                      value={formData.RIF}
+                      onChange={handleChange}
+                      disabled={formData.isRetail === 'false'}
+                    />
+                </div>
+            </div>
           </div>
-
+             
           <div className="form-group-user">
-            <label htmlFor="RIF">RIF:</label>
-            <input
-              type="tel"
-              id="RIF"
-              name="RIF"
-              value={formData.RIF}
-              onChange={handleChange}
-              placeholder="Ingrese el número de RIF"
-              maxLength={10}
-            />
-          </div>
-
-          <div className="form-group-user">
-            <label htmlFor="companyName">Nombre de la sucursal:</label>
+            <label htmlFor="companyName">
+              Nombre de la sucursal <span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               id="companyName"
@@ -209,7 +220,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="address">Dirección:</label>
+            <label htmlFor="address">
+              Dirección <span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               id="address"
@@ -221,7 +234,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="branchDescription">Descripción de Sucursal:</label>
+            <label htmlFor="branchDescription">
+              Descripción de Sucursal <span className="required-asterisk">*</span>
+            </label>
             <textarea
               id="branchDescription"
               name="branchDescription"

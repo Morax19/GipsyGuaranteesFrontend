@@ -3,7 +3,7 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { useNavigate } from 'react-router-dom';
 import LayoutBase from '../base/LayoutBaseUser';
-import image from '../../assets/IMG/WarrancyWallpaper.jpg';
+import imageHome from '../../assets/IMG/WarrantyWallpaperClientHome.png';
 
 const Home = () => {
 
@@ -16,7 +16,7 @@ const Home = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
 
   return (
     <LayoutBase activePage="home">
@@ -26,13 +26,22 @@ const Home = () => {
             <h2>Control de Garantías Gipsy</h2>
           </div>
           <div className="title-center">
-            <h3>Bienvenido(a), {email_address}</h3>
+            <h3>Bienvenido(a), {user_first_name}</h3>
           </div>
         </div>
         <img
-          src={image}
+          src={imageHome}
           alt="Seller Wallpaper"
-          style={{ width: '100%', maxWidth: '1300px', display: 'block' }}
+          style={{
+            width: '100%',
+            maxWidth: '1100px',
+            display: 'block',
+            margin: '32px auto',
+            borderRadius: '18px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+            border: '1px solid #e0e0e0',
+            objectFit: 'cover'
+          }}
         />
       </div>
     </LayoutBase>

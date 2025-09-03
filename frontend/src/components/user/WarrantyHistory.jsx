@@ -21,7 +21,7 @@ const WarrantyHistory = () => {
     }
   }, [navigate]);
 
-  const { user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [historyWarranties, setHistoryWarranties] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
   const [filteredHistoryWarranties, setFilteredHistoryWarranties] = useState([]);

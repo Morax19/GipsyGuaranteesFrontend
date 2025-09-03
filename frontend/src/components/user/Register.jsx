@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/user/register.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
+import eye from '../../assets/IMG/ojo.png';
 
 const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
@@ -26,18 +27,29 @@ function Register() {
     FirstName: '',
     LastName: '',
     EmailAddress: '',
-    PhoneNumber: '',
     Address: '',
     Zip: '',
     Password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    Phonetype: '', // Add prefix field
+    Phone: '' // Add phone number field
   });
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };  
+
+  const togglePasswordConfirmationVisibility = () => {
+    setShowPasswordConfirmation(!showPasswordConfirmation);
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,13 +62,20 @@ function Register() {
         setMessage('El formato del correo electrónico no es válido. Por favor, ingresar una dirección usuario@dominio.com');
         return;
     }
+
+    // Concatenate prefix and phone number
+    const submitForm = {
+      ...form,
+      PhoneNumber: form.Phonetype + '-' + form.Phone
+    };
+
     try {
       const response = await fetch(`${apiUrl}/api/publicRegister/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(submitForm)
       });
       const data = await response.json();
       if (response.ok) {
@@ -117,7 +136,7 @@ function Register() {
           onChange={handleChange}
         />
         <div className="phone-container">
-          <select className="phone-type" id="Phonetype" name="Phonetype">
+          <select className="phone-type" id="Phonetype" name="Phonetype" value={form.Phonetype} onChange={handleChange} required>
             <option value="">Prefijo</option>
             <option value="0412">0412</option>
             <option value="0422">0422</option>
@@ -128,11 +147,14 @@ function Register() {
           </select>
           <input
             className="phone-number"
-            type="number"
+            type="tel"
             id="Phone"
             name="Phone"
             placeholder="Número Telefónico"
-            length="7"
+            maxLength={7}
+            value={form.Phone}
+            onChange={handleChange}
+            required
           />
         </div>
         <input
@@ -142,24 +164,44 @@ function Register() {
           value={form.zip_code}
           onChange={handleChange}
         />
-        <input
-          type="password"
-          name="Password"
-          placeholder="Contraseña *"
-          required
-          value={form.Password}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmar Contraseña *"
-          required
-          value={form.confirmPassword}
-          onChange={handleChange}
-        />
+        <div className="password-input-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="Password"
+            placeholder="Contraseña *"
+            required
+            value={form.Password}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className="registerPassword-toggle-button"
+            onClick={togglePasswordVisibility}
+            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            <img src={eye} alt="Toggle password visibility" />
+          </button>
+        </div>
+        <div className="password-input-container">
+          <input
+            type={showPasswordConfirmation ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirmar Contraseña *"
+            required
+            value={form.confirmPassword}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className="registerPassword-toggle-button"
+            onClick={togglePasswordConfirmationVisibility}
+            title={showPasswordConfirmation ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            <img src={eye} alt="Toggle password visibility" />
+          </button>
+        </div>
         <br />
-        <button type="submit">Registrarse</button>
+        <button className="register-button" type="submit">Registrarse</button>
       </form>
       {message && <p>{message}</p>}
     </div>

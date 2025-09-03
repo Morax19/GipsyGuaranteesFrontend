@@ -21,7 +21,7 @@ const WarrantiesList = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [primaryFilter, setPrimaryFilter] = useState('');
   const [secondaryFilter, setSecondaryFilter] = useState('');

@@ -20,13 +20,14 @@ const EditProfile = () => {
     }
   }, [navigate]);
 
-  const {user_id, email_address, role } = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [form, setForm] = useState({
     userID: user_id,
     FirstName: '',
     LastName: '',
     EmailAddress: '',
-    PhoneNumber: '',
+    Phonetype: '', // prefix
+    PhoneNumber: '', // number only
     Address: '',
     Zip: ''
   });
@@ -39,13 +40,30 @@ const EditProfile = () => {
     } else {
       fetchWithAuth(`${apiUrl}/api/getCustomerByUserID/?userID=${user_id}`)
         .then(res => res.json())
-        .then(data => setForm(prev => ({ ...prev, ...data })))
+        .then(data => {
+          let prefix = '';
+          let number = '';
+          if (data.PhoneNumber) {
+            const parts = data.PhoneNumber.split('-');
+            if (parts.length === 2) {
+              prefix = parts[0];
+              number = parts[1];
+            }
+          }
+          setForm(prev => ({
+            ...prev,
+            ...data,
+            Phonetype: prefix,
+            PhoneNumber: number
+          }));
+        })
         .catch(() =>
           setForm({
             userID: user_id,
             FirstName: '',
             LastName: '',
             EmailAddress: '',
+            Phonetype: '',
             PhoneNumber: '',
             Address: '',
             Zip: ''
@@ -61,11 +79,16 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+    // Concatenate prefix and number for backend
+    const submitForm = {
+      ...form,
+      PhoneNumber: form.Phonetype && form.PhoneNumber ? `${form.Phonetype}-${form.PhoneNumber}` : ''
+    };
     try {
       const response = await fetchWithAuth(`${apiUrl}/api/userProfileEdit/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(submitForm)
       });
       const data = await response.json();
       if (response.ok) {
@@ -114,13 +137,29 @@ const EditProfile = () => {
             value={form.Address}
             onChange={handleChange}
           />
-          <input
-            type="tel"
-            name="PhoneNumber"
-            placeholder="Teléfono (Opcional)"
-            value={form.PhoneNumber}
-            onChange={handleChange}
-          />
+          <div className="phone-container">
+            <select className="phone-type" id="Phonetype" name="Phonetype" value={form.Phonetype} onChange={handleChange} required>
+              <option value="">Prefijo</option>
+              <option value="0412">0412</option>
+              <option value="0422">0422</option>
+              <option value="0414">0414</option>
+              <option value="0424">0424</option>
+              <option value="0416">0416</option>
+              <option value="0426">0426</option>
+              <option value="0212">0212</option>
+            </select>
+            <input
+              className="phone-number"
+              type="tel"
+              id="PhoneNumber"
+              name="PhoneNumber"
+              placeholder="Número Telefónico"
+              maxLength={7}
+              value={form.PhoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <input
             type="text"
             name="Zip"

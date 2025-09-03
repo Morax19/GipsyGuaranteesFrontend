@@ -12,8 +12,9 @@ export const getCurrentUserInfo = (tokenKey = 'session_token') => {
   try {
     const decoded = jwtDecode(token);
     return {
-      user_id: decoded.user_id, 
-      email_address: decoded.email_address, 
+      user_id: decoded.user_id,
+      user_first_name: decoded.user_first_name,
+      email_address: decoded.email_address,
       role: decoded.role,
     };
   } catch (err) {
