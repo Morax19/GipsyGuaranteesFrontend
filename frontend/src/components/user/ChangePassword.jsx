@@ -21,7 +21,7 @@ const ChangePassword = () => {
   }, [navigate]);
 
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
-  const [passwords, setPasswords] = useState({ oldPassword1: '', oldPassword2: '', newPassword: '' });
+  const [passwords, setPasswords] = useState({ oldPassword1: '', oldPassword2: '', newPassword: '', newPassword2: '' });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -46,6 +46,11 @@ const ChangePassword = () => {
       return;
     }
 
+    if (passwords.newPassword !== passwords.newPassword2) {
+      setMessage('Las contraseñas nuevas no coinciden. Por favor, verifique.');
+      return;
+    }
+
     try {
       const response = await fetchWithAuth(`${apiUrl}/api/userChangePassword/`, {
         method: 'PUT',
@@ -61,7 +66,7 @@ const ChangePassword = () => {
 
       if (response.ok) {
         setMessage('Contraseña cambiada correctamente.');
-        setPasswords({ oldPassword1: '', oldPassword2: '', newPassword: '' });
+        setPasswords({ oldPassword1: '', oldPassword2: '', newPassword: '', newPassword2: '' });
       } else {
         setMessage(data.warning);
       }
@@ -74,12 +79,12 @@ const ChangePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const toggleNewPasswordVisibility = () => {
-    setShowNewPassword(!showNewPassword);
-  };
-
   const togglePasswordConfirmationVisibility = () => {
     setShowPasswordConfirmation(!showPasswordConfirmation);
+  };
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
   };
 
   const toggleNewPasswordConfirmationVisibility = () => {
@@ -158,7 +163,7 @@ const ChangePassword = () => {
               type={showNewPasswordConfirmation ? 'text' : 'password'}
               name="newPassword2"
               placeholder="Confirmar nueva contraseña"
-              value={passwords.oldPassword2}
+              value={passwords.newPassword2}
               onChange={handlePasswordChange}
               required
             />

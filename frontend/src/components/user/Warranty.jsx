@@ -431,6 +431,9 @@ export default function Warranty() {
             required
             onChange={handleChange}
           />
+          <small style={{ display: 'block', marginBottom: '12px', color: '#555' }}>
+            Solo se aceptan archivos JPG, PNG, PDF
+          </small>
 
           <button className="inputWarranty" type="submit">Guardar Garantía</button>
         </form>
