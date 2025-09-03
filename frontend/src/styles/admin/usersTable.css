@@ -48,7 +48,6 @@
     text-align: left; /* Alinea el contenido a la izquierda */
 }
 
-
 /* Botón "Agregar Usuario" */
 .add-user-button-admin {
     padding: 12px 20px;
@@ -141,6 +140,7 @@
     text-align: left;
     border-bottom: 1px solid #ddd;
     color: #191c16;
+    vertical-align: middle; /* Ensure vertical alignment for all cells */
 }
 
 .users-table th {
@@ -158,14 +158,16 @@
 }
 
 /* Estilos para la celda y botón de contraseña */
-.password-cell {
+.password-cell-user-table {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: center; /* Vertically center content */
+    gap: 10px;
+    height: 100%; /* Fill cell height for proper alignment */
+    min-height: 48px; /* Match row height if needed */
 }
 
-.password-toggle-button {
+.password-toggle-button-user-table {
     background: none;
     border: none;
     padding: 0;
@@ -177,13 +179,13 @@
     height: 30px;
 }
 
-.password-toggle-button img {
+.password-toggle-button-user-table img {
     width: 20px;
     height: 20px;
     transition: transform 0.2s ease;
 }
 
-.password-toggle-button:hover img {
+.password-toggle-button-user-table:hover img {
     transform: scale(1.1);
 }
 

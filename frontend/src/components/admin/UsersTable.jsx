@@ -271,10 +271,10 @@ const UsersTable = () => {
                   <tr key={user.userID}>
                     <td>{user.userID}</td>
                     <td>{user.Users}</td>
-                    <td className="password-cell">
+                    <td className="password-cell-user-table">
                       {showPasswordFor === user.userID ? user.Password : '********'}
                       <button
-                        className="password-toggle-button"
+                        className="password-toggle-button-user-table"
                         onClick={() => handleTogglePassword(user.userID)}
                         title={showPasswordFor === user.userID ? "Ocultar contraseña" : "Mostrar contraseña"}
                       >
