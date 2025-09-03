@@ -181,6 +181,18 @@
 /*    width: 100%; /* Ensure container fills parent width */
 }
 
+.password-input-container-modal {
+    position: relative;
+    display: flex;
+    align-items: center;
+/*    width: 100%; /* Ensure container fills parent width */
+}
+
+.password-input-container input-modal {
+    padding-right: 40px;
+/*    width: 100%; /* Ensure container fills parent width */
+}
+
 .password-toggle-button-modal {
     position: absolute;
     right: 5px;
