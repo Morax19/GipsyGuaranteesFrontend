@@ -286,7 +286,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
             <label htmlFor="Password">
               Contraseña <span className="required-asterisk">*</span>
             </label>
-            <div className="password-input-container">
+            <div className="password-input-container-modal">
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="Password"

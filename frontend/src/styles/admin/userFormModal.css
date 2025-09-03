@@ -173,10 +173,12 @@
     position: relative;
     display: flex;
     align-items: center;
+/*    width: 100%; /* Ensure container fills parent width */
 }
 
 .password-input-container input {
     padding-right: 40px;
+/*    width: 100%; /* Ensure container fills parent width */
 }
 
 .password-toggle-button-modal {
