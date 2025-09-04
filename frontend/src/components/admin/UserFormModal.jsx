@@ -295,7 +295,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 onChange={handleChange}
                 placeholder="Ingrese la contraseña"
               />
-              { 
               <button
                 type="button"
                 className="password-toggle-button-modal"
@@ -304,7 +303,6 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
               >
                 <img src={eye} alt="Toggle password visibility" />
               </button>
-              }
             </div>
           </div>
 

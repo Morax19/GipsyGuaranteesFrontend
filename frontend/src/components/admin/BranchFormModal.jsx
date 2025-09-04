@@ -199,7 +199,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                       required
                       value={formData.RIF}
                       onChange={handleChange}
-                      disabled={formData.isRetail === 'false'}
+                      //disabled={formData.isRetail === 'false'}
                     />
                 </div>
             </div>

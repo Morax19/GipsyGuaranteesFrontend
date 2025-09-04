@@ -217,17 +217,27 @@ export default function Warranty() {
       return;
     }
 
+    const selectedStore = mainCustomers.find(mc => String(mc.ID) === String(formData.mainCustomerID));
+    const selectedBranch = branchAddresses.find(b => String(b.branchID) === String(formData.branchID));
     const img = document.getElementById("invoiceIMG").files[0];
+
     const warrantyData = new FormData();
     warrantyData.append('registerID', user_id);
+    warrantyData.append('userFirstName', user_first_name);
+    warrantyData.append('emailAddress', email_address);
     warrantyData.append('branchID', formData.branchID);
+    warrantyData.append('RIFtype', formData.RIFtype);
+    warrantyData.append('RIF', formData.RIF);
     warrantyData.append('ItemId', formData.ItemId);
     warrantyData.append('isRetail', formData.isRetail);
     warrantyData.append('purchaseDate', formData.purchaseDate);
     warrantyData.append('productBrand', formData.productBrand);
+    warrantyData.append('productModel', formData.productDetail);
     warrantyData.append('productBarcode', formData.barCode);
     warrantyData.append('invoiceNumber', formData.invoiceNumber);
     warrantyData.append('invoiceIMG', img);
+    warrantyData.append('storeName', selectedStore ? selectedStore.FullName : '');
+    warrantyData.append('branchName', selectedBranch ? selectedBranch.companyName : '');
 
     try {
       const response = await fetchWithAuth(

@@ -49,7 +49,7 @@ function Register() {
 
   const togglePasswordConfirmationVisibility = () => {
     setShowPasswordConfirmation(!showPasswordConfirmation);
-  };  
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
