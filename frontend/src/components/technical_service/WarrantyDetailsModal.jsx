@@ -181,28 +181,56 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         </div>
 
         <div className="modal-body">
-          <div className="detail-row">
-            <strong>Código del caso:</strong> <span>{warranty.CaseNumber}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Cliente:</strong> <span>{warranty.Customer}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Tienda:</strong> <span>{warranty.companyName}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Fecha de Recepción:</strong> <span>{warranty.receptionDate}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Fecha de Revisión:</strong> <span>{warranty.lastUpdated || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
-          </div>
-          {warranty.fechaCierre && ( // Muestra fecha de cierre si existe
-             <div className="detail-row">
-                <strong>Fecha de Cierre:</strong> <span>{warranty.fechaCierre}</span>
+
+          {/* Sección de 'Datos del Cliente' */}
+
+          <div className="section-container">
+            <h4 className="section-title">Datos del Cliente</h4>
+            <div className="detail-row">
+              <strong>Cliente:</strong> <span>{warranty.Customer}</span>
             </div>
-          )}
-         <div className="detail-row">
-            <strong>Producto:</strong> <span>{warranty.Description}</span>
+            <div className="detail-row">
+              <strong>C.I.:</strong> <span>{warranty.NationalId}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Teléfono:</strong> <span>{warranty.PhoneNumber}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Correo:</strong> <span>{warranty.EmailAddress}</span>
+            </div>
+          </div>
+          <hr className="section-divider" />
+
+          {/* Sección de 'Datos del Producto y Garantía' */}
+
+          <div className="section-container">
+            <h4 className="section-title">Datos del Producto y Garantía</h4>
+            <div className="detail-row">
+              <strong>Código del caso:</strong> <span>{warranty.CaseNumber}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Tienda:</strong> <span>{warranty.companyName}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Fecha de Recepción:</strong> <span>{warranty.receptionDate}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Fecha de Revisión:</strong> <span>{warranty.lastUpdated || 'N/A'}</span> {/* Asume que puedes tener una fecha de revisión */}
+            </div>
+            {warranty.fechaCierre && ( // Muestra fecha de cierre si existe
+              <div className="detail-row">
+                  <strong>Fecha de Cierre:</strong> <span>{warranty.fechaCierre}</span>
+              </div>
+            )}
+            <div className="detail-row">
+              <strong>Marca:</strong> <span>{warranty.Brand}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Código de Barra:</strong> <span>{warranty.ItemLookupCode}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Producto:</strong> <span>{warranty.Description}</span>
+            </div>
           </div>
 
           <hr /> {/* Separador visual */}
