@@ -133,7 +133,9 @@ body.barraCurvaURegister::after {
     margin-bottom: 30px;
 }
 
-.phone-container {
+
+.phone-container,
+.national-id-container {
     display: flex;
     width: 69% !important;
     margin: 12px 0;
@@ -142,7 +144,9 @@ body.barraCurvaURegister::after {
 }
 
 .phone-container select,
-.phone-container input {
+.phone-container input,
+.national-id-container select,
+.national-id-container input {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -153,11 +157,13 @@ body.barraCurvaURegister::after {
     margin: 0;
 }
 
-.phone-container .phone-type {
+.phone-container .phone-type,
+.national-id-container .national-id-type {
   flex: 1.5;
 }
 
-.phone-container .phone-number {
+.phone-container .phone-number,
+.national-id-container .national-id {
   flex: 3.2;
 }
 

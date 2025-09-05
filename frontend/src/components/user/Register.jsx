@@ -26,6 +26,8 @@ function Register() {
   const [form, setForm] = useState({
     FirstName: '',
     LastName: '',
+    NationalIDtype: '',
+    NationalID: '',
     EmailAddress: '',
     Address: '',
     Zip: '',
@@ -66,6 +68,7 @@ function Register() {
     // Concatenate prefix and phone number
     const submitForm = {
       ...form,
+      NationalID: form.NationalIDtype + '-' + form.NationalID,
       PhoneNumber: form.Phonetype + '-' + form.Phone
     };
 
@@ -120,6 +123,24 @@ function Register() {
           value={form.LastName}
           onChange={handleChange}
         />
+        <div className="national-id-container">
+          <select className="national-id-type" id="NationalIDtype" name="NationalIDtype" value={form.NationalIDtype} onChange={handleChange} required>
+            <option value="">Prefijo</option>
+            <option value="V">V</option>
+            <option value="E">E</option>
+            <option value="P">P</option>
+          </select>
+          <input
+              className="national-id"
+              type="tel"
+              id="NationalID"
+              name="NationalID"
+              placeholder="Cédula de identidad *"
+              value={form.NationalID}
+              onChange={handleChange}
+              required
+            />
+          </div>
         <input
           type="email"
           name="EmailAddress"
@@ -150,7 +171,7 @@ function Register() {
             type="tel"
             id="Phone"
             name="Phone"
-            placeholder="Número Telefónico"
+            placeholder="Número Telefónico *"
             maxLength={7}
             value={form.Phone}
             onChange={handleChange}

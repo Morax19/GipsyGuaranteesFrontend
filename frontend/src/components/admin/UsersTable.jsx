@@ -283,7 +283,7 @@ const UsersTable = () => {
                     </td>
                     <td>{user.registrationDate}</td>
                     <td>{user.CustomerID}</td>
-                    <td><span className={`role-${user.roleID?.toLowerCase().replace(/\s+/g, '-')}`}>{user.Description}</span></td>
+                    <td><span className={`role-${String(user.roleID).toLowerCase().replace(/\s+/g, '-')}`}>{user.Description}</span></td>
                     <td>
                       <button
                         className="edit-button"
