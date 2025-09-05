@@ -42,33 +42,58 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
         </div>
 
         <div className="modal-body">
-          <div className="detail-row">
-            <strong>Código de Garantía:</strong> <span>{warranty.WarrantyNumber}</span>
+          
+          {/* Sección de 'Datos del Cliente' */}
+
+          <div className="section-container">
+            <h4 className="section-title">Datos del Cliente</h4>
+            <div className="detail-row">
+              <strong>Cliente:</strong> <span>{warranty.Customer}</span>
+            </div>
+            <div className="detail-row">
+              <strong>C.I.:</strong> <span>{warranty.NationalId}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Teléfono:</strong> <span>{warranty.PhoneNumber}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Correo:</strong> <span>{warranty.EmailAddress}</span>
+            </div>
           </div>
-          <div className="detail-row">
-            <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span> {/* Asumiendo 'purchaseDate' es la fecha de registro */}
-          </div>
-          <div className="detail-row">
-            <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Producto:</strong> <span>{warranty.Brand} - {warranty.Model}</span>
-          </div>
-          <div className="detail-row">
-            <strong>Estatus (Vigencia):</strong> 
-            <span style={{ color: validityStatus === 'Válida' ? '#28a745' : '#d9534f', fontWeight: 'bold' }}>
-              {validityStatus}
-            </span>
-          </div>
-          <div className="detail-row">
-            <strong>Veces Utilizada:</strong> 
-            <span>{usedCount} / 2</span>
-          </div>
-          <div className="detail-row">
-            <strong>Estado Actual del Caso:</strong> 
-            <span className={`status-${warranty.TechnicalServiceStatus ? warranty.TechnicalServiceStatus.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
-                {warranty.TechnicalServiceStatus || 'N/A'}
-            </span>
+          <hr className="section-divider" />
+
+          {/* Sección de 'Datos del Producto y Garantía' */}
+
+          <div className="section-container">
+            <h4 className="section-title">Datos del Producto y Garantía</h4>
+            <div className="detail-row">
+              <strong>Código de Garantía:</strong> <span>{warranty.WarrantyNumber}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Producto:</strong> <span>{warranty.Brand} - {warranty.Model}</span>
+            </div>
+            <div className="detail-row">
+              <strong>Estatus (Vigencia):</strong>
+              <span style={{ color: validityStatus === 'Válida' ? '#28a745' : '#d9534f', fontWeight: 'bold' }}>
+                {validityStatus}
+              </span>
+            </div>
+            <div className="detail-row">
+              <strong>Veces Utilizada:</strong>
+              <span>{usedCount} / 2</span>
+            </div>
+            <div className="detail-row">
+              <strong>Estado Actual del Caso:</strong>
+              <span className={`status-${warranty.TechnicalServiceStatus ? warranty.TechnicalServiceStatus.replace(/\s+/g, '-').toLowerCase() : 'desconocido'}`}>
+                  {warranty.TechnicalServiceStatus || 'N/A'}
+              </span>
+            </div>
           </div>
 
           <hr />

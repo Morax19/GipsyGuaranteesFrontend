@@ -198,3 +198,23 @@ hr {
   margin-left: 3px;
   font-weight: bold;
 }
+
+
+.section-container {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    color: #495057;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1em;
+    border-bottom: 1px solid #CFD8DC;
+    padding-bottom: 5px;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid #CFD8DC;
+    margin: 20px 0;
+}
