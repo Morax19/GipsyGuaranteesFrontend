@@ -22,6 +22,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
     userID: '',
     FirstName: '',
     LastName: '',
+    NationalIDtype: '',
+    NationalID: '',
     EmailAddress: '',
     Phonetype: '', // prefix
     PhoneNumber: '', // number only
@@ -68,10 +70,21 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                   number = parts[1];
                 }
               }
+              let nationalIDtype = '';
+              let nationalID = '';
+              if (customerData.NationalId){
+                const parts2 = customerData.NationalId.split('-');
+                if (parts2.length === 2) {
+                  nationalIDtype = parts2[0];
+                  nationalID = parts2[1];
+                }
+              }
               setFormData(prevData => ({
                 ...prevData,
                 FirstName: customerData.FirstName,
                 LastName: customerData.LastName,
+                NationalIDtype: nationalIDtype,
+                NationalID: nationalID,
                 EmailAddress: customerData.EmailAddress,
                 Phonetype: prefix,
                 PhoneNumber: number,
@@ -93,6 +106,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
         userID: '',
         FirstName: '',
         LastName: '',
+        NationalIDtype: '',
+        NationalID: '',
         EmailAddress: '',
         Phonetype: '',
         PhoneNumber: '',
@@ -111,7 +126,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   };
 
   const handleSave = async () => {
-    if (!formData.FirstName || !formData.LastName || !formData.EmailAddress || !formData.Password || !formData.roleID) {
+    if (!formData.FirstName || !formData.LastName || !formData.NationalIDtype || !formData.NationalID || !formData.EmailAddress || !formData.Phonetype || !formData.PhoneNumber || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
@@ -119,6 +134,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
     // Concatenate prefix and number for backend
     const submitData = {
       ...formData,
+      roleID: parseInt(formData.roleID, 10),
+      NationalID: formData.NationalIDtype + '-' + formData.NationalID,
       PhoneNumber: formData.Phonetype && formData.PhoneNumber ? `${formData.Phonetype}-${formData.PhoneNumber}` : ''
     };
 
@@ -218,6 +235,30 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
+            <label htmlFor="NationalID">
+              Cédula de identidad <span className="required-asterisk">*</span>
+            </label>
+            <div className="national-id-container-modal">
+              <select className="national-id-type-modal" id="NationalIDtype" name="NationalIDtype" value={formData.NationalIDtype} onChange={handleChange} required>
+                <option value="">Prefijo</option>
+                <option value="V">V</option>
+                <option value="E">E</option>
+                <option value="P">P</option>
+              </select>
+              <input
+                  className="national-id-modal"
+                  type="tel"
+                  id="NationalID"
+                  name="NationalID"
+                  placeholder="Cédula de identidad"
+                  value={formData.NationalID}
+                  onChange={handleChange}
+                  required
+                />
+            </div>
+          </div>
+
+          <div className="form-group-user">
             <label htmlFor="EmailAddress">
               Correo electrónico <span className="required-asterisk">*</span>
             </label>
@@ -233,7 +274,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           </div>
 
           <div className="form-group-user">
-            <label htmlFor="PhoneNumber">Teléfono</label>
+            <label htmlFor="PhoneNumber">
+              Teléfono <span className="required-asterisk">*</span>
+              </label>
             <div className="phone-container-modal">
               <select className="phone-type" id="Phonetype" name="Phonetype" value={formData.Phonetype} onChange={handleChange}>
                 <option value="">Prefijo</option>
@@ -252,7 +295,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 name="PhoneNumber"
                 value={formData.PhoneNumber}
                 onChange={handleChange}
-                placeholder="Ingrese el teléfono del usuario (Opcional)"
+                placeholder="Ingrese el teléfono del usuario"
                 length="7"
               />
             </div>

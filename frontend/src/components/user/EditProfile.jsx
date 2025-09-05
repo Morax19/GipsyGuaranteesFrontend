@@ -25,6 +25,8 @@ const EditProfile = () => {
     userID: user_id,
     FirstName: '',
     LastName: '',
+    NationalIDtype: '',
+    NationalID: '',
     EmailAddress: '',
     Phonetype: '', // prefix
     PhoneNumber: '', // number only
@@ -50,9 +52,22 @@ const EditProfile = () => {
               number = parts[1];
             }
           }
+          
+          let nationalIDtype = '';
+          let nationalID = '';
+          if (data.NationalId) {
+            const parts2 = data.NationalId.split('-');
+            if (parts2.length === 2) {
+              nationalIDtype = parts2[0];
+              nationalID = parts2[1];
+            }
+          }
+
           setForm(prev => ({
             ...prev,
             ...data,
+            NationalIDtype: nationalIDtype,
+            NationalID: nationalID,
             Phonetype: prefix,
             PhoneNumber: number
           }));
@@ -62,6 +77,8 @@ const EditProfile = () => {
             userID: user_id,
             FirstName: '',
             LastName: '',
+            NationalIDtype: '',
+            NationalID: '',
             EmailAddress: '',
             Phonetype: '',
             PhoneNumber: '',
@@ -82,7 +99,8 @@ const EditProfile = () => {
     // Concatenate prefix and number for backend
     const submitForm = {
       ...form,
-      PhoneNumber: form.Phonetype && form.PhoneNumber ? `${form.Phonetype}-${form.PhoneNumber}` : ''
+      NationalID: `${form.NationalIDtype}-${form.NationalID}`,
+      PhoneNumber: `${form.Phonetype}-${form.PhoneNumber}`
     };
     try {
       const response = await fetchWithAuth(`${apiUrl}/api/userProfileEdit/`, {
@@ -122,6 +140,24 @@ const EditProfile = () => {
             value={form.LastName}
             onChange={handleChange}
           />
+          <div className="national-id-container">
+          <select className="national-id-type" id="NationalIDtype" name="NationalIDtype" value={form.NationalIDtype} onChange={handleChange} required>
+            <option value="">Prefijo</option>
+            <option value="V">V</option>
+            <option value="E">E</option>
+            <option value="P">P</option>
+          </select>
+          <input
+              className="national-id"
+              type="tel"
+              id="NationalID"
+              name="NationalID"
+              placeholder="Cédula de identidad *"
+              value={form.NationalID}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <input
             type="email"
             name="EmailAddress"

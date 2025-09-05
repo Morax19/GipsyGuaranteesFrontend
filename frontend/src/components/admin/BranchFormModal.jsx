@@ -181,7 +181,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                     name="RIFtype"
                       value={formData.RIFtype}
                       onChange={handleChange}
-                      disabled={formData.isRetail === 'false'}
+                      //disabled={formData.isRetail === 'false'}
                     >
                       <option value="">Tipo</option>
                       {RIFtypeOptions.map(opt => (
