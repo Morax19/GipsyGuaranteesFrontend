@@ -99,7 +99,7 @@ export default function Warranty() {
         }
       } else {
         console.error(data.error);
-        alert(data.warning);
+        alert(data.error);
       }
     } catch {
       console.error('Error de conexión con el servidor');
