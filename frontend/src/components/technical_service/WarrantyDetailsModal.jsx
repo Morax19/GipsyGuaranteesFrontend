@@ -19,6 +19,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   }, [navigate]);  
   
   // Estado local para los campos editables del modal
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [currentStatus, setCurrentStatus] = useState('');
   const [currentDiagnosis, setCurrentDiagnosis] = useState('');
   const [actionDescription, setActionDescription] = useState('');
@@ -103,6 +104,17 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             statusID: selectedStatus,
             issueID: selectedDiagnosis.IssueId,
             issueResolutionDetails: actionDescription,
+
+            //Data para el email
+            Customer: warranty.Customer,
+            WarrantyID: warranty.warrantyID,
+            TechnicalServiceEmail: email_address,
+            CustomerEmail: warranty.EmailAddress,
+            StoreName: warranty.companyName,
+            ProductName: warranty.Description,
+            ReceptionDate: warranty.receptionDate,
+            statusDescription: currentStatus,
+            issueDescription: currentDiagnosis,
           }),
         }
       );
@@ -110,11 +122,14 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
       if (response.ok) {
         // Update local state only if backend update succeeded
         const updatedWarranty = {
+          //Data para cerrar el caso
           ...warranty,
           statusDescription: 'Cerrado',
           issueDescription: currentDiagnosis,
           issueResolutionDetails: actionDescription,
           closedDate: new Date().toISOString().split('T')[0],
+
+    
         };
         onUpdateWarranty(updatedWarranty); // Ensure this updates the parent list
         onClose();
@@ -141,10 +156,22 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            //Data para actualización del caso
             CaseNumber: warranty.CaseNumber,
             statusID: selectedStatus ? selectedStatus.statusID : null,
             issueID: selectedDiagnosis ? selectedDiagnosis.IssueId : null,
             issueResolutionDetails: actionDescription,
+
+            //Data para el email
+            Customer: warranty.Customer,
+            WarrantyID: warranty.warrantyID,
+            TechnicalServiceEmail: email_address,
+            CustomerEmail: warranty.EmailAddress,
+            StoreName: warranty.companyName,
+            ProductName: warranty.Description,
+            ReceptionDate: warranty.receptionDate,
+            statusDescription: currentStatus,
+            issueDescription: currentDiagnosis,
           }),
         }
       );

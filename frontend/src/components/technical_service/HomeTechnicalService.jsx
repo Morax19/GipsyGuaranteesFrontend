@@ -75,40 +75,23 @@ const Home = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            //Data para abrir un caso
             registerID: user_id,
-            WarrantyID: warrantyToOpenCase.WarrantyNumber
-          })
-        }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.WarrantyNumber}.`);
-        setIsModalOpen(false);
-      } else {
-        console.log(data.error)
-        alert(data.warning);
-      }
-    } catch (error) {
-      console.error('Error de conexión con el servidor:', error);
-      alert('Error de conexión con el servidor');
-    }
+            WarrantyID: warrantyToOpenCase.WarrantyNumber,
 
-    try {
-      const response = await fetchWithAuth(
-        `${apiUrl}/api/updateWarrantyUsedCount/`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            WarrantyNumber: foundWarranty.WarrantyNumber
+            //Data para el email
+            Customer: warrantyToOpenCase.Customer,
+            TechnicalServiceEmail: email_address,
+            CustomerEmail: warrantyToOpenCase.EmailAddress,
+            StoreName: warrantyToOpenCase.companyName,
+            ProductName: warrantyToOpenCase.Model
           })
         }
       );
       const data = await response.json();
       if (response.ok) {
-        console.log(`Se ha actualizado el conteo de usos para la garantía: ${foundWarranty.WarrantyNumber}.`);
+        alert(`Se ha abierto un caso para la garantía: ${warrantyToOpenCase.WarrantyNumber}.`);        
+        setIsModalOpen(false);
       } else {
         console.log(data.error)
         alert(data.warning);
