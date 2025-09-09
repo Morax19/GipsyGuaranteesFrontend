@@ -102,9 +102,11 @@ const SetNewPassword = () => {
                 if (response.ok) {
                     setMessage(data.message || 'Código reenviado.');
                 } else {
+                    alert("Hola Yarima, error en el endpoint")
                     setMessage(data.message || 'Error al reenviar el código.');
                 }
             } catch (err) {
+                alert("Hola Yarima, error en el try catch: " + err.message)
                 setMessage('Error de red al reenviar el código.');
             } finally {
                 setLoading(false);
