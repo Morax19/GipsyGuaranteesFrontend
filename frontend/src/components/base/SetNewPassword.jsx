@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getTempToken } from '../../utils/passwordRecovery';
 import '../../styles/base/setNewPassword.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
@@ -91,7 +90,7 @@ const SetNewPassword = () => {
             // Reenviar/solicitar nuevo código al backend (mantener comportamiento previo)
             setLoading(true);
             try {
-                const response = await fetchWithAuth(`${apiUrl}/api/forgottenPassword/`, {
+                const response = await fetch(`${apiUrl}/api/forgottenPassword/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -131,14 +130,16 @@ const SetNewPassword = () => {
         setLoading(true);
         try {
             // Nota: asumo un endpoint para cambiar la contraseña. Ajustar según backend.
-            const response = await fetchWithAuth(`${apiUrl}/api/resetPassword/`, {
+            const tempToken = localStorage.getItem('temp_token');
+            const response = await fetch(`${apiUrl}/api/resetPassword/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     user_id: tokenUserId,
-                    new_password: passwords.newPassword
+                    new_password: passwords.newPassword,
+                    temp_token: tempToken
                 })
             });
             const data = await response.json();
