@@ -97,7 +97,6 @@
 
 .warranty-table tbody tr:hover {
     background-color: #e6f0ff;
-    cursor: pointer;
 }
 
 /* Estilos para los estados de la garantía */
