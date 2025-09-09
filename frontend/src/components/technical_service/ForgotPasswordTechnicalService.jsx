@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/technical_service/forgotPasswordTechnicalService.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
@@ -29,13 +28,14 @@ const ForgotPasswordTechnicalService = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/api/forgottenPassword/`, {
+      const response = await fetch(`${apiUrl}/api/forgottenPassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email }),
       });
+
       const data = await response.json();
       if (response.ok) {
         const { temp_token } = data;

@@ -101,11 +101,9 @@ const SetNewPassword = () => {
                 if (response.ok) {
                     setMessage(data.message || 'Código reenviado.');
                 } else {
-                    alert("Hola Yarima, error en el endpoint del codigo")
                     setMessage(data.message || 'Error al reenviar el código.');
                 }
             } catch (err) {
-                alert("Hola Yarima, error en el try catch del codigo: " + err.message)
                 setMessage('Error de red al reenviar el código.');
             } finally {
                 setLoading(false);
@@ -144,15 +142,14 @@ const SetNewPassword = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                setMessage(data.message || 'Contraseña actualizada correctamente.');
+                alert(data.message || 'Contraseña actualizada correctamente.');
                 localStorage.removeItem('temp_token');
                 // Opcional: redirigir al login después de un corto delay
                 setTimeout(() => navigate('/'), 1200);
             } else {
-                setMessage(data.message || 'Error al actualizar la contraseña.');
+                setMessage(data.error || 'Error al actualizar la contraseña.');
             }
         } catch (err) {
-            alert("Hola Yarima, error en el try catch del password: " + err.message)
             setMessage('Error de red al actualizar la contraseña.');
         } finally {
             setLoading(false);
