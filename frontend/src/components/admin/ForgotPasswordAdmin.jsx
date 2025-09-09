@@ -29,16 +29,17 @@ const ForgotPasswordAdmin = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/admin/forgot-password`, {
+      const response = await fetchWithAuth(`${apiUrl}/api/forgottenPassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('session_token')}`,
         },
         body: JSON.stringify({ email }),
       });
       const data = await response.json();
       if (response.ok) {
+        const { temp_token } = data;
+        localStorage.setItem('temp_token', temp_token);
         setMessage(data.message);
       } else {
         setMessage(data.message || 'Error sending reset email');

@@ -46,6 +46,7 @@ const ForgotPassword = () => {
         setMessage(data.error || 'Error sending reset email');
       }
     } catch (error) {
+      alert('Network error: ' + error.message);
       setMessage('Network error');
     } finally {
       setLoading(false);
