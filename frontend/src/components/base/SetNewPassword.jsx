@@ -28,6 +28,8 @@ const SetNewPassword = () => {
     const [Code, setCode] = useState('');
     const [showCode, setShowCode] = useState(false);
 
+    const [showCodeOrPassword, setShowCodeOrPassword] = useState(true); // true for code, false for password
+
     useEffect(() => {
         document.body.classList.add('barraCurvaFPassword');
 
@@ -51,7 +53,6 @@ const SetNewPassword = () => {
     }, [navigate]);
 
 
-
     const handlePasswordChange = (e) => {
         setPasswords({ ...passwords, [e.target.name]: e.target.value });
     };
@@ -64,100 +65,183 @@ const SetNewPassword = () => {
         setShowCode(!showCode);
     };
 
-    const handleSubmit = async (e) => {
+    // Maneja el submit del formulario de código; el formulario tiene dos botones submit
+    // El submitter se identifica por e.nativeEvent.submitter.name -> 'verify' | 'resend'
+    const handleCodeFormSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        const submitterName = e.nativeEvent?.submitter?.name;
         setMessage('');
+        if (submitterName === 'verify') {
+            // Validar código localmente contra el temp_password decodificado
+            if (!Code) {
+                setMessage('Ingrese el código.');
+                return;
+            }
+            if (Code.trim() === String(tokenTempPassword).trim()) {
+                // Código correcto: mostrar la lógica de cambio de contraseña
+                setShowCodeOrPassword(false);
+                setMessage('Código verificado. Ahora puede establecer una nueva contraseña.');
+            } else {
+                setMessage('Código inválido. Verifique e intente nuevamente.');
+            }
+            return;
+        }
+
+        if (submitterName === 'resend') {
+            // Reenviar/solicitar nuevo código al backend (mantener comportamiento previo)
+            setLoading(true);
+            try {
+                const response = await fetchWithAuth(`${apiUrl}/api/forgottenPassword/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: tokenEmailAddress })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setMessage(data.message || 'Código reenviado.');
+                } else {
+                    setMessage(data.message || 'Error al reenviar el código.');
+                }
+            } catch (err) {
+                setMessage('Error de red al reenviar el código.');
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+    // Maneja el submit del formulario de cambio de contraseña
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        // Validaciones locales
+        if (!passwords.newPassword || !passwords.confirmNewPassword) {
+            setMessage('Complete ambos campos de contraseña.');
+            return;
+        }
+        if (passwords.newPassword !== passwords.confirmNewPassword) {
+            setMessage('Las contraseñas no coinciden.');
+            return;
+        }
+
+        setLoading(true);
         try {
-            const response = await fetchWithAuth(`${apiUrl}/api/userRecoverPassword/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            //body: JSON.stringify({ email }),
+            // Nota: asumo un endpoint para cambiar la contraseña. Ajustar según backend.
+            const response = await fetchWithAuth(`${apiUrl}/api/resetPassword/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: tokenUserId,
+                    new_password: passwords.newPassword
+                })
             });
             const data = await response.json();
             if (response.ok) {
-                setMessage(data.message);
+                setMessage(data.message || 'Contraseña actualizada correctamente.');
+                localStorage.removeItem('temp_token');
+                // Opcional: redirigir al login después de un corto delay
+                setTimeout(() => navigate('/'), 1200);
             } else {
-                setMessage(data.message || 'Error sending reset email');
+                setMessage(data.message || 'Error al actualizar la contraseña.');
             }
-        } catch (error) {
-            setMessage('Network error');
+        } catch (err) {
+            setMessage('Error de red al actualizar la contraseña.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-    <div className="cardContainerFPassword">
-        <img src={logo} alt="Logo" className="logoFPassword" />
-        <h2>Ingrese el código de verificación</h2>
-        <br />
-        <form onSubmit={handleSubmit}>
-        <div className="password-input-container">
-            <input
-            type={showCode ? "text" : "password"}
-            name="Code"
-            placeholder="Código de Verificación"
-            required
-            value={Code}
-            onChange={e => setCode(e.target.value)}
-            />
-            <button
-            type="button"
-            className="password-toggle-button"
-            onClick={toggleCodeVisibility}
-            title={showCode ? "Ocultar código" : "Mostrar código"}
-            >
-            <img src={eye} alt="Toggle code visibility" />
-            </button>
-        {/*
-        <div className="password-input-container">
-            <input
-            type={showPassword ? "text" : "password"}
-            name="NewPassword1"
-            placeholder="Nueva contraseña"
-            required
-            value={passwords.newPassword}
-            onChange={e => setNewPassword(e.target.value)}
-            />
-            <button
-            type="button"
-            className="password-toggle-button"
-            onClick={togglePasswordVisibility}
-            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            >
-            <img src={eye} alt="Toggle Password visibility" />
-            </button>
+        <div className="cardContainerFPassword">
+            <img src={logo} alt="Logo" className="logoFPassword" />
+            {showCodeOrPassword ? (
+                <React.Fragment>
+                    <h2>Ingrese el código de verificación</h2>
+                    <br />
+                    <form onSubmit={handleCodeFormSubmit}>
+                        <div className="password-input-container">
+                            <input
+                                type={showCode ? "text" : "password"}
+                                name="Code"
+                                placeholder="Código de Verificación"
+                                required
+                                value={Code}
+                                onChange={e => setCode(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle-button"
+                                onClick={toggleCodeVisibility}
+                                title={showCode ? "Ocultar código" : "Mostrar código"}
+                            >
+                                <img src={eye} alt="Toggle code visibility" />
+                            </button>
+                        </div>
+                        <br />
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <button type="submit" name="verify" disabled={loading}>
+                                {loading ? 'Verificando' : 'Verificar'}
+                            </button>
+                            <button type="submit" name="resend" disabled={loading}>
+                                {loading ? 'Enviando' : 'Reenviar código'}
+                            </button>
+                        </div>
+                    </form>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>
+                    <h2>Establecer nueva contraseña</h2>
+                    <br />
+                    <form onSubmit={handlePasswordSubmit}>
+                        <div className="password-input-container">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="newPassword"
+                                placeholder="Nueva contraseña"
+                                required
+                                value={passwords.newPassword}
+                                onChange={handlePasswordChange}
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle-button"
+                                onClick={togglePasswordVisibility}
+                                title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                <img src={eye} alt="Toggle Password visibility" />
+                            </button>
+                        </div>
+                        <div className="password-input-container">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="confirmNewPassword"
+                                placeholder="Confirmar nueva contraseña"
+                                required
+                                value={passwords.confirmNewPassword}
+                                onChange={handlePasswordChange}
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle-button"
+                                onClick={togglePasswordVisibility}
+                                title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                <img src={eye} alt="Toggle Password visibility" />
+                            </button>
+                        </div>
+                        <br />
+                        <button type="submit" disabled={loading}>
+                            {loading ? 'Enviando' : 'Cambiar contraseña'}
+                        </button>
+                    </form>
+                </React.Fragment>
+            )}
+            {message && <p>{message}</p>}
         </div>
-        <div className="password-input-container">
-            <input
-            type={showPassword ? "text" : "password"}
-            name="NewPassword2"
-            placeholder="Confirmar nueva contraseña"
-            required
-            value={NewPassword}
-            onChange={e => setNewPassword(e.target.value)}
-            />
-            <button
-            type="button"
-            className="password-toggle-button"
-            onClick={togglePasswordVisibility}
-            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            >
-            <img src={eye} alt="Toggle Password visibility" />
-            </button>
-        </div>
-            */}
-        </div>
-        <br />
-        <button type="submit" disabled={loading}>
-            {loading ? 'Verificando' : 'Verificar'}
-        </button>
-        </form>
-        {message && <p>{message}</p>}
-    </div>
     );
 };
 
