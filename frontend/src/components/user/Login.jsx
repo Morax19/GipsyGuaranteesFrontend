@@ -92,11 +92,9 @@ function Login() {
       <p>
         ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/user/register/'); }}>Regístrate</a>
       </p>
-      {/*
       <p>
         <a href="#" disabled onClick={e => { e.preventDefault(); navigate('/user/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>
       </p>
-      */}
 
       <div className="login-footer">
         <Link to="/technical-service/login" className="login-link"> 
