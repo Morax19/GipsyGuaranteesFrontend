@@ -23,6 +23,7 @@ const SetNewPassword = () => {
 
     const [passwords, setPasswords] = useState({ newPassword: '', confirmNewPassword: ''});
     const [showPassword, setShowPassword] =useState(false);
+    const [showConfirmedPassword, setShowConfirmedPassword] =useState(false);
 
     const [Code, setCode] = useState('');
     const [showCode, setShowCode] = useState(false);
@@ -55,9 +56,15 @@ const SetNewPassword = () => {
     const handlePasswordChange = (e) => {
         setPasswords({ ...passwords, [e.target.name]: e.target.value });
     };
+    const handleConfirmedPasswordChange = (e) => {
+        setPasswords({ ...passwords, [e.target.name]: e.target.value });
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
+    };
+    const toggleConfirmedPasswordVisibility = () => {
+        setShowConfirmedPassword(!showConfirmedPassword);
     };
 
     const toggleCodeVisibility = () => {
@@ -164,7 +171,7 @@ const SetNewPassword = () => {
                     <h2>Ingrese el código de verificación</h2>
                     <br />
                     <form onSubmit={handleCodeFormSubmit}>
-                        <div className="password-input-container">
+                        <div className="fPassword-input-container centered-input-container">
                             <input
                                 type={showCode ? "text" : "password"}
                                 name="Code"
@@ -175,21 +182,21 @@ const SetNewPassword = () => {
                             />
                             <button
                                 type="button"
-                                className="password-toggle-button"
+                                className="fPassword-toggle-button"
                                 onClick={toggleCodeVisibility}
                                 title={showCode ? "Ocultar código" : "Mostrar código"}
                             >
                                 <img src={eye} alt="Toggle code visibility" />
                             </button>
-                        </div>
+                            </div>
                         <br />
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <button type="submit" name="verify" disabled={loading}>
-                                {loading ? 'Verificando' : 'Verificar'}
-                            </button>
-                            <button type="submit" name="resend" disabled={loading}>
-                                {loading ? 'Enviando' : 'Reenviar código'}
-                            </button>
+                        <div className="fPassword-button-group tight-button-group">
+                        <button type="submit" name="verify" disabled={loading}>
+                            {loading ? 'Verificando' : 'Verificar'}
+                        </button>
+                        <button type="submit" name="resend" disabled={loading}>
+                            {loading ? 'Enviando' : 'Reenviar código'}
+                        </button>
                         </div>
                     </form>
                 </React.Fragment>
@@ -198,7 +205,7 @@ const SetNewPassword = () => {
                     <h2>Establecer nueva contraseña</h2>
                     <br />
                     <form onSubmit={handlePasswordSubmit}>
-                        <div className="password-input-container">
+                        <div className="fPassword-input-container centered-input-container">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="newPassword"
@@ -209,27 +216,27 @@ const SetNewPassword = () => {
                             />
                             <button
                                 type="button"
-                                className="password-toggle-button"
+                                className="fPassword-toggle-button"
                                 onClick={togglePasswordVisibility}
                                 title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                             >
                                 <img src={eye} alt="Toggle Password visibility" />
                             </button>
                         </div>
-                        <div className="password-input-container">
+                        <div className="fPassword-input-container centered-input-container">
                             <input
-                                type={showPassword ? "text" : "password"}
+                                type={showConfirmedPassword ? "text" : "password"}
                                 name="confirmNewPassword"
                                 placeholder="Confirmar nueva contraseña"
                                 required
                                 value={passwords.confirmNewPassword}
-                                onChange={handlePasswordChange}
+                                onChange={handleConfirmedPasswordChange}
                             />
                             <button
                                 type="button"
-                                className="password-toggle-button"
-                                onClick={togglePasswordVisibility}
-                                title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                className="fPassword-toggle-button"
+                                onClick={toggleConfirmedPasswordVisibility}
+                                title={showConfirmedPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                             >
                                 <img src={eye} alt="Toggle Password visibility" />
                             </button>
