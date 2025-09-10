@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Welcome from './components/base/Welcome';
+import SetNewPassword from './components/base/SetNewPassword';
 import ProtectedRoute from './components/base/ProtectedRoute';
 
 import Home from './components/user/Home';
@@ -32,13 +33,14 @@ export default function AppRoutes() {
       {/* Path from the Welcome */}
       <Route path="/"              element={<Welcome />} />
       <Route path="/technical-service" element={<TechnicalService />} />
+      <Route path="/set-new-password" element={<SetNewPassword />} />
 
       {/* Path from User's Logic */}
       {/* Public paths from User's Logic */}
       <Route path="/user/login" element={<Login />} />
       <Route path="/user/register" element={<Register />} />
       <Route path="/user/forgot-password" element={<ForgotPassword />} />
-      
+
       {/* Protected paths from User's Logic */}
       <Route path="/user/home" element={
         <ProtectedRoute requiredRole='Cliente'>

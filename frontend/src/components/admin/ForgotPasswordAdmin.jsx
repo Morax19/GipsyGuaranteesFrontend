@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/admin/forgotPasswordAdmin.css';
 import backIcon from '../../assets/IMG/back.png';
 import logo from '../../assets/IMG/Gipsy_imagotipo_color.png';
@@ -29,19 +28,21 @@ const ForgotPasswordAdmin = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetchWithAuth(`${apiUrl}/admin/forgot-password`, {
+      const response = await fetch(`${apiUrl}/api/forgottenPassword/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('session_token')}`,
         },
         body: JSON.stringify({ email }),
       });
+
       const data = await response.json();
       if (response.ok) {
+        const { temp_token } = data;
+        localStorage.setItem('temp_token', temp_token);
         setMessage(data.message);
       } else {
-        setMessage(data.message || 'Error sending reset email');
+        setMessage(data.error || 'Error sending reset email');
       }
     } catch (error) {
       setMessage('Network error');
