@@ -30,6 +30,8 @@ const SetNewPassword = () => {
 
     const [showCodeOrPassword, setShowCodeOrPassword] = useState(true); // true for code, false for password
 
+    const [showResendButton, setShowResendButton] = useState(false);
+
     useEffect(() => {
         document.body.classList.add('barraCurvaFPassword');
 
@@ -52,6 +54,14 @@ const SetNewPassword = () => {
         setTokenRole(role);
     }, [navigate]);
 
+    useEffect(() => {
+        setShowResendButton(false);
+        const TIMER_MS = 30*60*1000;
+        const timer = setTimeout(() => {
+            setShowResendButton(true);
+        }, TIMER_MS);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handlePasswordChange = (e) => {
         setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -107,6 +117,10 @@ const SetNewPassword = () => {
                 const data = await response.json();
                 if (response.ok) {
                     setMessage(data.message || 'Código reenviado.');
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
                 } else {
                     setMessage(data.message || 'Error al reenviar el código.');
                 }
@@ -191,12 +205,16 @@ const SetNewPassword = () => {
                             </div>
                         <br />
                         <div className="fPassword-button-group tight-button-group">
-                        <button type="submit" name="verify" disabled={loading}>
-                            {loading ? 'Verificando' : 'Verificar'}
-                        </button>
-                        <button type="submit" name="resend" disabled={loading}>
-                            {loading ? 'Enviando' : 'Reenviar código'}
-                        </button>
+                        {!showResendButton && (
+                            <button type="submit" name="verify" disabled={loading}>
+                                {loading ? 'Verificando' : 'Verificar'}
+                            </button>
+                        )}
+                        {showResendButton && (
+                            <button type="submit" name="resend" disabled={loading}>
+                                {loading ? 'Enviando' : 'Reenviar código'}
+                            </button>
+                        )}
                         </div>
                     </form>
                 </React.Fragment>
