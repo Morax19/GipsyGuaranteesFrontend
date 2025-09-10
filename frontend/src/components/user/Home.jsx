@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { useNavigate } from 'react-router-dom';
 import LayoutBase from '../base/LayoutBaseUser';
-import imageHome from '../../assets/IMG/WarrantyWallpaperClientHome.png';
+import imageHome from '../../assets/IMG/WarrantyWallpaperClientHome.webp';
 
 const Home = () => {
 

@@ -1,9 +1,8 @@
 import React, { useEffect }from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
-import imageHome from '../../assets/IMG/WarrantyWallpaperAdminHome.png';
+import imageHome from '../../assets/IMG/WarrantyWallpaperAdminHome.webp';
 
 const HomeAdmin = () => {
 
