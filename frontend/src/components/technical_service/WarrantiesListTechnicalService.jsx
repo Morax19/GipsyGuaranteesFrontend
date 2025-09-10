@@ -99,8 +99,8 @@ const WarrantiesList = () => {
     } else if (primaryFilter === 'Brand') {
       const brands = [...new Set(currentWarranties.map(g => g.Brand))].sort();
       newSecondaryOptions = brands.map(b => ({ value: b, label: b }));
-    } else if (primaryFilter === 'ItemLookupCode') {
-      const codes = [...new Set(currentWarranties.map(g => g.ItemLookupCode))].sort();
+    } else if (primaryFilter === 'BinLocation') {
+      const codes = [...new Set(currentWarranties.map(g => g.BinLocation))].sort();
       newSecondaryOptions = codes.map(c => ({ value: c, label: c }));
     }
     setSecondaryFilterOptions(newSecondaryOptions);
@@ -132,9 +132,9 @@ const WarrantiesList = () => {
         currentWarranties = currentWarranties.filter(warranty =>
           warranty.Brand === secondaryFilter
         );
-      } else if (primaryFilter === 'ItemLookupCode') {
+      } else if (primaryFilter === 'BinLocation') {
         currentWarranties = currentWarranties.filter(warranty =>
-          warranty.ItemLookupCode === secondaryFilter
+          warranty.BinLocation === secondaryFilter
         );
       }
     }
@@ -149,8 +149,8 @@ const WarrantiesList = () => {
         currentWarranties.sort((a, b) => a.statusDescription.localeCompare(b.statusDescription));
     } else if (primaryFilter === 'Brand') {
       currentWarranties.sort((a, b) => a.Brand.localeCompare(b.Brand));
-    } else if (primaryFilter === 'ItemLookupCode') {
-      currentWarranties.sort((a, b) => a.ItemLookupCode.localeCompare(b.ItemLookupCode));
+    } else if (primaryFilter === 'BinLocation') {
+      currentWarranties.sort((a, b) => a.BinLocation.localeCompare(b.BinLocation));
     }
 
     setFilteredWarranties(currentWarranties);
@@ -200,7 +200,7 @@ const WarrantiesList = () => {
             <option value="companyName">Compañía</option>
             <option value="statusDescription">Estado</option>
             <option value="Brand">Marca</option>
-            <option value="ItemLookupCode">Código de Barra</option>
+            <option value="BinLocation">BinLocation</option>
           </select>
 
           {/* El filtro secundario solo es visible si se elige un filtro primario y hay opciones */}
@@ -217,7 +217,7 @@ const WarrantiesList = () => {
                 {primaryFilter === 'companyName' && 'Seleccione una compañía'}
                 {primaryFilter === 'statusDescription' && 'Seleccione un estado'}
                 {primaryFilter === 'Brand' && 'Seleccione una marca'}
-                {primaryFilter === 'ItemLookupCode' && 'Seleccione un código de barra'}
+                {primaryFilter === 'BinLocation' && 'Seleccione un binlocation'}
                 {!primaryFilter && 'Seleccione una opción...'}
               </option>
               {secondaryFilterOptions.map(option => (
@@ -231,7 +231,7 @@ const WarrantiesList = () => {
 
         <div className="warranties-table-container">
           {filteredWarranties.length > 0 ? (
-            <table>
+            <table className='techWarranty-table'>
               <thead>
                 <tr>
                   <th>Código de Garantía</th>
@@ -239,7 +239,7 @@ const WarrantiesList = () => {
                   <th>Cliente</th>
                   <th>Compañía</th>
                   <th>Marca</th>
-                  <th>Código de Barra</th>
+                  <th>BinLocation</th>
                   <th>Producto</th>
                   <th>Estado</th>
                   <th>Acciones</th>
@@ -253,7 +253,7 @@ const WarrantiesList = () => {
                     <td>{warranty.Customer}</td>
                     <td>{warranty.companyName}</td>
                     <td>{warranty.Brand}</td>
-                    <td>{warranty.ItemLookupCode}</td>
+                    <td>{warranty.BinLocation}</td>
                     <td>{warranty.Description}</td>
                     <td><span className={`status-${warranty.statusDescription.replace(/\s+/g, '-').toLowerCase()}`}>{warranty.statusDescription}</span></td>
                     <td>

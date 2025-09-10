@@ -92,22 +92,22 @@
     margin-bottom: 50px;
 }
 
-table {
+.techWarranty-table {
     width: 100%;
     border-collapse: collapse;
     min-width: 700px;
     background-color: white;
 }
 
-table th,
-table td {
+.techWarranty-table th,
+.techWarranty-table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #CFD8DC;
     color: #37474F;
 }
 
-table th {
+.techWarranty-table th {
     background-color: white;
     color: #37474F;
     font-weight: bold;
@@ -116,7 +116,7 @@ table th {
     border-bottom: 2px solid #90A4AE;
 }
 
-table tbody tr:hover {
+.techWarranty-table tbody tr:hover {
     background-color: #ECEFF1;
     cursor: pointer;
 }
