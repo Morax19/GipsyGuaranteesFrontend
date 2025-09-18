@@ -5,14 +5,23 @@ import '../../styles/admin/userFormModal.css';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const FailsFormModal = ({ isOpen, onClose, onSave }) => {
+const FailsFormModal = ({ isOpen, onClose, onSave, issueToEdit }) => {
   const [issueDescription, setIssueDescription] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (issueToEdit) {
+      setIsEditMode(true);
+      setIssueDescription(issueToEdit.IssueDescription);
+    } else {
+      setIsEditMode(false);
       setIssueDescription('');
     }
-  }, [isOpen]);
+  }, [issueToEdit]);
+
+  if (!isOpen) {
+    return null;
+  }
 
   const handleChange = (e) => {
     setIssueDescription(e.target.value);
@@ -28,23 +37,31 @@ const FailsFormModal = ({ isOpen, onClose, onSave }) => {
       IssueDescription: issueDescription
     };
 
+    const endpoint = isEditMode ? 'technicalServiceEditIssue' : 'technicalServiceCreateIssue';
+    const method = isEditMode ? 'PUT' : 'POST';
+    
+    // Si estamos editando, incluimos el IssueId en la data a enviar
+    if (isEditMode) {
+      submitData.IssueId = issueToEdit.IssueId;
+    }
+
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/api/technicalServiceCreateIssue/`,
+        `${apiUrl}/api/${endpoint}/`,
         {
-          method: 'POST',
+          method,
           credentials: 'include',
           body: JSON.stringify(submitData)
         }
       );
 
       if (response.ok) {
-        alert('Falla creada correctamente.');
-        onSave();
+        alert(isEditMode ? 'Falla actualizada correctamente.' : 'Falla creada correctamente.');
+        onSave(submitData, isEditMode); // Llama a la función onSave en el componente padre
         onClose();
       } else {
         const data = await response.json();
-        alert(data.warning || 'Error al crear la falla.');
+        alert(data.warning || 'Error al guardar la falla.');
       }
     } catch (error) {
       console.error('Error de conexión con el servidor:', error);
@@ -52,17 +69,21 @@ const FailsFormModal = ({ isOpen, onClose, onSave }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
     <div className="modal-overlay-user">
       <div className="modal-content-user">
         <div className="modal-header-user">
-          <h3>Agregar Nueva Falla</h3>
+          <h3>{isEditMode ? 'Editar Falla' : 'Agregar Nueva Falla'}</h3>
           <button className="close-button-user" onClick={onClose}>&times;</button>
         </div>
 
         <div className="modal-body-user">
+          {isEditMode && (
+             <div className="form-group-user">
+              <label>ID de la Falla:</label>
+              <input type="text" value={issueToEdit?.IssueId || ''} disabled />
+            </div>
+          )}
           <div className="form-group-user">
             <label htmlFor="issueDescription">
               Descripción de la Falla <span className="required-asterisk">*</span>
@@ -87,7 +108,7 @@ const FailsFormModal = ({ isOpen, onClose, onSave }) => {
             Cancelar
           </button>
           <button className="modal-button-user save-button-user" onClick={handleSave}>
-            Agregar Falla
+            {isEditMode ? 'Guardar Cambios' : 'Agregar Falla'}
           </button>
         </div>
       </div>
