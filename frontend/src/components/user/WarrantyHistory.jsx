@@ -110,6 +110,7 @@ const WarrantyHistory = () => {
                 <tr>
                   <th>Nº</th>
                   <th>Fecha de Registro</th>
+                  <th>Fecha de Compra</th>
                   <th>Tienda</th>
                   <th>Producto</th>
                   <th>Número de usos</th>
@@ -124,6 +125,7 @@ const WarrantyHistory = () => {
                     <tr key={warranty.WarrantyNumber}>
                       <td>{warranty.WarrantyNumber}</td>
                       <td>{warranty.registrationDate}</td>
+                      <td>{warranty.purchaseDate}</td>
                       <td>{warranty.companyName}</td>
                       <td>{warranty.ProductName}</td>
                       <td>{warranty.usedCount}</td>

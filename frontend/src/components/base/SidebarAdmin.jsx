@@ -24,12 +24,17 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => 
             </li>
             <li>
               <div className={`optionContainer ${isActive('usersTable') ? 'active' : ''}`}>
-                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios</Link>
+                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios Técnicos</Link>
               </div>
             </li>
             <li>
               <div className={`optionContainer ${isActive('branchesTable') ? 'active' : ''}`}>
                 <Link to="/admin/branches-table" className="optionLink" onClick={closeSidebar}>Sucursales</Link>
+              </div>
+            </li>
+            <li>
+              <div className={`optionContainer ${isActive('failsTable') ? 'active' : ''}`}>
+                <Link to="/admin/fails-table" className="optionLink" onClick={closeSidebar}>Fallas de Productos</Link>
               </div>
             </li>
             <li>

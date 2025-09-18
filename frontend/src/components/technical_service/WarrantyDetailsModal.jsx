@@ -94,31 +94,32 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const handleCloseCase = async () => {
     const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
     const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
- 
+    const img = document.getElementById("diagnosticIMG").files[0];
+
+    const technicalServiceCaseData = new FormData();
+    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber)
+    technicalServiceCaseData.append('statusID', selectedStatus)
+    technicalServiceCaseData.append('issueID', selectedDiagnosis.IssueId)
+    technicalServiceCaseData.append('issueResolutionDetails', actionDescription)
+    technicalServiceCaseData.append('diagnosticIMG', img)
+    technicalServiceCaseData.append('requiredChange', requiredChangeBox)
+
+    technicalServiceCaseData.append('Customer', warranty.Customer)
+    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID)
+    technicalServiceCaseData.append('TechnicalServiceEmail', email_address)
+    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress)
+    technicalServiceCaseData.append('StoreName', warranty.companyName)
+    technicalServiceCaseData.append('ProductName', warranty.Description)
+    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate)
+    technicalServiceCaseData.append('statusDescription', currentStatus)
+    technicalServiceCaseData.append('issueDescription', currentDiagnosis)
+
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/technicalServiceCloseCase/`, // Replace with your actual endpoint
         {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            CaseNumber: warranty.CaseNumber,
-            statusID: selectedStatus,
-            issueID: selectedDiagnosis.IssueId,
-            issueResolutionDetails: actionDescription,
-            requiredChange: requiredChangeBox,
-
-            //Data para el email
-            Customer: warranty.Customer,
-            WarrantyID: warranty.warrantyID,
-            TechnicalServiceEmail: email_address,
-            CustomerEmail: warranty.EmailAddress,
-            StoreName: warranty.companyName,
-            ProductName: warranty.Description,
-            ReceptionDate: warranty.receptionDate,
-            statusDescription: currentStatus,
-            issueDescription: currentDiagnosis,
-          }),
+          method: 'POST',
+          body: technicalServiceCaseData,
         }
       );
       const data = await response.json();
@@ -130,9 +131,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           statusDescription: 'Cerrado',
           issueDescription: currentDiagnosis,
           issueResolutionDetails: actionDescription,
-          closedDate: new Date().toISOString().split('T')[0],
-
-    
+          closedDate: new Date().toISOString().split('T')[0],    
         };
         onUpdateWarranty(updatedWarranty); // Ensure this updates the parent list
         onClose();
@@ -151,31 +150,32 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
     // Find the selected status and diagnosis objects
     const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
     const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
+    const img = document.getElementById("diagnosticIMG").files[0];
+
+    const technicalServiceCaseData = new FormData();
+    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber)
+    technicalServiceCaseData.append('statusID', selectedStatus ? selectedStatus.statusID : null)
+    technicalServiceCaseData.append('issueID', selectedDiagnosis ? selectedDiagnosis.IssueId : null)
+    technicalServiceCaseData.append('issueResolutionDetails', actionDescription)
+    technicalServiceCaseData.append('diagnosticIMG', img)
+
+    technicalServiceCaseData.append('Customer', warranty.Customer)
+    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID)
+    technicalServiceCaseData.append('TechnicalServiceEmail', email_address)
+    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress)
+    technicalServiceCaseData.append('StoreName', warranty.companyName)
+    technicalServiceCaseData.append('ProductName', warranty.Description)
+    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate)
+    technicalServiceCaseData.append('statusDescription', currentStatus)
+    technicalServiceCaseData.append('issueDescription', currentDiagnosis)
 
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/technicalServiceUpdateCase/`,
         {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            //Data para actualización del caso
-            CaseNumber: warranty.CaseNumber,
-            statusID: selectedStatus ? selectedStatus.statusID : null,
-            issueID: selectedDiagnosis ? selectedDiagnosis.IssueId : null,
-            issueResolutionDetails: actionDescription,
-
-            //Data para el email
-            Customer: warranty.Customer,
-            WarrantyID: warranty.warrantyID,
-            TechnicalServiceEmail: email_address,
-            CustomerEmail: warranty.EmailAddress,
-            StoreName: warranty.companyName,
-            ProductName: warranty.Description,
-            ReceptionDate: warranty.receptionDate,
-            statusDescription: currentStatus,
-            issueDescription: currentDiagnosis,
-          }),
+          method: 'POST',
+          //headers: { 'Content-Type': 'application/json' },
+          body: technicalServiceCaseData,
         }
       );
       const data = await response.json();
@@ -192,12 +192,12 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         alert('Caso actualizado para la garantía: ' + warranty.warrantyID);
         console.log('Caso Actualizado:', updatedWarranty);
       } else {
-        cosole.log(data.error)
+        console.log(data.error)
         alert(data.warning);
       }
     } catch (error) {
       console.log(error);
-      alert('Error de conexión con el servidor');
+      alert(`Error de conexión con el servidor ${error}`);
       
     }
   };
@@ -287,7 +287,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
 
           <div className="form-group">
             <label htmlFor="diagnosis-select">
-              Diagnóstico <span className="required-asterisk">*</span>
+              Falla <span className="required-asterisk">*</span>
             </label>
             <select
               id="diagnosis-select"
@@ -296,7 +296,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               className="modal-select"
               disabled={warranty.statusDescription === 'Cerrado' || warranty.statusDescription === 'Finalizado'}
             >
-              <option value="">Seleccione un diagnóstico</option>
+              <option value="">Seleccione la falla del producto</option>
               {diagnosisOptions.map(option => (
                 <option key={option.IssueId} value={option.IssueDescription}>{option.IssueDescription}</option>
               ))}
@@ -304,15 +304,32 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           </div>
 
           <div className="form-group">
+            <label htmlFor="diagnosticIMG">
+              Imagen del Producto <span className="required-asterisk">*</span>
+            </label>
+            <input
+              type="file"
+              id="diagnosticIMG"
+              name="diagnosticIMG"
+              accept="image/*, .pdf"
+              required
+            />
+            <small style={{ display: 'block', marginBottom: '12px', color: '#555' }}>
+              Solo se aceptan archivos JPG, PNG, PDF
+            </small>
+
+          </div>
+
+          <div className="form-group">
             <label htmlFor="action-description">
-              Descripción de la Acción Realizada <span className="required-asterisk">*</span>
+              Diagnóstico <span className="required-asterisk">*</span>
             </label>
             <textarea
               id="action-description"
               value={actionDescription}
               onChange={handleActionDescriptionChange}
               className="modal-textarea"
-              placeholder="Describa las acciones tomadas o el resultado de la revisión..."
+              placeholder="Describa el diagnóstico del producto..."
               rows="4"
               disabled={warranty.statusDescription === 'Cerrado' || warranty.statusDescription === 'Finalizado'}
             ></textarea>

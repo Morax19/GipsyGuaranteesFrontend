@@ -1,0 +1,226 @@
+/* usersTable.css */
+
+/* --- Estilos Generales del Contenedor de la Lista --- */
+.users-list-container {
+    padding: 30px;
+    background-color: white;
+    min-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title-section {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.title-section h2 {
+    color: #191c16;
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+/* Contenedor principal para la barra de búsqueda, filtros y el botón */
+.filters-and-search-container {
+    width: calc(100% - 60px);
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Alinea los elementos internos al centro */
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Contenedor de la barra de búsqueda y los filtros */
+.filters-and-search {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    flex-wrap: wrap;
+}
+
+/* Contenedor para el botón "Agregar Usuario" */
+.add-user-button-container {
+    width: 100%;
+    text-align: left; /* Alinea el contenido a la izquierda */
+}
+
+/* Botón "Agregar Usuario" */
+.add-user-button-admin {
+    padding: 12px 20px;
+    background-color: #421d83; /* Color de botón de LoginAdmin.css */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.add-user-button-admin:hover {
+    background-color: #8b56ed; /* Color de hover de botón de LoginAdmin.css */
+}
+
+.search-input-admin {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #191c16;
+    background-color: #f9f9f9;
+    flex-grow: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.search-input-admin::placeholder {
+    color: #61608b;
+}
+
+.search-input-admin:focus {
+    outline: none;
+    border-color: #8b56ed;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(139, 86, 237, 0.2);
+}
+
+.filter-select-admin {
+    padding: 12px 20px;
+    border: 1px solid #421d83;
+    border-radius: 8px;
+    font-size: 1em;
+    color: white;
+    background-color: #421d83;
+    cursor: pointer;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2C114.7L146.2%2C255.5L5.4%2C114.7H287z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha blanca SVG */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-select-admin:hover {
+    background-color: #8b56ed;
+    border-color: #8b56ed;
+}
+
+.filter-select-admin:focus {
+    outline: none;
+    border-color: #421d83;
+    box-shadow: 0 0 0 3px rgba(66, 29, 131, 0.2);
+}
+
+/* --- Estilos de la Tabla de Usuarios --- */
+.users-table-container {
+    width: calc(100% - 60px);
+    max-width: 1200px;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    margin-bottom: 50px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+    background-color: white;
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #191c16;
+    vertical-align: middle; /* Ensure vertical alignment for all cells */
+}
+
+.users-table th {
+    background-color: #f9f9f9;
+    color: #421d83;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    border-bottom: 2px solid #8b56ed;
+}
+
+.users-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Estilos para la celda y botón de contraseña */
+.password-cell-user-table {
+    position: relative;
+    display: flex;
+    align-items: center; /* Vertically center content */
+    gap: 10px;
+    height: 100%; /* Fill cell height for proper alignment */
+    min-height: 48px; /* Match row height if needed */
+}
+
+.password-toggle-button-user-table {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+}
+
+.password-toggle-button-user-table img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.password-toggle-button-user-table:hover img {
+    transform: scale(1.1);
+}
+
+/* Estilos para el botón de edición */
+.edit-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+}
+
+.edit-button img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.edit-button:hover img {
+    transform: scale(1.1);
+}
+
+/* Estilos para los roles (opcional) */
+.role-administrador { color: #8b56ed; font-weight: bold; }
+.role-servicio-técnico { color: #455a64; font-weight: bold; }
+.role-cliente { color: #4068f8; font-weight: bold; }
+
+/* Mensaje sin resultados */
+.no-results {
+    text-align: center;
+    padding: 50px;
+    color: #61608b;
+    font-size: 1.1em;
+}

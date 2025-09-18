@@ -25,6 +25,7 @@ import HomeAdmin from './components/admin/HomeAdmin';
 import UsersTable from './components/admin/UsersTable';
 import LoginAdmin from './components/admin/LoginAdmin';
 import BranchesTable from './components/admin/BranchesTable';
+import FailsTable from './components/admin/FailsTable';
 import ForgotPasswordAdmin from './components/admin/ForgotPasswordAdmin';
 
 export default function AppRoutes() {
@@ -104,6 +105,11 @@ export default function AppRoutes() {
       <Route path="/admin/users-table" element={
         <ProtectedRoute requiredRole='Administrador'>
           <UsersTable />
+        </ProtectedRoute>
+      }/>
+      <Route path="/admin/fails-table" element={
+        <ProtectedRoute requiredRole='Administrador'>
+          <FailsTable />
         </ProtectedRoute>
       }/>
       <Route path="/admin/branches-table" element={
