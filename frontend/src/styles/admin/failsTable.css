@@ -23,7 +23,7 @@
 }
 
 /* Contenedor principal para la barra de búsqueda, filtros y el botón */
-.filters-and-search-container {
+.filters-and-search-container-admin {
     width: calc(100% - 60px);
     max-width: 1200px;
     display: flex;
@@ -34,7 +34,7 @@
 }
 
 /* Contenedor de la barra de búsqueda y los filtros */
-.filters-and-search {
+.filters-and-search-admin {
     display: flex;
     gap: 15px;
     width: 100%;

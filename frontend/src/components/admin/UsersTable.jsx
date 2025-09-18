@@ -207,7 +207,7 @@ const UsersTable = () => {
             <input
               type="text"
               placeholder="Buscar por Usuario..."
-              className="search-input"
+              className="search-input-admin"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
