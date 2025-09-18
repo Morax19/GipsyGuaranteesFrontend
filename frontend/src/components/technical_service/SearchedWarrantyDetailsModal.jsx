@@ -73,7 +73,7 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
               <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
             </div>
             <div className="detail-row">
-              <strong>Fecha de Registro:</strong> <span>{warranty.purchaseDate || 'N/A'}</span>
+              <strong>Fecha de Compra:</strong> <span>{warranty.purchaseDate || 'N/A'}</span>
             </div>
             <div className="detail-row">
               <strong>Producto:</strong> <span>{warranty.Brand} - {warranty.Model}</span>
