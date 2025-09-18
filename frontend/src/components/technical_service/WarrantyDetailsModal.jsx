@@ -256,7 +256,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
               <strong>Marca:</strong> <span>{warranty.Brand}</span>
             </div>
             <div className="detail-row">
-              <strong>Código de Barra:</strong> <span>{warranty.ItemLookupCode}</span>
+              <strong>BinLocation:</strong> <span>{warranty.BinLocation}</span>
             </div>
             <div className="detail-row">
               <strong>Producto:</strong> <span>{warranty.Description}</span>
@@ -322,7 +322,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         {warranty.statusDescription !== 'Cerrado' && currentStatus === 'Cerrado' && (
           <div className="form-group">
             <label htmlFor="required-change">
-              Requiere cambio:
+              Indique si fue necesario cambiar el producto:
               <input type="checkbox" checked={requiredChangeBox} onChange={handleCheckboxChange}/>
             </label>
         </div>
