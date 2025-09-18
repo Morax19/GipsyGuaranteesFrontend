@@ -91,7 +91,7 @@ const FailsTable = () => {
     <LayoutBaseAdmin activePage="failsTable">
       <div className="users-list-container">
         <div className="title-section">
-          <h2>Gestión de Fallos de Productos</h2>
+          <h2>Gestión de Fallas de Productos</h2>
         </div>
 
         <div className="filters-and-search-container-admin">
@@ -117,7 +117,7 @@ const FailsTable = () => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Descripción del Fallo</th>
+                  <th>Descripción de la Falla</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -140,7 +140,7 @@ const FailsTable = () => {
               </tbody>
             </table>
           ) : (
-            <p className="no-results">No se encontraron fallos.</p>
+            <p className="no-results">No se encontraron fallas.</p>
           )}
         </div>
       </div>
