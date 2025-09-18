@@ -25,6 +25,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const [actionDescription, setActionDescription] = useState('');
   const [statusOptions, setStatusOptions] = useState([]);
   const [diagnosisOptions, setDiagnosisOptions] = useState([]);
+  const [requiredChangeBox, setRequiredChangeBox] = useState(false);
 
   useEffect(() => {
     async function fetchAllStatuses() {
@@ -88,6 +89,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const handleStatusChange = (e) => setCurrentStatus(e.target.value);
   const handleDiagnosisChange = (e) => setCurrentDiagnosis(e.target.value);
   const handleActionDescriptionChange = (e) => setActionDescription(e.target.value);
+  const handleCheckboxChange = (e) => setRequiredChangeBox(e.target.checked);
 
   const handleCloseCase = async () => {
     const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
@@ -104,6 +106,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             statusID: selectedStatus,
             issueID: selectedDiagnosis.IssueId,
             issueResolutionDetails: actionDescription,
+            requiredChange: requiredChangeBox,
 
             //Data para el email
             Customer: warranty.Customer,
@@ -315,6 +318,15 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             ></textarea>
           </div>
         </div>
+
+        {warranty.statusDescription !== 'Cerrado' && currentStatus === 'Cerrado' && (
+          <div className="form-group">
+            <label htmlFor="required-change">
+              Requiere cambio:
+              <input type="checkbox" checked={requiredChangeBox} onChange={handleCheckboxChange}/>
+            </label>
+        </div>
+        )}
 
         <div className="modal-footer">
           {warranty.s !== 'Cerrado' && warranty.statusDescription !== 'Finalizado' ? (
