@@ -238,7 +238,7 @@ export default function Warranty() {
     warrantyData.append('invoiceIMG', img);
     warrantyData.append('storeName', selectedStore ? selectedStore.FullName : '');
     warrantyData.append('branchName', selectedBranch ? selectedBranch.companyName : '');
-
+    warrantyData.append('mainCustomerID', selectedStore.ID);
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/warrantyRegister/`,
