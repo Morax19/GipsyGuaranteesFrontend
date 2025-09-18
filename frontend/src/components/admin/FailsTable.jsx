@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import eye from '../../assets/IMG/ojo.png';
 import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/failsTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
@@ -75,15 +74,11 @@ const FailsTable = () => {
   const handleSaveIssue = (issueData, isEditing) => {
     if (isEditing) {
       setAllIssues(prevIssues => prevIssues.map(issue => (issue.IssueId === issueData.IssueId ? issueData : issue)));
-      console.log('Fallo actualizado:', issueData);
     } else {
       const newIssueId = Math.max(...allIssues.map(issue => issue.IssueId)) + 1;
       const newIssue = { ...issueData, IssueId: newIssueId };
       setAllIssues(prevIssues => [...prevIssues, newIssue]);
-      console.log('Nuevo fallo agregado:', newIssue);
     }
-    setIsModalOpen(false);
-    setIssueToEdit(null);
   };
 
   const handleCloseModal = () => {
@@ -122,7 +117,8 @@ const FailsTable = () => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Descripción del Fallo</th>
+                  <th>Descripción de la Falla</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,12 +126,21 @@ const FailsTable = () => {
                   <tr key={i.IssueId}>
                     <td>{i.IssueId}</td>
                     <td>{i.IssueDescription}</td>
+                    <td>
+                      <button
+                        className="edit-button"
+                        onClick={() => handleEditIssue(i.IssueId)}
+                        title="Editar Falla"
+                       >
+                        <img src={editIcon} alt="Editar" />
+                      </button>
+                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           ) : (
-            <p className="no-results">No se encontraron fallos.</p>
+            <p className="no-results">No se encontraron fallas.</p>
           )}
         </div>
       </div>
@@ -144,6 +149,7 @@ const FailsTable = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveIssue}
+        issueToEdit={issueToEdit}
       />
     </LayoutBaseAdmin>
   );
