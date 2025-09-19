@@ -62,6 +62,7 @@ export default function Warranty() {
   const inputRef = useRef(null);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
+  const [editableField, setEditableField] = useState(false);
 
   // Normalizer: trim, collapse spaces, remove diacritics, lowercase
   const normalizeText = (s = '') =>
@@ -164,6 +165,7 @@ export default function Warranty() {
       const data = await response.json();
       if (response.ok) {
         setBranchAddresses(data);
+        setEditableField(true);
       } else {
         console.error(data.error);
         alert(data.error);
@@ -472,7 +474,7 @@ export default function Warranty() {
                       name="RIFtype"
                       value={formData.RIFtype}
                       onChange={handleChange}
-                      disabled={formData.isRetail === 'false'}
+                      disabled={editableField}
                     >
                       <option value="">Tipo</option>
                       {RIFtypeOptions.map(opt => (
@@ -490,7 +492,7 @@ export default function Warranty() {
                       required
                       value={formData.RIF}
                       onChange={handleChange}
-                      disabled={formData.isRetail === 'false'}
+                      disabled={editableField}
                     />
                 </div>
           </div>
