@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import '../../styles/admin/userFormModal.css';
@@ -29,9 +29,28 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
+  // Local customer states for autocomplete
+  const [customersList, setCustomersList] = useState([]);
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
+  const [suppressShowOnQuery, setSuppressShowOnQuery] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const searchDebounceRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const normalizeText = (s = '') =>
+    s
+      .toString()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/[^\p{L}\p{N} ]+/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
 
   useEffect(() => {
-    if (branchToEdit) {
+  if (branchToEdit) {
       // Format the data to match the select value string
       setFormData({
         ...branchToEdit,
@@ -53,6 +72,50 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
       setIsEditMode(false);
     }
   }, [branchToEdit]);
+
+  // When prop mainCustomers changes, precompute normalized names
+  useEffect(() => {
+    const normalized = (mainCustomers || []).map(mc => ({
+      ...mc,
+      _norm: normalizeText(mc.FullName || '')
+    }));
+    setCustomersList(normalized);
+  }, [mainCustomers]);
+
+  // Debounced filtering of customersList
+  useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    if (!customerQuery) {
+      setFilteredCustomers([]);
+      setShowCustomerSuggestions(false);
+      setHighlightIndex(-1);
+      return;
+    }
+
+    searchDebounceRef.current = setTimeout(() => {
+      const qNorm = normalizeText(customerQuery);
+      const tokens = qNorm.split(' ').filter(Boolean);
+
+      if (suppressShowOnQuery) {
+        setFilteredCustomers([]);
+        setShowCustomerSuggestions(false);
+        setHighlightIndex(-1);
+        setSuppressShowOnQuery(false);
+        return;
+      }
+
+      const matches = customersList.filter(c => {
+        if (!c._norm) return false;
+        return tokens.every(t => c._norm.includes(t));
+      }).slice(0, 50);
+
+      setFilteredCustomers(matches);
+      setShowCustomerSuggestions(matches.length > 0);
+      setHighlightIndex(-1);
+    }, 200);
+
+    return () => { if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current); };
+  }, [customerQuery, customersList, suppressShowOnQuery]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -151,23 +214,89 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             <label htmlFor="customerID">
               Compañía asociada <span className="required-asterisk">*</span>
             </label>
-            <select
-              id="customerID"
-              name="customerID"
-              value={formData.customerID}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>Seleccione una compañía</option>
-              {mainCustomers.map(mainCustomer => (
-                <option 
-                  key={`${mainCustomer.ID}-${mainCustomer.isRetail}`} 
-                  value={`${mainCustomer.ID}-${mainCustomer.isRetail}`}
-                >
-                  {`${mainCustomer.FullName}`}
-                </option>
-              ))}
-            </select>
+            <div style={{ position: 'relative' }}>
+              <input
+                type="text"
+                id="customerID"
+                name="customerID"
+                placeholder="Busque la compañía asociada"
+                value={customerQuery || (formData.customerID ? (mainCustomers.find(m => `${m.ID}-${m.isRetail}` === formData.customerID)?.FullName || '') : '')}
+                onChange={e => {
+                  setCustomerQuery(e.target.value);
+                  // clear previously selected customerID while typing
+                  setFormData(prev => ({ ...prev, customerID: '' }));
+                }}
+                onFocus={() => customerQuery && setShowCustomerSuggestions(true)}
+                ref={inputRef}
+                autoComplete="new-password"
+                spellCheck={false}
+                autoCorrect="off"
+                autoCapitalize="off"
+                onKeyDown={e => {
+                  if (!showCustomerSuggestions) return;
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setHighlightIndex(i => Math.min(i + 1, filteredCustomers.length - 1));
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setHighlightIndex(i => Math.max(i - 1, 0));
+                  } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const sel = filteredCustomers[highlightIndex >= 0 ? highlightIndex : 0];
+                    if (sel) {
+                      const val = `${sel.ID}-${sel.isRetail}`;
+                      setFormData(prev => ({ ...prev, customerID: val, isRetail: `${sel.isRetail}` }));
+                      setCustomerQuery(sel.FullName || '');
+                      setShowCustomerSuggestions(false);
+                      setSuppressShowOnQuery(true);
+                      // blur input
+                      if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
+                    }
+                  } else if (e.key === 'Escape') {
+                    setShowCustomerSuggestions(false);
+                  }
+                }}
+                required
+              />
+
+              {showCustomerSuggestions && (
+                <ul style={{
+                  position: 'absolute',
+                  zIndex: 40,
+                  left: 0,
+                  right: 0,
+                  maxHeight: '240px',
+                  overflowY: 'auto',
+                  background: 'white',
+                  border: '1px solid #ccc',
+                  listStyle: 'none',
+                  margin: 0,
+                  padding: 0
+                }}>
+                  {filteredCustomers.length > 0 ? (
+                    filteredCustomers.map((mc, idx) => (
+                      <li
+                        key={`${mc.ID}-${mc.isRetail}`}
+                        onMouseDown={e => { try { e.preventDefault(); } catch {};
+                          const val = `${mc.ID}-${mc.isRetail}`;
+                          setFormData(prev => ({ ...prev, customerID: val, isRetail: `${mc.isRetail}` }));
+                          setCustomerQuery(mc.FullName || '');
+                          setShowCustomerSuggestions(false);
+                          setSuppressShowOnQuery(true);
+                          if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
+                        }}
+                        onMouseEnter={() => setHighlightIndex(idx)}
+                        style={{ padding: '8px 10px', cursor: 'pointer', background: highlightIndex === idx ? '#eef' : 'transparent' }}
+                      >
+                        {mc.FullName}
+                      </li>
+                    ))
+                  ) : (
+                    <li style={{ padding: '8px 10px' }}>No se encontraron resultados</li>
+                  )}
+                </ul>
+              )}
+            </div>
           </div>
 
           <div className="form-group-user">

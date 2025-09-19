@@ -56,7 +56,7 @@ const BranchesTable = () => {
     const fetchCustomers = async () => {
       try {
         const response = await fetchWithAuth(
-          `${apiUrl}/api/adminGetMainCustomersRetail/`,
+          `${apiUrl}/api/adminGetMainCustomers/`,
           {
             method: 'GET',
             headers: {
