@@ -38,7 +38,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
   const inputRef = useRef(null);
-  // timestamp (ms) until which showing suggestions should be suppressed
+  // timestamp (ms) until which showing suggestions should be suppressed (legacy - will remove uses)
   const suppressShowUntilRef = useRef(0);
   // wrapper ref to detect outside clicks
   const wrapperRef = useRef(null);
@@ -100,9 +100,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
       const qNorm = normalizeText(customerQuery);
       const tokens = qNorm.split(' ').filter(Boolean);
 
-      // Also respect the short-lived timestamp-based suppression to avoid
-      // re-opening suggestions after a programmatic selection/focus race.
-      if (suppressShowOnQuery || Date.now() < (suppressShowUntilRef.current || 0)) {
+      // If we recently selected a suggestion and updated the input value programmatically,
+      // suppress reopening the suggestions box on that update.
+      if (suppressShowOnQuery) {
         setFilteredCustomers([]);
         setShowCustomerSuggestions(false);
         setHighlightIndex(-1);
@@ -124,25 +124,15 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   }, [customerQuery, customersList, suppressShowOnQuery]);
 
   // Close suggestions when clicking outside of the input/suggestions area
+  // Close suggestions when clicking outside (use 'click' to match Warranty.jsx behavior)
   useEffect(() => {
-    // Use both mousedown and touchstart to cover desktop and mobile.
-    const handler = (e) => {
-      if (!wrapperRef.current) return;
-      if (!wrapperRef.current.contains(e.target)) {
-        // close suggestions and set a short suppression window so internal focus/blur
-        // or other events don't re-open it immediately
+    function handleClickOutside(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
         setShowCustomerSuggestions(false);
-        setFilteredCustomers([]);
-        suppressShowUntilRef.current = Date.now() + 350;
-        setSuppressShowOnQuery(true);
       }
-    };
-    document.addEventListener('mousedown', handler, { passive: true });
-    document.addEventListener('touchstart', handler, { passive: true });
-    return () => {
-      document.removeEventListener('mousedown', handler);
-      document.removeEventListener('touchstart', handler);
-    };
+    }
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   const handleChange = (e) => {
