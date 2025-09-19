@@ -63,6 +63,11 @@ body {
     transition: border 0.2s;
     transition: background-color 0.3s ease;
 }
+/* Barra de búsqueda de Compañía asociada */
+.customer-search-container {
+    width: 100%;
+    margin-left: 24% !important;
+}
 
 .cardContainerWarranty form select {
     width: 76%;

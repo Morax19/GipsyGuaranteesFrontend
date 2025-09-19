@@ -346,12 +346,13 @@ export default function Warranty() {
     <LayoutBase activePage="warranty">
       <div className="cardContainerWarranty">
         <h2>Registro de Garantía</h2>
+        <br></br>
         <form onSubmit={handleSubmit}>
           {/* Customer Select */}
           <label htmlFor="mainCustomerSearch">
             Compañía asociada <span className="required-asterisk">*</span>
           </label>
-          <div ref={customerSearchRef} style={{ position: 'relative' }}>
+          <div ref={customerSearchRef} className="customer-search-container">
             <input
               type="text"
               id="mainCustomerSearch"
