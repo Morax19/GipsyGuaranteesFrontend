@@ -101,8 +101,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
       const tokens = qNorm.split(' ').filter(Boolean);
 
       // If we recently selected a suggestion and updated the input value programmatically,
-      // suppress reopening the suggestions box on that update.
-      if (suppressShowOnQuery) {
+      // suppress reopening the suggestions box on that update. Also respect a short
+      // timestamp-based suppression to cover timing races.
+      if (suppressShowOnQuery || Date.now() < (suppressShowUntilRef.current || 0)) {
         setFilteredCustomers([]);
         setShowCustomerSuggestions(false);
         setHighlightIndex(-1);
