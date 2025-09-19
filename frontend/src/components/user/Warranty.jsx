@@ -125,6 +125,7 @@ export default function Warranty() {
       const data = await response.json();
       if (response.ok) {
         setMainCustomers(data);
+        console.log(data)
       } else {
         console.error(data.error);
         alert(data.warning)
