@@ -339,7 +339,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
         {warranty.statusDescription !== 'Cerrado' && currentStatus === 'Cerrado' && (
           <div className="form-group">
             <label htmlFor="required-change">
-              Indique si fue necesario cambiar el producto:
+              Indique si el producto requiere cambio:
               <input type="checkbox" checked={requiredChangeBox} onChange={handleCheckboxChange}/>
             </label>
         </div>

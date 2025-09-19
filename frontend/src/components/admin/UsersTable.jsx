@@ -261,7 +261,6 @@ const UsersTable = () => {
                   <th>Usuario</th>
                   <th>Contraseña</th>
                   <th>Fecha de Registro</th>
-                  <th>ID de Cliente</th>
                   <th>Rol</th>
                   <th>Acciones</th>
                 </tr>
@@ -282,7 +281,6 @@ const UsersTable = () => {
                       </button>
                     </td>
                     <td>{user.registrationDate}</td>
-                    <td>{user.CustomerID}</td>
                     <td><span className={`role-${String(user.roleID).toLowerCase().replace(/\s+/g, '-')}`}>{user.Description}</span></td>
                     <td>
                       <button
