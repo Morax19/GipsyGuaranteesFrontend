@@ -38,6 +38,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
   const inputRef = useRef(null);
+  // timestamp (ms) until which showing suggestions should be suppressed
+  const suppressShowUntilRef = useRef(0);
 
   const normalizeText = (s = '') =>
     s
@@ -96,7 +98,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
       const qNorm = normalizeText(customerQuery);
       const tokens = qNorm.split(' ').filter(Boolean);
 
-      if (suppressShowOnQuery) {
+      // Also respect the short-lived timestamp-based suppression to avoid
+      // re-opening suggestions after a programmatic selection/focus race.
+      if (suppressShowOnQuery || Date.now() < (suppressShowUntilRef.current || 0)) {
         setFilteredCustomers([]);
         setShowCustomerSuggestions(false);
         setHighlightIndex(-1);
@@ -226,7 +230,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                   // clear previously selected customerID while typing
                   setFormData(prev => ({ ...prev, customerID: '' }));
                 }}
-                onFocus={() => customerQuery && setShowCustomerSuggestions(true)}
+                onFocus={() => { if (customerQuery && Date.now() >= (suppressShowUntilRef.current || 0)) setShowCustomerSuggestions(true); }}
                 ref={inputRef}
                 autoComplete="new-password"
                 spellCheck={false}
@@ -240,7 +244,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                   } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     setHighlightIndex(i => Math.max(i - 1, 0));
-                  } else if (e.key === 'Enter') {
+          } else if (e.key === 'Enter') {
                     e.preventDefault();
                     const sel = filteredCustomers[highlightIndex >= 0 ? highlightIndex : 0];
                     if (sel) {
@@ -249,6 +253,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                       setCustomerQuery(sel.FullName || '');
                       setShowCustomerSuggestions(false);
                       setSuppressShowOnQuery(true);
+            // suppress reopening for a short window (ms)
+            suppressShowUntilRef.current = Date.now() + 350;
                       // blur input
                       if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                     }
@@ -283,6 +289,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                           setCustomerQuery(mc.FullName || '');
                           setShowCustomerSuggestions(false);
                           setSuppressShowOnQuery(true);
+                          // suppress reopening for a short window (ms)
+                          suppressShowUntilRef.current = Date.now() + 350;
                           if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                         }}
                         onMouseEnter={() => setHighlightIndex(idx)}
