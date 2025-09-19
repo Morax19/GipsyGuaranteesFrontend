@@ -57,7 +57,9 @@ export default function Warranty() {
   const [mainCustomerQuery, setMainCustomerQuery] = useState('');
   const [filteredMainCustomers, setFilteredMainCustomers] = useState([]);
   const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
+  const [suppressShowOnQuery, setSuppressShowOnQuery] = useState(false);
   const customerSearchRef = useRef(null);
+  const inputRef = useRef(null);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
 
@@ -246,6 +248,16 @@ export default function Warranty() {
       const qNorm = normalizeText(mainCustomerQuery);
       const tokens = qNorm.split(' ').filter(Boolean);
 
+      // If we recently selected a suggestion and updated the input value programmatically,
+      // suppress reopening the suggestions box on that update.
+      if (suppressShowOnQuery) {
+        setFilteredMainCustomers([]);
+        setShowCustomerSuggestions(false);
+        setHighlightIndex(-1);
+        setSuppressShowOnQuery(false);
+        return;
+      }
+
       const matches = mainCustomers.filter(mc => {
         // Only search FullName (use precomputed _norm)
         if (!mc._norm) return false;
@@ -352,6 +364,7 @@ export default function Warranty() {
                 setFormData(prev => ({ ...prev, mainCustomerID: '', isRetail: '' }));
               }}
               onFocus={() => mainCustomerQuery && setShowCustomerSuggestions(true)}
+              ref={inputRef}
               onKeyDown={e => {
                 if (!showCustomerSuggestions) return;
                 if (e.key === 'ArrowDown') {
@@ -360,14 +373,17 @@ export default function Warranty() {
                 } else if (e.key === 'ArrowUp') {
                   e.preventDefault();
                   setHighlightIndex(i => Math.max(i - 1, 0));
-                } else if (e.key === 'Enter') {
+        } else if (e.key === 'Enter') {
                   e.preventDefault();
                   const sel = filteredMainCustomers[highlightIndex >= 0 ? highlightIndex : 0];
                   if (sel) {
                     setFormData(prev => ({ ...prev, mainCustomerID: sel.ID, isRetail: sel.isRetail }));
                     setMainCustomerQuery(sel.FullName || '');
-                    setShowCustomerSuggestions(false);
+          setShowCustomerSuggestions(false);
+          setSuppressShowOnQuery(true);
                     fetchBranchAddresses(sel.ID, sel.isRetail);
+                    // blur input to ensure suggestions close
+                    if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                   }
                 } else if (e.key === 'Escape') {
                   setShowCustomerSuggestions(false);
@@ -397,13 +413,16 @@ export default function Warranty() {
                   filteredMainCustomers.map((mc, idx) => (
                     <li
                       key={`${mc.ID}-${mc.isRetail}`}
-                      onMouseDown={() => {
-                        // use onMouseDown to ensure selection before blur
-                        setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail }));
-                        setMainCustomerQuery(mc.FullName || '');
-                        setShowCustomerSuggestions(false);
-                        fetchBranchAddresses(mc.ID, mc.isRetail);
-                      }}
+                      onMouseDown={(e) => {
+                          // prevent browser focusing the input before we blur
+                          try { e.preventDefault(); } catch (err) {}
+                          setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail }));
+                          setMainCustomerQuery(mc.FullName || '');
+                          setShowCustomerSuggestions(false);
+                          setSuppressShowOnQuery(true);
+                          fetchBranchAddresses(mc.ID, mc.isRetail);
+                          if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
+                        }}
                       onMouseEnter={() => setHighlightIndex(idx)}
                       role="option"
                       aria-selected={highlightIndex === idx}
