@@ -61,6 +61,17 @@ export default function Warranty() {
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
 
+  // Normalizer: trim, collapse spaces, remove diacritics, lowercase
+  const normalizeText = (s = '') =>
+    s
+      .toString()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/[^\p{L}\p{N} ]+/gu, ' ') // remove punctuation except letters/numbers
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+
   const validateInvoiceNumber = (value) => {
     const pattern = /^[A-Za-z0-9\-\/]{5,20}$/;
     return pattern.test(value.trim());
@@ -124,8 +135,12 @@ export default function Warranty() {
 
       const data = await response.json();
       if (response.ok) {
-        setMainCustomers(data);
-        console.log(data)
+        // Precompute normalized FullName to avoid repeated normalization on each keystroke
+        const normalized = (data || []).map(mc => ({
+          ...mc,
+          _norm: normalizeText(mc.FullName || '')
+        }));
+        setMainCustomers(normalized);
       } else {
         console.error(data.error);
         alert(data.warning)
@@ -149,6 +164,7 @@ export default function Warranty() {
         setBranchAddresses(data);
       } else {
         console.error(data.error);
+        alert(data.error);
         setBranchAddresses([]);
       }
     } catch {
@@ -227,10 +243,15 @@ export default function Warranty() {
     }
 
     searchDebounceRef.current = setTimeout(() => {
-      const q = mainCustomerQuery.toLowerCase();
-      const matches = mainCustomers
-        .filter(mc => (mc.FullName || '').toLowerCase().includes(q))
-        .slice(0, 50); // limit to first 50 matches
+      const qNorm = normalizeText(mainCustomerQuery);
+      const tokens = qNorm.split(' ').filter(Boolean);
+
+      const matches = mainCustomers.filter(mc => {
+        // Only search FullName (use precomputed _norm)
+        if (!mc._norm) return false;
+        // Every token must appear somewhere in the normalized full name (AND semantics)
+        return tokens.every(t => mc._norm.includes(t));
+      }).slice(0, 50);
 
       setFilteredMainCustomers(matches);
       setShowCustomerSuggestions(matches.length > 0);
