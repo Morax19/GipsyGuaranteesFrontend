@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
@@ -54,6 +54,12 @@ export default function Warranty() {
   const [mainCustomers, setMainCustomers] = useState([]);
   const [branchAddresses, setBranchAddresses] = useState([]);
   const [products, setProducts] = useState([]);
+  const [mainCustomerQuery, setMainCustomerQuery] = useState('');
+  const [filteredMainCustomers, setFilteredMainCustomers] = useState([]);
+  const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
+  const customerSearchRef = useRef(null);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const searchDebounceRef = useRef(null);
 
   const validateInvoiceNumber = (value) => {
     const pattern = /^[A-Za-z0-9\-\/]{5,20}$/;
@@ -208,6 +214,44 @@ export default function Warranty() {
     fetchMainCustomers();
   }, []);
 
+  // Debounced filter of main customers to avoid rendering huge lists
+  useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    if (!mainCustomerQuery) {
+      // If cleared, also clear selection and suggestions
+      setFilteredMainCustomers([]);
+      setShowCustomerSuggestions(false);
+      setHighlightIndex(-1);
+      return;
+    }
+
+    searchDebounceRef.current = setTimeout(() => {
+      const q = mainCustomerQuery.toLowerCase();
+      const matches = mainCustomers
+        .filter(mc => (mc.FullName || '').toLowerCase().includes(q))
+        .slice(0, 50); // limit to first 50 matches
+
+      setFilteredMainCustomers(matches);
+      setShowCustomerSuggestions(matches.length > 0);
+      setHighlightIndex(-1);
+    }, 200); // 200ms debounce
+
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, [mainCustomerQuery, mainCustomers]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
+        setShowCustomerSuggestions(false);
+      }
+    }
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   // Submit warranty registration
   const handleSubmit = async e => {
     e.preventDefault();
@@ -270,23 +314,92 @@ export default function Warranty() {
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
           {/* Customer Select */}
-          <label htmlFor="mainCustomerID">
+          <label htmlFor="mainCustomerSearch">
             Compañía asociada <span className="required-asterisk">*</span>
-            </label>
-          <select
-            id="mainCustomerID"
-            name="mainCustomerID"
-            value={formData.mainCustomerID ? `${formData.mainCustomerID}-${formData.isRetail}` : ''}
-            onChange={handleChange}
-            required
-          >
-            <option value="" disabled>Tienda donde compró el producto</option>
-            {mainCustomers.map(mc => (
-              <option key={`${mc.ID}-${mc.isRetail}`} value={`${mc.ID}-${mc.isRetail}`}>
-                {mc.FullName}
-              </option>
-            ))}
-          </select>
+          </label>
+          <div ref={customerSearchRef} style={{ position: 'relative' }}>
+            <input
+              type="text"
+              id="mainCustomerSearch"
+              name="mainCustomerSearch"
+              placeholder="Busque la tienda donde compró el producto"
+              value={mainCustomerQuery}
+              onChange={e => {
+                setMainCustomerQuery(e.target.value);
+                // clear previously selected mainCustomerID while typing
+                setFormData(prev => ({ ...prev, mainCustomerID: '', isRetail: '' }));
+              }}
+              onFocus={() => mainCustomerQuery && setShowCustomerSuggestions(true)}
+              onKeyDown={e => {
+                if (!showCustomerSuggestions) return;
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault();
+                  setHighlightIndex(i => Math.min(i + 1, filteredMainCustomers.length - 1));
+                } else if (e.key === 'ArrowUp') {
+                  e.preventDefault();
+                  setHighlightIndex(i => Math.max(i - 1, 0));
+                } else if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const sel = filteredMainCustomers[highlightIndex >= 0 ? highlightIndex : 0];
+                  if (sel) {
+                    setFormData(prev => ({ ...prev, mainCustomerID: sel.ID, isRetail: sel.isRetail }));
+                    setMainCustomerQuery(sel.FullName || '');
+                    setShowCustomerSuggestions(false);
+                    fetchBranchAddresses(sel.ID, sel.isRetail);
+                  }
+                } else if (e.key === 'Escape') {
+                  setShowCustomerSuggestions(false);
+                }
+              }}
+              required
+              autoComplete="off"
+              aria-autocomplete="list"
+              aria-controls="mainCustomer-suggestions"
+              aria-expanded={showCustomerSuggestions}
+            />
+            {showCustomerSuggestions && (
+              <ul id="mainCustomer-suggestions" className="suggestions-list" role="listbox" style={{
+                position: 'absolute',
+                zIndex: 40,
+                left: 0,
+                right: 0,
+                maxHeight: '240px',
+                overflowY: 'auto',
+                background: 'white',
+                border: '1px solid #ccc',
+                listStyle: 'none',
+                margin: 0,
+                padding: 0
+              }}>
+                {filteredMainCustomers.length > 0 ? (
+                  filteredMainCustomers.map((mc, idx) => (
+                    <li
+                      key={`${mc.ID}-${mc.isRetail}`}
+                      onMouseDown={() => {
+                        // use onMouseDown to ensure selection before blur
+                        setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail }));
+                        setMainCustomerQuery(mc.FullName || '');
+                        setShowCustomerSuggestions(false);
+                        fetchBranchAddresses(mc.ID, mc.isRetail);
+                      }}
+                      onMouseEnter={() => setHighlightIndex(idx)}
+                      role="option"
+                      aria-selected={highlightIndex === idx}
+                      style={{
+                        padding: '8px 10px',
+                        cursor: 'pointer',
+                        background: highlightIndex === idx ? '#eef' : 'transparent'
+                      }}
+                    >
+                      {mc.FullName}
+                    </li>
+                  ))
+                ) : (
+                  <li style={{ padding: '8px 10px' }}>No se encontraron resultados</li>
+                )}
+              </ul>
+            )}
+          </div>
 
           <label htmlFor="branchID">
             Sucursal <span className="required-asterisk">*</span>
