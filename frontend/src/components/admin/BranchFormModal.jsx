@@ -265,13 +265,14 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                     const sel = filteredCustomers[highlightIndex >= 0 ? highlightIndex : 0];
                     if (sel) {
                       const val = `${sel.ID}-${sel.isRetail}`;
+                      // set suppression BEFORE changing the input query to avoid the
+                      // debounced filter reopening the suggestions due to the programmatic update
+                      setSuppressShowOnQuery(true);
+                      suppressShowUntilRef.current = Date.now() + 350;
                       setFormData(prev => ({ ...prev, customerID: val, isRetail: `${sel.isRetail}` }));
                       setCustomerQuery(sel.FullName || '');
                       setShowCustomerSuggestions(false);
                       setFilteredCustomers([]);
-                      setSuppressShowOnQuery(true);
-                      // suppress reopening for a short window (ms)
-                      suppressShowUntilRef.current = Date.now() + 350;
                       // blur input
                       if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                     }
@@ -302,13 +303,13 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                         key={`${mc.ID}-${mc.isRetail}`}
                         onMouseDown={e => { try { e.preventDefault(); } catch {};
                           const val = `${mc.ID}-${mc.isRetail}`;
+                          // set suppression BEFORE updating query
+                          setSuppressShowOnQuery(true);
+                          suppressShowUntilRef.current = Date.now() + 350;
                           setFormData(prev => ({ ...prev, customerID: val, isRetail: `${mc.isRetail}` }));
                           setCustomerQuery(mc.FullName || '');
                           setShowCustomerSuggestions(false);
                           setFilteredCustomers([]);
-                          setSuppressShowOnQuery(true);
-                          // suppress reopening for a short window (ms)
-                          suppressShowUntilRef.current = Date.now() + 350;
                           if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                         }}
                         onMouseEnter={() => setHighlightIndex(idx)}
