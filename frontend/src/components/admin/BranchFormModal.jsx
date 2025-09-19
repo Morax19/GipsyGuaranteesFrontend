@@ -125,15 +125,24 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
 
   // Close suggestions when clicking outside of the input/suggestions area
   useEffect(() => {
+    // Use both mousedown and touchstart to cover desktop and mobile.
     const handler = (e) => {
       if (!wrapperRef.current) return;
       if (!wrapperRef.current.contains(e.target)) {
+        // close suggestions and set a short suppression window so internal focus/blur
+        // or other events don't re-open it immediately
         setShowCustomerSuggestions(false);
         setFilteredCustomers([]);
+        suppressShowUntilRef.current = Date.now() + 350;
+        setSuppressShowOnQuery(true);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('mousedown', handler, { passive: true });
+    document.addEventListener('touchstart', handler, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
   }, []);
 
   const handleChange = (e) => {
