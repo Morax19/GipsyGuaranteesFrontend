@@ -270,7 +270,9 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                       setSuppressShowOnQuery(true);
                       suppressShowUntilRef.current = Date.now() + 350;
                       setFormData(prev => ({ ...prev, customerID: val, isRetail: `${sel.isRetail}` }));
-                      setCustomerQuery(sel.FullName || '');
+                      // Clear the typed query; the input will show the selected
+                      // FullName from `mainCustomers` lookup (via formData.customerID)
+                      setCustomerQuery('');
                       setShowCustomerSuggestions(false);
                       setFilteredCustomers([]);
                       // blur input
@@ -307,7 +309,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                           setSuppressShowOnQuery(true);
                           suppressShowUntilRef.current = Date.now() + 350;
                           setFormData(prev => ({ ...prev, customerID: val, isRetail: `${mc.isRetail}` }));
-                          setCustomerQuery(mc.FullName || '');
+                          // Clear the typed query so debounced filter doesn't re-open suggestions
+                          setCustomerQuery('');
                           setShowCustomerSuggestions(false);
                           setFilteredCustomers([]);
                           if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
