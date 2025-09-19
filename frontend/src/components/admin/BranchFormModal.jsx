@@ -40,6 +40,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   const inputRef = useRef(null);
   // timestamp (ms) until which showing suggestions should be suppressed
   const suppressShowUntilRef = useRef(0);
+  // wrapper ref to detect outside clicks
+  const wrapperRef = useRef(null);
 
   const normalizeText = (s = '') =>
     s
@@ -120,6 +122,19 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
 
     return () => { if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current); };
   }, [customerQuery, customersList, suppressShowOnQuery]);
+
+  // Close suggestions when clicking outside of the input/suggestions area
+  useEffect(() => {
+    const handler = (e) => {
+      if (!wrapperRef.current) return;
+      if (!wrapperRef.current.contains(e.target)) {
+        setShowCustomerSuggestions(false);
+        setFilteredCustomers([]);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -218,7 +233,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
             <label htmlFor="customerID">
               Compañía asociada <span className="required-asterisk">*</span>
             </label>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }} ref={wrapperRef}>
               <input
                 type="text"
                 id="customerID"
@@ -252,9 +267,10 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                       setFormData(prev => ({ ...prev, customerID: val, isRetail: `${sel.isRetail}` }));
                       setCustomerQuery(sel.FullName || '');
                       setShowCustomerSuggestions(false);
+                      setFilteredCustomers([]);
                       setSuppressShowOnQuery(true);
-            // suppress reopening for a short window (ms)
-            suppressShowUntilRef.current = Date.now() + 350;
+                      // suppress reopening for a short window (ms)
+                      suppressShowUntilRef.current = Date.now() + 350;
                       // blur input
                       if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                     }
@@ -288,6 +304,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                           setFormData(prev => ({ ...prev, customerID: val, isRetail: `${mc.isRetail}` }));
                           setCustomerQuery(mc.FullName || '');
                           setShowCustomerSuggestions(false);
+                          setFilteredCustomers([]);
                           setSuppressShowOnQuery(true);
                           // suppress reopening for a short window (ms)
                           suppressShowUntilRef.current = Date.now() + 350;
