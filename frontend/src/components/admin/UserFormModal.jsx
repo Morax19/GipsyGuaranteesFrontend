@@ -244,6 +244,9 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
                 <option value="V">V</option>
                 <option value="E">E</option>
                 <option value="P">P</option>
+                <option value="J">J</option>
+                <option value="G">G</option>
+                <option value="R">R</option>
               </select>
               <input
                   className="national-id-modal"
