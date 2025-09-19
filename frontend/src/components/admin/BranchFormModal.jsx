@@ -254,7 +254,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                   // clear previously selected customerID while typing
                   setFormData(prev => ({ ...prev, customerID: '' }));
                 }}
-                onFocus={() => { if (customerQuery && Date.now() >= (suppressShowUntilRef.current || 0)) setShowCustomerSuggestions(true); }}
+                // Do not auto-open suggestions on focus to avoid focus/blur races.
+                // Suggestions are opened by the debounced filter effect when results exist.
                 ref={inputRef}
                 autoComplete="new-password"
                 spellCheck={false}
