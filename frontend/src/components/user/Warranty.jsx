@@ -346,7 +346,6 @@ export default function Warranty() {
     <LayoutBase activePage="warranty">
       <div className="cardContainerWarranty">
         <h2>Registro de Garantía</h2>
-        <br></br>
         <form onSubmit={handleSubmit}>
           {/* Customer Select */}
           <label htmlFor="mainCustomerSearch">
