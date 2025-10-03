@@ -34,9 +34,16 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
             </li>
             <li>
               <div className={`optionContainer ${isActive('user-technical-service') ? 'active' : ''}`}>
+                <Link to="/user/user-technical-service" className="optionLink" onClick={closeSidebar}>Servicio Técnico</Link>
+              </div>
+            </li>
+            {/* 
+            <li>
+              <div className={`optionContainer ${isActive('user-technical-service') ? 'active' : ''}`}>
                 <a href="https://gipsymx-my.sharepoint.com/:w:/g/personal/desarrollo_grupogipsy_com/EUb4GDoCEIFMtbQOoYi264MBsmMGd8auSJfj_hQ1bqN7yQ?e=lrP8vX" className="optionLink" onClick={closeSidebar} target='_blank'>Servicio Técnico</a>
               </div>
             </li>
+            */}
           </ul>
           <ul className="bottomMenu">
             <li>
