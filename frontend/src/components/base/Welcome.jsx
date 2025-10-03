@@ -26,9 +26,8 @@ function WelcomePage() {
 
       <div className="welcome-footer">
         <a
-          href="https://gipsymx-my.sharepoint.com/:w:/g/personal/desarrollo_grupogipsy_com/EUb4GDoCEIFMtbQOoYi264MBsmMGd8auSJfj_hQ1bqN7yQ?e=lrP8vX"
           className="service-link"
-          target='_blank'
+          onClick={() => navigate('/technical-service')}
         > 
           Servicio Técnico
         </a>

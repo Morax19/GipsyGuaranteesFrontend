@@ -24,7 +24,7 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => 
             </li>
             <li>
               <div className={`optionContainer ${isActive('usersTable') ? 'active' : ''}`}>
-                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios Técnicos</Link>
+                <Link to="/admin/users-table" className="optionLink" onClick={closeSidebar}>Usuarios</Link>
               </div>
             </li>
             <li>

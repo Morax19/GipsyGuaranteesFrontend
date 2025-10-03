@@ -12,22 +12,6 @@ const sucursalesData = [
     diaAtencion: 'Lunes a Viernes',
     horarioAtencion: '10:00 AM - 7:00 PM',
   },
-  {
-    id: 2,
-    nombreEmpresa: 'Gipsy Garantías - Sucursal Este',
-    direccion: 'Centro Comercial Sambil, Nivel Terraza, Local 150, Caracas Este',
-    telefono: '+58 212-666-6666',
-    diaAtencion: 'Lunes a Sábado',
-    horarioAtencion: '10:00 AM - 7:00 PM',
-  },
-  {
-    id: 3,
-    nombreEmpresa: 'Gipsy Garantías - Sucursal Oeste',
-    direccion: 'Avenida Sucre, Edificio Miranda, Planta Baja, Los Dos Caminos',
-    telefono: '+58 212-666-6666',
-    diaAtencion: 'Lunes a Viernes',
-    horarioAtencion: '8:30 AM - 4:30 PM',
-  },
 ];
 
 const TechnicalService = () => {
