@@ -7,10 +7,22 @@ body {
     font-family: Arial, sans-serif;
     background-color: #ffffff;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+.containerHome {
+    background-color: #f1efef;
+    position: relative;
+    overflow-x: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 /* Curva inferior */
@@ -24,15 +36,37 @@ body.barraCurvaHome::after {
     background-color: #a2c0bb;
     border-radius: 50% 50% 0 0;
     transform: scale(1.5);
-    z-index: -1;
+    z-index: 1;
 }
 
-.containerHome {
+/* Imagen lateral */
+
+.left-panel {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.imagenLateral {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Login */
+
+.right-panel {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    padding: 20px;
+    background-color: #f1efef;
+    position: relative;
     z-index: 1;
 }
 
@@ -70,7 +104,7 @@ body.barraCurvaHome::after {
     bottom: 20px;
     right: 30px;
     text-align: right;
-    z-index: 10;
+    z-index: 3;
 }
 
 .service-link {
