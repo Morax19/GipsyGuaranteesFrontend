@@ -6,11 +6,10 @@ import backIcon from '../../assets/IMG/back.png';
 const sucursalesData = [
   {
     id: 1,
-    nombreEmpresa: 'Gipsy Garantías - Principal Caracas',
-    direccion: 'Av. Libertador, Edificio Principal, Piso 2, Caracas',
-    telefono: '+58 212-666-6666',
-    diaAtencion: 'Lunes a Viernes',
-    horarioAtencion: '10:00 AM - 7:00 PM',
+    nombreEmpresa: 'Call Center - Garantías Gipsy',
+    telefono: '+58 422-6247117',
+    diaAtencion: 'Lunes a Sábado',
+    horarioAtencion: '8:00 AM - 7:00 PM'
   },
 ];
 
@@ -33,15 +32,14 @@ const TechnicalService = () => {
       </div>
 
       <h2>Servicio Técnico</h2>
-      <p>Sucursales disponibles para la atención del control de su(s) garantía(s)</p>
+      <p>Para obtener información acerca de la(s) garantía(s) de su(s) producto(s), por favor contáctenos:</p>
       
       <br></br>
       <div className="branch-cards-container">
         {sucursalesData.map((sucursal) => (
           <div key={sucursal.id} className="branch-card">
             <div className="branch-card-info">
-              <div className="branch-card-title">{sucursal.nombreEmpresa}</div>
-              <div>{sucursal.direccion}</div>
+              <div className="branch-card-title">{sucursal.nombreEmpresa}</div>           
               <div>Teléfono: {sucursal.telefono}</div>
             </div>
             <div className="branch-card-schedule">

@@ -55,6 +55,18 @@ body.barraCurvaServTec::after {
     box-sizing: border-box;
 }
 
+.branch-card-user {
+    background-color: #f1efef;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%; 
+    box-sizing: border-box;
+}
+
 .branch-card-info {
     flex: 2;
 }
