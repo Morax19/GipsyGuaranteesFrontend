@@ -164,12 +164,24 @@ export default function Warranty() {
 
       const data = await response.json();
       if (response.ok) {
-        setBranchAddresses(data);
-        setEditableField(true);
+        const branches = data || [];
+        setBranchAddresses(branches);
+        if (branches.length > 0) {
+          // enable the branch select; do NOT autofill RIF here. RIF should be filled when user selects a branch.
+          setEditableField(true);
+          // ensure previous branch/RIF are cleared so user can pick a branch
+          setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
+        } else {
+          // no branches for this customer
+          setEditableField(false);
+          setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
+        }
       } else {
         console.error(data.error);
-        alert(data.error);
+        //alert(data.error);
         setBranchAddresses([]);
+        setEditableField(false);
+        setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
       }
     } catch {
       console.error('Error de conexión con el servidor');
@@ -305,9 +317,18 @@ export default function Warranty() {
     warrantyData.append('registerID', user_id);
     warrantyData.append('userFirstName', user_first_name);
     warrantyData.append('emailAddress', email_address);
-    warrantyData.append('branchID', formData.branchID);
-    warrantyData.append('RIFtype', formData.RIFtype);
-    warrantyData.append('RIF', formData.RIF);
+
+    if (editableField) {
+      warrantyData.append('branchID', formData.branchID);
+      warrantyData.append('RIFtype', formData.RIFtype);
+      warrantyData.append('RIF', formData.RIF);
+    }
+    else {
+      warrantyData.append('branchID', '');
+      warrantyData.append('RIFtype', '');
+      warrantyData.append('RIF', '');
+    }
+    
     warrantyData.append('ItemId', formData.ItemId);
     warrantyData.append('isRetail', formData.isRetail);
     warrantyData.append('purchaseDate', formData.purchaseDate);
@@ -362,8 +383,11 @@ export default function Warranty() {
               value={mainCustomerQuery}
               onChange={e => {
                 setMainCustomerQuery(e.target.value);
-                // clear previously selected mainCustomerID while typing
-                setFormData(prev => ({ ...prev, mainCustomerID: '', isRetail: '' }));
+                // clear previously selected mainCustomerID and any branch/RIF while typing
+                setFormData(prev => ({ ...prev, mainCustomerID: '', isRetail: '', branchID: '', RIFtype: '', RIF: '' }));
+                // clear branch list and disable branch select until a customer is chosen
+                setBranchAddresses([]);
+                setEditableField(false);
               }}
               onFocus={() => mainCustomerQuery && setShowCustomerSuggestions(true)}
               ref={inputRef}
@@ -375,14 +399,15 @@ export default function Warranty() {
                 } else if (e.key === 'ArrowUp') {
                   e.preventDefault();
                   setHighlightIndex(i => Math.max(i - 1, 0));
-        } else if (e.key === 'Enter') {
+                } else if (e.key === 'Enter') {
                   e.preventDefault();
                   const sel = filteredMainCustomers[highlightIndex >= 0 ? highlightIndex : 0];
                   if (sel) {
-                    setFormData(prev => ({ ...prev, mainCustomerID: sel.ID, isRetail: sel.isRetail }));
+                    // set selected main customer and clear previous branch/RIF selection
+                    setFormData(prev => ({ ...prev, mainCustomerID: sel.ID, isRetail: sel.isRetail, branchID: '', RIFtype: '', RIF: '' }));
                     setMainCustomerQuery(sel.FullName || '');
-          setShowCustomerSuggestions(false);
-          setSuppressShowOnQuery(true);
+                    setShowCustomerSuggestions(false);
+                    setSuppressShowOnQuery(true);
                     fetchBranchAddresses(sel.ID, sel.isRetail);
                     // blur input to ensure suggestions close
                     if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
@@ -418,7 +443,8 @@ export default function Warranty() {
                       onMouseDown={(e) => {
                           // prevent browser focusing the input before we blur
                           try { e.preventDefault(); } catch (err) {}
-                          setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail }));
+                          // set selected main customer and clear previous branch/RIF selection
+                          setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail, branchID: '', RIFtype: '', RIF: '' }));
                           setMainCustomerQuery(mc.FullName || '');
                           setShowCustomerSuggestions(false);
                           setSuppressShowOnQuery(true);
@@ -444,58 +470,63 @@ export default function Warranty() {
             )}
           </div>
 
-          <label htmlFor="branchID">
-            Sucursal <span className="required-asterisk">*</span>
-            </label>
-          <select
-            id="branchID"
-            name="branchID"
-            required
-            value={formData.branchID}
-            onChange={handleChange}
-            disabled={!formData.mainCustomerID}
-          >
-            <option value="" disabled>Seleccione una sucursal</option>
-            {branchAddresses.map(branch => (
-              <option key={branch.branchID} value={branch.branchID}>
-                {branch.companyName} - {branch.address}
-              </option>
-            ))}
-          </select>
+          {editableField && (
+            <>
+              <label htmlFor="branchID">
+                Sucursal <span className="required-asterisk">*</span>
+              </label>
+              <select
+                id="branchID"
+                name="branchID"
+                required={editableField}
+                value={formData.branchID}
+                onChange={handleChange}
+                disabled={!formData.mainCustomerID}
+              >
+                <option value="" disabled>Seleccione una sucursal</option>
+                {branchAddresses.map(branch => (
+                  <option key={branch.branchID} value={branch.branchID}>
+                    {branch.companyName} - {branch.address}
+                  </option>
+                ))}
+              </select>
 
-          {/* Auto-filled and locked RIFtype */}
-          <label htmlFor="RIFtype">
-            RIF de la tienda <span className="required-asterisk">*</span>
-            </label>
-            <div className="rif-container">
-                <div className="rif-type">
-                    <select
-                      id="RIFtype"
-                      name="RIFtype"
-                      value={formData.RIFtype}
-                      onChange={handleChange}
-                      disabled={editableField}
-                    >
-                      <option value="">Tipo</option>
-                      {RIFtypeOptions.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                </div>
-                <div className="rif-number">
-                    <input
-                      type="number"
-                      id="RIF"
-                      name="RIF"
-                      placeholder="Número de RIF"
-                      maxLength={10}
-                      required
-                      value={formData.RIF}
-                      onChange={handleChange}
-                      disabled={editableField}
-                    />
-                </div>
-          </div>
+              {/* Auto-filled and locked RIFtype */}
+              <label htmlFor="RIFtype">
+                RIF de la tienda <span className="required-asterisk">*</span>
+                </label>
+                <div className="rif-container">
+                    <div className="rif-type">
+                        <select
+                          id="RIFtype"
+                          name="RIFtype"
+                          required={editableField}
+                          value={formData.RIFtype}
+                          onChange={handleChange}
+                          disabled={editableField}
+                        >
+                          <option value="">Tipo</option>
+                          {RIFtypeOptions.map(opt => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                    </div>
+                    <div className="rif-number">
+                        <input
+                          type="number"
+                          id="RIF"
+                          name="RIF"
+                          placeholder="Número de RIF"
+                          maxLength={10}
+                          required={editableField}
+                          value={formData.RIF}
+                          onChange={handleChange}
+                          disabled={editableField}
+                        />
+                    </div>
+              </div>
+            </>
+          )}
 
           <label htmlFor="purchaseDate">
             Fecha de compra <span className="required-asterisk">*</span>
