@@ -38,6 +38,12 @@ function WelcomePage() {
             value="Ingresar" 
             onClick={() => navigate('/user/login')}
         />
+        <a 
+          className='conditions-link'
+          onClick={() => navigate('/')}
+        >
+          Términos y condiciones
+        </a>
         <br /><br />
       </div>
 

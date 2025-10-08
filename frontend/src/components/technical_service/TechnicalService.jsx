@@ -8,8 +8,8 @@ const sucursalesData = [
     id: 1,
     nombreEmpresa: 'Call Center - Garantías Gipsy',
     telefono: '+58 422-6247117',
-    diaAtencion: 'Lunes a Sábado',
-    horarioAtencion: '8:00 AM - 7:00 PM'
+    diaAtencion: 'Lunes a Viernes',
+    horarioAtencion: '9:00 AM - 5:00 PM'
   },
 ];
 
