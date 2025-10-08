@@ -71,20 +71,14 @@ body {
 
 .service-link,
 .conditions-link {
-    color: #4e4e4e;
+    color: #272727;
     font-size: 0.95em;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
-.conditions-link {
-    font-size: 1em;
-    font-weight: bold;
-}
-
 .service-link:hover,
 .conditions-link:hover {
     color: #4068f8;
-    text-decoration: thickness;
 }
