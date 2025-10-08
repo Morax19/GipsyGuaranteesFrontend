@@ -9,10 +9,11 @@ function WelcomePage() {
 
   const navigate = useNavigate();
 
-  return (
+  /*
+  return ( 
     <div className="containerHome">
 
-      {/* Curva inferior */}
+      {// Curva inferior }
       <svg
         className="wave-footer"
         xmlns="http://www.w3.org/2000/svg"
@@ -23,12 +24,12 @@ function WelcomePage() {
       <path d="M 0 60 C 150 160 330 -30 500 60 L 500 150 L 0 150 Z" fill="#a2c0bb" />
       </svg>
 
-      {/* Imagen lateral */}
+      {// Imagen lateral }
       <div className="left-panel">
         <img src={imagenLateral} alt="Imagen de Bienvenida" className="imagenLateral" />
       </div>
       
-      {/* Login */}
+      {// Login }
       <div className="right-panel">
         <img src={logoHome} alt="Logo" className="logoHome" />
         <h2>Bienvenido a Control de Garantías Gipsy</h2>
@@ -57,6 +58,7 @@ function WelcomePage() {
       </div>
     </div>
   );
+  */
 };
 
 export default WelcomePage;
