@@ -3,7 +3,6 @@ import '../../styles/base/welcome.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logoHome from '../../assets/IMG/Gipsy_imagotipo_color.png';
-import termsPDF from '../../assets/docs/NormativasGarantiasGipsy.pdf';
 
 function WelcomePage() {
   const navigate = useNavigate();
