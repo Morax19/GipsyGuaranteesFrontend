@@ -40,7 +40,7 @@ function WelcomePage() {
       </p>
 
       {/* Botón para ingresar */}
-      <input className="inputHome" type="submit" value="Ingresar" onClick={() => navigate('/login')}></input>
+      <input className="inputHome" type="submit" value="Ingresar" onClick={() => navigate('/user/login')}></input>
       <br /><br />
 
       {/* Link a Servicio Técnico */}
