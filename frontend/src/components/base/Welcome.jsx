@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import '../../styles/base/welcome.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,25 @@ import logoHome from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 function WelcomePage() {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(true);
+  const acceptBtnRef = useRef(null);
+  //const pdfUrl = 'https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/EdoiV6RFGuZGt8ahISYXjEwBXBlRLGO8t_1fxi2-WhVIqw?e=cxHwpY';
+  const pdfUrl = 'https://gipsymx-my.sharepoint.com/personal/desarrollo_grupogipsy_com/_layouts/15/embed.aspx?UniqueId=a45722da-1a45-46e6-b7c6-a12126178c4c'
+  useEffect(() => {
+    // Cuando el modal está abierto, evitar scroll de fondo y poner foco en el botón Aceptar
+    if (showModal) {
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      // esperar al próximo tick para asegurar que el ref esté montado
+      setTimeout(() => acceptBtnRef.current?.focus(), 0);
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }
+    // Asegurar restauración si se cierra
+    document.body.style.overflow = '';
+    return undefined;
+  }, [showModal]);
 
   return (
     <div className="containerHome">
@@ -23,18 +42,11 @@ function WelcomePage() {
       <img src={logoHome} alt="Logo" className="logoHome" />
       <h2>Bienvenido a Control de Garantías Gipsy</h2>
       
-      {/* Link a Términos y Condiciones */}
+      {/* Texto de Términos y Condiciones (ahora abre modal al entrar) */}
       <p>
         Conoce los
           <span>&nbsp;</span>
-          <a
-            href="https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/EdoiV6RFGuZGt8ahISYXjEwBXBlRLGO8t_1fxi2-WhVIqw?e=cxHwpY"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="conditions-link"
-          >
-            Términos y Condiciones
-          </a>
+          <span className="conditions-link">Términos y Condiciones</span>
           <span>&nbsp;</span>
         de las garantías Gipsy.
       </p>
@@ -49,6 +61,32 @@ function WelcomePage() {
           Servicio Técnico
         </Link>
       </div>
+      {/* Modal de Términos y Condiciones - aparece al ingresar y sólo se cierra con Aceptar */}
+      {showModal && (
+        <div className="terms-modal-overlay" role="dialog" aria-modal="true" aria-label="Términos y Condiciones">
+          <div className="terms-modal-content">
+            <h3>Términos y Condiciones</h3>
+            <div className="terms-modal-body">
+              <object data={pdfUrl} type="application/pdf" width="125%" height="100%">
+                {/* Fallback a iframe si object no es compatible */}
+                <iframe title="Términos y Condiciones" src={pdfUrl} width="100%" height="100%"></iframe>
+              </object>
+            </div>
+            <div className="terms-modal-footer">
+              <p className="acceptance-text">
+                Al hacer clic en "Aceptar", usted confirma que ha leído, comprendido y acepta la totalidad de los Términos y Condiciones de las garantías Gipsy descritos en este documento.
+              </p>
+              <button
+                ref={acceptBtnRef}
+                className="accept-button"
+                onClick={() => setShowModal(false)}
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
