@@ -151,6 +151,10 @@ body {
     background: #4a7b6f;
 }
 
+.accept-button:focus {
+    outline: none;
+}
+
 .conditions-link {
     font-size: 1em;
     font-weight: bold;
