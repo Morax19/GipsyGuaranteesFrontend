@@ -6,10 +6,22 @@ import logoHome from '../../assets/IMG/Gipsy_imagotipo_color.png';
 
 function WelcomePage() {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(true);
+  // Initialize modal visibility from localStorage so acceptance persists across visits
+  const [showModal, setShowModal] = useState(() => {
+    try {
+      const accepted = localStorage.getItem('gipsy_accepted_terms');
+      return accepted === 'true' ? false : true;
+    } catch (e) {
+      // If storage is unavailable, fall back to showing the modal 26660853
+      return true;
+    }
+  });
   const acceptBtnRef = useRef(null);
-  //const pdfUrl = 'https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/EdoiV6RFGuZGt8ahISYXjEwBXBlRLGO8t_1fxi2-WhVIqw?e=cxHwpY';
-  const pdfUrl = 'https://gipsymx-my.sharepoint.com/personal/desarrollo_grupogipsy_com/_layouts/15/embed.aspx?UniqueId=a45722da-1a45-46e6-b7c6-a12126178c4c'
+
+  //const pdfUrl = 'https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/EdoiV6RFGuZGt8ahISYXjEwBXP9VZ3oIOC3MW-FN-VbeTw?e=27yZ4f';
+  //const pdfUrl = 'https://gipsymx-my.sharepoint.com/personal/desarrollo_grupogipsy_com/_layouts/15/download.aspx?UniqueId=a45722da-1a45-46e6-b7c6-a12126178c4c'
+  const pdfUrl = "/NormativasGarantiasGipsy.pdf"
+
   useEffect(() => {
     // Cuando el modal está abierto, evitar scroll de fondo y poner foco en el botón Aceptar
     if (showModal) {
@@ -79,7 +91,14 @@ function WelcomePage() {
               <button
                 ref={acceptBtnRef}
                 className="accept-button"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  try {
+                    localStorage.setItem('gipsy_accepted_terms', 'true');
+                  } catch (e) {
+                    // ignore storage errors
+                  }
+                  setShowModal(false);
+                }}
               >
                 Aceptar
               </button>
