@@ -324,7 +324,7 @@ export default function Warranty() {
       warrantyData.append('RIF', formData.RIF);
     }
     else {
-      warrantyData.append('branchID', '');
+      warrantyData.append('branchID', null);
       warrantyData.append('RIFtype', '');
       warrantyData.append('RIF', '');
     }
