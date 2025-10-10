@@ -53,12 +53,19 @@ function WelcomePage() {
       {/* Logo Gipsy */}
       <img src={logoHome} alt="Logo" className="logoHome" />
       <h2>Bienvenido a Control de Garantías Gipsy</h2>
-      
-      {/* Texto de Términos y Condiciones (ahora abre modal al entrar) */}
+
+      {/* Link a Términos y Condiciones (también abre modal al entrar) */}
       <p>
         Conoce los
           <span>&nbsp;</span>
-          <span className="conditions-link">Términos y Condiciones</span>
+          <a
+            href="https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/EdoiV6RFGuZGt8ahISYXjEwBXBlRLGO8t_1fxi2-WhVIqw?e=cxHwpY"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="conditions-link"
+          >
+            Términos y Condiciones
+          </a>
           <span>&nbsp;</span>
         de las garantías Gipsy.
       </p>
