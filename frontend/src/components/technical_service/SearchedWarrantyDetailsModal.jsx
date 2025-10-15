@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/technical_service/warrantyDetailsModal.css';
 
 const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase }) => {
   
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!sessionStorage.getItem('session_token')) {
       alert('Por favor, inicie sesión para acceder a esta página.');
@@ -27,9 +29,10 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
   const validityStatus = isWarrantyValid(warranty.purchaseDate, usedCount) ? 'Válida' : 'No Válida';
   const canOpenCase = (usedCount < 2 && validityStatus === 'Válida' && (warranty.TechnicalServiceStatus === 'N/A' || warranty.TechnicalServiceStatus === 'Cerrado'));
 
-
   const handleOpenCaseClick = () => {
+    setLoading(true);
     onOpenCase(warranty);
+    setLoading(false);
     onClose();
   };
 
@@ -100,8 +103,8 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
 
           <div className="modal-footer" style={{ justifyContent: 'center' }}>
             {canOpenCase ? (
-              <button className="modal-button open-case-button" onClick={handleOpenCaseClick}>
-                Abrir Caso
+              <button className="modal-button open-case-button" disabled={loading} onClick={handleOpenCaseClick}>
+                {loading ? 'Abriendo...' : 'Abrir Caso'}
               </button>
             ) : (
               <span className="case-closed-message" style={{ textAlign: 'center' }}>

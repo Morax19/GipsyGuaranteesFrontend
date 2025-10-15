@@ -26,6 +26,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const [statusOptions, setStatusOptions] = useState([]);
   const [diagnosisOptions, setDiagnosisOptions] = useState([]);
   const [requiredChangeBox, setRequiredChangeBox] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchAllStatuses() {
@@ -92,31 +93,69 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
   const handleCheckboxChange = (e) => setRequiredChangeBox(e.target.checked);
 
   const handleCloseCase = async () => {
+    setLoading(true);
+
+    // Validaciones previas: status, diagnosis, action description y archivo (imagen/PDF)
+    if (!currentStatus || currentStatus.trim() === '') {
+      alert('El estado del caso es obligatorio para cerrar el caso.');
+      setLoading(false);
+      return;
+    }
+    if (!currentDiagnosis || currentDiagnosis.trim() === '') {
+      alert('La falla (diagnóstico) es obligatoria para cerrar el caso.');
+      setLoading(false);
+      return;
+    }
+    if (!actionDescription || actionDescription.trim() === '') {
+      alert('La descripción del diagnóstico/acción es obligatoria para cerrar el caso.');
+      setLoading(false);
+      return;
+    }
+
+    const imgInput = document.getElementById('diagnosticIMG');
+    const img = imgInput && imgInput.files && imgInput.files[0];
+    if (!img) {
+      alert('Por favor, adjunte una imagen o PDF del producto antes de cerrar el caso.');
+      setLoading(false);
+      return;
+    }
+
     const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
     const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
-    const img = document.getElementById("diagnosticIMG").files[0];
+
+    // Validar que se encontraron los objetos seleccionados (si se espera id en backend)
+    if (!selectedStatus) {
+      alert('El estado seleccionado no es válido. Por favor seleccione un estado existente.');
+      setLoading(false);
+      return;
+    }
+    if (!selectedDiagnosis) {
+      alert('La falla seleccionada no es válida. Por favor seleccione una falla existente.');
+      setLoading(false);
+      return;
+    }
 
     const technicalServiceCaseData = new FormData();
-    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber)
-    technicalServiceCaseData.append('statusID', selectedStatus)
-    technicalServiceCaseData.append('issueID', selectedDiagnosis.IssueId)
-    technicalServiceCaseData.append('issueResolutionDetails', actionDescription)
-    technicalServiceCaseData.append('diagnosticIMG', img)
-    technicalServiceCaseData.append('requiredChange', requiredChangeBox)
+    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber);
+    technicalServiceCaseData.append('statusID', selectedStatus.statusID);
+    technicalServiceCaseData.append('issueID', selectedDiagnosis.IssueId);
+    technicalServiceCaseData.append('issueResolutionDetails', actionDescription);
+    technicalServiceCaseData.append('diagnosticIMG', img);
+    technicalServiceCaseData.append('requiredChange', requiredChangeBox);
 
-    technicalServiceCaseData.append('Customer', warranty.Customer)
-    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID)
-    technicalServiceCaseData.append('TechnicalServiceEmail', email_address)
-    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress)
-    technicalServiceCaseData.append('StoreName', warranty.companyName)
-    technicalServiceCaseData.append('ProductName', warranty.Description)
-    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate)
-    technicalServiceCaseData.append('statusDescription', currentStatus)
-    technicalServiceCaseData.append('issueDescription', currentDiagnosis)
+    technicalServiceCaseData.append('Customer', warranty.Customer);
+    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID);
+    technicalServiceCaseData.append('TechnicalServiceEmail', email_address);
+    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress);
+    technicalServiceCaseData.append('StoreName', warranty.companyName);
+    technicalServiceCaseData.append('ProductName', warranty.Description);
+    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate);
+    technicalServiceCaseData.append('statusDescription', currentStatus);
+    technicalServiceCaseData.append('issueDescription', currentDiagnosis);
 
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/api/technicalServiceCloseCase/`, // Replace with your actual endpoint
+        `${apiUrl}/api/technicalServiceCloseCase/`,
         {
           method: 'POST',
           body: technicalServiceCaseData,
@@ -126,55 +165,95 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
       if (response.ok) {
         // Update local state only if backend update succeeded
         const updatedWarranty = {
-          //Data para cerrar el caso
           ...warranty,
           statusDescription: 'Cerrado',
           issueDescription: currentDiagnosis,
           issueResolutionDetails: actionDescription,
-          closedDate: new Date().toISOString().split('T')[0],    
+          closedDate: new Date().toISOString().split('T')[0],
         };
-        onUpdateWarranty(updatedWarranty); // Ensure this updates the parent list
+        onUpdateWarranty(updatedWarranty);
+        setLoading(false);
         onClose();
         alert('Caso cerrado exitosamente para la garantía: ' + warranty.warrantyID);
         console.log('Caso Cerrado:', updatedWarranty);
       } else {
-        alert(data.warning);
+        alert(data.warning || 'No se pudo cerrar el caso.');
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       alert('Error de conexión con el servidor');
       console.log(`Error de conexión con el servidor: ${error}`);
     }
   };
 
   const handleUpdateCase = async () => {
+    setLoading(true);
+
+    // Validaciones previas: status, diagnosis, action description
+    if (!currentStatus || currentStatus.trim() === '') {
+      alert('El estado del caso es obligatorio para actualizar el caso.');
+      setLoading(false);
+      return;
+    }
+    if (!currentDiagnosis || currentDiagnosis.trim() === '') {
+      alert('La falla (diagnóstico) es obligatoria para actualizar el caso.');
+      setLoading(false);
+      return;
+    }
+    if (!actionDescription || actionDescription.trim() === '') {
+      alert('La descripción del diagnóstico/acción es obligatoria para actualizar el caso.');
+      setLoading(false);
+      return;
+    }
+
     // Find the selected status and diagnosis objects
     const selectedStatus = statusOptions.find(opt => opt.statusDescription === currentStatus);
     const selectedDiagnosis = diagnosisOptions.find(opt => opt.IssueDescription === currentDiagnosis);
-    const img = document.getElementById("diagnosticIMG").files[0];
+    const imgInput = document.getElementById('diagnosticIMG');
+    const img = imgInput && imgInput.files && imgInput.files[0];
+
+    // Validate selection objects
+    if (!selectedStatus) {
+      alert('El estado seleccionado no es válido. Por favor seleccione un estado existente.');
+      setLoading(false);
+      return;
+    }
+    if (!selectedDiagnosis) {
+      alert('La falla seleccionada no es válida. Por favor seleccione una falla existente.');
+      setLoading(false);
+      return;
+    }
+
+    // Validación de imagen: usar mismo mensaje que en handleCloseCase
+    if (!img) {
+      alert('Por favor, adjunte una imagen o PDF del producto antes de actualizar el caso.');
+      setLoading(false);
+      return;
+    }
 
     const technicalServiceCaseData = new FormData();
-    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber)
-    technicalServiceCaseData.append('statusID', selectedStatus ? selectedStatus.statusID : null)
-    technicalServiceCaseData.append('issueID', selectedDiagnosis ? selectedDiagnosis.IssueId : null)
-    technicalServiceCaseData.append('issueResolutionDetails', actionDescription)
-    technicalServiceCaseData.append('diagnosticIMG', img)
+    technicalServiceCaseData.append('CaseNumber', warranty.CaseNumber);
+    technicalServiceCaseData.append('statusID', selectedStatus.statusID);
+    technicalServiceCaseData.append('issueID', selectedDiagnosis.IssueId);
+    technicalServiceCaseData.append('issueResolutionDetails', actionDescription);
+    technicalServiceCaseData.append('diagnosticIMG', img);
 
-    technicalServiceCaseData.append('Customer', warranty.Customer)
-    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID)
-    technicalServiceCaseData.append('TechnicalServiceEmail', email_address)
-    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress)
-    technicalServiceCaseData.append('StoreName', warranty.companyName)
-    technicalServiceCaseData.append('ProductName', warranty.Description)
-    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate)
-    technicalServiceCaseData.append('statusDescription', currentStatus)
-    technicalServiceCaseData.append('issueDescription', currentDiagnosis)
+    technicalServiceCaseData.append('Customer', warranty.Customer);
+    technicalServiceCaseData.append('WarrantyID', warranty.warrantyID);
+    technicalServiceCaseData.append('TechnicalServiceEmail', email_address);
+    technicalServiceCaseData.append('CustomerEmail', warranty.EmailAddress);
+    technicalServiceCaseData.append('StoreName', warranty.companyName);
+    technicalServiceCaseData.append('ProductName', warranty.Description);
+    technicalServiceCaseData.append('ReceptionDate', warranty.receptionDate);
+    technicalServiceCaseData.append('statusDescription', currentStatus);
+    technicalServiceCaseData.append('issueDescription', currentDiagnosis);
 
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/technicalServiceUpdateCase/`,
         {
           method: 'POST',
-          //headers: { 'Content-Type': 'application/json' },
           body: technicalServiceCaseData,
         }
       );
@@ -188,17 +267,19 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           issueResolutionDetails: actionDescription,
         };
         onUpdateWarranty(updatedWarranty);
+        setLoading(false);
         onClose();
         alert('Caso actualizado para la garantía: ' + warranty.warrantyID);
         console.log('Caso Actualizado:', updatedWarranty);
       } else {
-        console.log(data.error)
-        alert(data.warning);
+        console.log(data.error);
+        alert(data.warning || 'No se pudo actualizar el caso.');
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
       alert(`Error de conexión con el servidor ${error}`);
-      
     }
   };
 
@@ -349,11 +430,15 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           {warranty.s !== 'Cerrado' && warranty.statusDescription !== 'Finalizado' ? (
             <>
               {currentStatus !== 'Cerrado' && (
-                <button className="modal-button update-button" onClick={handleUpdateCase}>Actualizar Caso</button>
+                <button className="modal-button update-button" disabled={loading} onClick={handleUpdateCase}>
+                  {loading ? 'Actualizando...' : 'Actualizar Caso'}
+                </button>
               )}
               
               {warranty.statusDescription !== 'Cerrado' && currentStatus === 'Cerrado' && (
-                <button className="modal-button close-case-button" onClick={handleCloseCase}>Cerrar Caso</button>
+                <button className="modal-button close-case-button" disabled={loading} onClick={handleCloseCase}>
+                  {loading ? 'Cerrando...' : 'Cerrar Caso'}
+                </button>
               )}
             </>
           ) : (

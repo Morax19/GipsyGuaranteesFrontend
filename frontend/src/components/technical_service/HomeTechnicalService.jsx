@@ -24,8 +24,10 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWarranty, setFoundWarranty] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = () => {
+    setLoading(true);
     if (searchTerm.trim()) {
       async function fetchWarrantyById() {
         try {
@@ -41,10 +43,12 @@ const Home = () => {
           if (response.ok) {
             const data = await response.json();
             setFoundWarranty(data);
+            setLoading(false);
             setIsModalOpen(true);
           } else {
             alert('Garantía no encontrada.');
             setFoundWarranty(null);
+            setLoading(false);
             setIsModalOpen(false);
           }
         } catch {
@@ -54,6 +58,7 @@ const Home = () => {
       fetchWarrantyById();
     } else {
       alert('Por favor, ingrese un código de garantía.');
+      setLoading(false);
     }
   };
 
@@ -127,7 +132,9 @@ const Home = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
             />
-            <button className="search-button-home" onClick={handleSearch}>Buscar</button>
+            <button className="search-button-home" onClick={handleSearch} disabled={loading}>
+              {loading ? 'Buscando...' : 'Buscar'}
+            </button>
           </div>
         </div>
       </div>
