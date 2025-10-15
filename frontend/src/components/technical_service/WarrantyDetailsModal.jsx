@@ -238,7 +238,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
     technicalServiceCaseData.append('issueID', selectedDiagnosis.IssueId);
     technicalServiceCaseData.append('issueResolutionDetails', actionDescription);
     technicalServiceCaseData.append('diagnosticIMG', img);
-
+    
     technicalServiceCaseData.append('Customer', warranty.Customer);
     technicalServiceCaseData.append('WarrantyID', warranty.warrantyID);
     technicalServiceCaseData.append('TechnicalServiceEmail', email_address);
