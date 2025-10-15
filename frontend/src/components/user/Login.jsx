@@ -22,6 +22,7 @@ function Login() {
   const [EmailAddress, setEmailAddress] = useState('');
   const [Password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -30,6 +31,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(`${apiUrl}/api/userLogin/`, {
         method: 'POST',
@@ -50,6 +52,8 @@ function Login() {
       }
     } catch (error) {
       alert('Error connecting to server');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +91,9 @@ function Login() {
           </button>
         </div>
         <br />
-        <button className="submit-button" type="submit">Iniciar Sesión</button>
+        <button className="submit-button" type="submit" disabled={loading}>
+          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+        </button>
       </form>
       <p>
         ¿No tienes una cuenta? <a href="#" onClick={e => { e.preventDefault(); navigate('/user/register/'); }}>Regístrate</a>

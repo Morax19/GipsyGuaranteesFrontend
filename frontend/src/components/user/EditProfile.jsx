@@ -33,6 +33,7 @@ const EditProfile = () => {
     Address: '',
     Zip: ''
   });
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -95,6 +96,7 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setMessage('');
     // Concatenate prefix and number for backend
     const submitForm = {
@@ -116,6 +118,8 @@ const EditProfile = () => {
       }
     } catch (error) {
       setMessage('Error de conexión con el servidor.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -207,7 +211,9 @@ const EditProfile = () => {
             onChange={handleChange}
           />
           <div className="ButtonGroupEditProfile">
-            <button type="submit">Guardar cambios</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Cargando...' : 'Guardar cambios'}
+            </button>
           </div>
         </form>
         {message && <p>{message}</p>}

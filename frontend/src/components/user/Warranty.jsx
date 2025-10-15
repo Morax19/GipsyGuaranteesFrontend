@@ -65,6 +65,7 @@ export default function Warranty() {
   const searchDebounceRef = useRef(null);
   const [editableField, setEditableField] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseInfoModal = () => {
     setShowInfoModal(false); 
@@ -309,6 +310,7 @@ export default function Warranty() {
   // Submit warranty registration
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     
     if (!validateInvoiceNumber(formData.invoiceNumber)) {
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
@@ -368,6 +370,8 @@ export default function Warranty() {
       }
     } catch {
       console.error('Error de conexión con el servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -643,7 +647,9 @@ export default function Warranty() {
             Solo se aceptan archivos JPG, PNG, PDF
           </small>
 
-          <button className="inputWarranty" type="submit">Guardar Garantía</button>
+          <button className="inputWarranty" type="submit" disabled={loading}>
+            {loading ? 'Cargando...' : 'Guardar Garantía'}
+          </button>
         </form>
       </div>
     </LayoutBase>

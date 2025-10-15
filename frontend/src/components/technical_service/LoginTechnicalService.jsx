@@ -22,6 +22,7 @@ function LoginTechnicalService() {
   const [EmailAddress, setEmailAddress] = useState('');
   const [Password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -30,6 +31,7 @@ function LoginTechnicalService() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(`${apiUrl}/api/technicalServiceLogin/`, {
         method: 'POST',
@@ -50,6 +52,8 @@ function LoginTechnicalService() {
       }
     } catch (error) {
       alert(`Error connecting to server: ${error}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +91,9 @@ function LoginTechnicalService() {
           </button>
         </div>
         <br />
-        <button className="submit-button-techServ" type="submit">Iniciar Sesión</button>
+        <button className="submit-button-techServ" type="submit" disabled={loading}>
+          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+        </button>
       </form>
       <p>
         <a href="#" onClick={e => { e.preventDefault(); navigate('/technical-service/forgot-password/'); }}>¿Olvidaste tu contraseña?</a>

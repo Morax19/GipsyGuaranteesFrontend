@@ -21,6 +21,7 @@ function LoginAdmin() {
   const [EmailAddress, setEmailAddress] = useState('');
   const [Password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -29,6 +30,7 @@ function LoginAdmin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(`${apiUrl}/api/adminLogin/`, {
         method: 'POST',
@@ -48,6 +50,8 @@ function LoginAdmin() {
       }
     } catch (error) {
       alert('Error connecting to server');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +89,9 @@ function LoginAdmin() {
           </button>
         </div>
         <br />
-        <button className="submit-button-admin" type="submit">Iniciar Sesión</button>
+        <button className="submit-button-admin" type="submit" disabled={loading}>
+          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+        </button>
       </form>
       
       <p>

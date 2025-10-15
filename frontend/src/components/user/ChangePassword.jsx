@@ -27,6 +27,7 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [showNewPasswordConfirmation, setShowNewPasswordConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -34,6 +35,7 @@ const ChangePassword = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setMessage('');
 
     if (!user_id) {
@@ -72,6 +74,8 @@ const ChangePassword = () => {
       }
     } catch {
       setMessage('Error de conexión con el servidor.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -177,7 +181,9 @@ const ChangePassword = () => {
             </button>
           </div>
           <div className="ButtonGroupChangePassword">
-            <button className="savePassword-button" type="submit">Guardar contraseña</button>
+            <button className="savePassword-button" type="submit" disabled={loading}>
+              {loading ? 'Cargando...' : 'Guardar contraseña'}
+            </button>
           </div>
         </form>
         {message && <p>{message}</p>}
