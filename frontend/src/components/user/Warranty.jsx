@@ -4,6 +4,7 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import { jwtDecode } from 'jwt-decode';
 import LayoutBase from '../base/LayoutBaseUser';
+import InfoModal from './InfoModal';
 import '../../styles/user/warranty.css';
 
 const isDevelopment = import.meta.env.MODE === 'development';
@@ -63,6 +64,11 @@ export default function Warranty() {
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
   const [editableField, setEditableField] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(true);
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false); 
+  };
 
   // Normalizer: trim, collapse spaces, remove diacritics, lowercase
   const normalizeText = (s = '') =>
@@ -367,6 +373,11 @@ export default function Warranty() {
 
   return (
     <LayoutBase activePage="warranty">
+       <InfoModal 
+        isOpen={showInfoModal} 
+        onClose={handleCloseInfoModal}
+      />
+
       <div className="cardContainerWarranty">
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
