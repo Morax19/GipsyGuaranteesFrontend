@@ -49,6 +49,7 @@ body.barraCurvaServTec::after {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: 30px;
     width: 120%; 
@@ -75,6 +76,32 @@ body.barraCurvaServTec::after {
     flex: 1;
     font-style: italic;
     text-align: right;
+}
+
+.whatsapp-icon-container {
+    flex-shrink: 0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.whatsapp-logo {
+    width: 40px; 
+    height: 40px;
+    transition: transform 0.2s ease;
+}
+
+.whatsapp-logo:hover {
+    transform: scale(1.1);
+}
+
+.contact-email a.email-link {
+    text-decoration: none; 
+    color: #324bab;
+    font-weight: 500;
+    margin-left: 5px;
+    transition: color 0.2s ease;
 }
 
 .branch-card-title {
