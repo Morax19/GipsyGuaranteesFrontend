@@ -8,6 +8,7 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 const FailsFormModal = ({ isOpen, onClose, onSave, issueToEdit }) => {
   const [issueDescription, setIssueDescription] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (issueToEdit) {
@@ -28,8 +29,11 @@ const FailsFormModal = ({ isOpen, onClose, onSave, issueToEdit }) => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
+
     if (!issueDescription) {
       alert('La descripción de la falla no puede estar vacía.');
+      setLoading(false);
       return;
     }
 
@@ -58,12 +62,15 @@ const FailsFormModal = ({ isOpen, onClose, onSave, issueToEdit }) => {
       if (response.ok) {
         alert(isEditMode ? 'Falla actualizada correctamente.' : 'Falla creada correctamente.');
         onSave(submitData, isEditMode); // Llama a la función onSave en el componente padre
+        setLoading(false);
         onClose();
       } else {
+        setLoading(false);
         const data = await response.json();
         alert(data.warning || 'Error al guardar la falla.');
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error de conexión con el servidor:', error);
       alert('Error de conexión con el servidor.');
     }
@@ -107,8 +114,8 @@ const FailsFormModal = ({ isOpen, onClose, onSave, issueToEdit }) => {
           <button className="modal-button-user cancel-button-user" onClick={onClose}>
             Cancelar
           </button>
-          <button className="modal-button-user save-button-user" onClick={handleSave}>
-            {isEditMode ? 'Guardar Cambios' : 'Agregar Falla'}
+          <button className="modal-button-user save-button-user" disabled={loading} onClick={handleSave}>
+            {isEditMode ? (loading ? 'Guardando...' : 'Guardar Cambios') : (loading ? 'Agregando...' : 'Agregar Falla')}
           </button>
         </div>
       </div>

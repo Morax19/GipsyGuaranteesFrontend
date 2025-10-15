@@ -9,6 +9,7 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers, onReload }) => {
   
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!sessionStorage.getItem('session_token')) {
       alert('Por favor, inicie sesión para acceder a esta página.');
@@ -27,8 +28,10 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
     address: '',
     branchDescription: '',
   });
+  const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
+
   // Local customer states for autocomplete
   const [customersList, setCustomersList] = useState([]);
   const [customerQuery, setCustomerQuery] = useState('');
@@ -38,6 +41,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
   const inputRef = useRef(null);
+
   // timestamp (ms) until which showing suggestions should be suppressed (legacy - will remove uses)
   const suppressShowUntilRef = useRef(0);
   // wrapper ref to detect outside clicks
@@ -162,8 +166,11 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
   };
 
   const handleSave = () => {
+    setLoading(true);
+
     if (!formData.customerID || !formData.RIFtype || !formData.RIF || !formData.companyName || !formData.address) {
       alert('Por favor, complete todos los campos obligatorios (ID de Cliente, Tipo RIF, RIF, Nombre de Compañía, Dirección).');
+      setLoading(false);
       return;
     }
 
@@ -194,12 +201,16 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
         if (response.ok) {
           alert(isEditMode ? 'Sucursal actualizada correctamente.' : 'Sucursal creada correctamente.');
           onSave(data, isEditMode);
+          setLoading(false);
           onClose();
           onReload();
         } else {
+          setLoading(false);
           alert(data.warning);
         }
-      } catch {
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
         alert('Error de conexión con el servidor');
       }
     })();
@@ -409,8 +420,8 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
 
         <div className="modal-footer-user">
           <button className="modal-button-user cancel-button-user" onClick={onClose}>Cancelar</button>
-          <button className="modal-button-user save-button-user" onClick={handleSave}>
-            {isEditMode ? 'Guardar Cambios' : 'Agregar Sucursal'}
+          <button className="modal-button-user save-button-user" disabled={loading} onClick={handleSave}>
+            {isEditMode ? (loading ? 'Guardando...' : 'Guardar Cambios') : (loading ? 'Agregando...' : 'Agregar Sucursal')}
           </button>
         </div>
       </div>

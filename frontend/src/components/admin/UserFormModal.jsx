@@ -10,6 +10,7 @@ const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.
 const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload }) => {
   
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (!sessionStorage.getItem('session_token')) {
       alert('Por favor, inicie sesión para acceder a esta página.');
@@ -35,6 +36,7 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userToEdit) {
@@ -126,8 +128,11 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
   };
 
   const handleSave = async () => {
+    setLoading(true);
+
     if (!formData.FirstName || !formData.LastName || !formData.NationalIDtype || !formData.NationalID || !formData.EmailAddress || !formData.Phonetype || !formData.PhoneNumber || !formData.Password || !formData.roleID) {
       alert('Por favor, complete todos los campos obligatorios.');
+      setLoading(false);
       return;
     }
     
@@ -157,17 +162,21 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
           if (response.ok) {
             alert(isEditMode ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
             onSave(formData, isEditMode);
+            setLoading(false);
             onClose();
             onReload();
           } else {
+            setLoading(false);
             alert(data.warning);
           }
         } else {
+          setLoading(false);
           const text = await response.text();
           console.error('Unexpected response format:', text);
           alert('Error inesperado del servidor. Por favor, inténtelo de nuevo.');
         }
       } catch (error) {
+        setLoading(false);
         console.error(error); // Prints the error object
         alert('Error de conexión con el servidor');
       }
@@ -372,8 +381,8 @@ const UserFormModal = ({ isOpen, onClose, userToEdit, onSave, roles, onReload })
 
         <div className="modal-footer-user">
           <button className="modal-button-user cancel-button-user" onClick={onClose}>Cancelar</button>
-          <button className="modal-button-user save-button-user" onClick={handleSave}>
-            {isEditMode ? 'Guardar Cambios' : 'Agregar Usuario'}
+          <button className="modal-button-user save-button-user" disabled={loading} onClick={handleSave}>
+            {isEditMode ? (loading ? 'Guardando...' : 'Guardar Cambios') : (loading ? 'Agregando...' : 'Agregar Usuario')}
           </button>
         </div>
       </div>
