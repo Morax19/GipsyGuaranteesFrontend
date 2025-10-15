@@ -51,13 +51,23 @@ const WarrantyHistory = () => {
   }, []);
 
 
-  const getWarrantyStatus = (fechaCompra) => {
-    const purchaseDate = new Date(fechaCompra);
+  // Accept the whole warranty object so we can inspect brand and purchaseDate
+  const getWarrantyStatus = (warranty) => {
+    const purchaseDate = new Date(warranty.purchaseDate);
     const expirationDate = new Date(purchaseDate);
-    expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-    
+
+    // Determine brand (handle variations in property names). If brand matches certain
+    // manufacturers, warranty is 2 years, otherwise 1 year.
+    const brand = warranty.itemBrand || warranty.brand || warranty.ProductBrand || '';
+    const twoYearBrands = ['Remington', 'Black & Decker'];
+    if (twoYearBrands.includes(brand)) {
+      expirationDate.setFullYear(expirationDate.getFullYear() + 2);
+    } else {
+      expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+    }
+
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
     expirationDate.setHours(0, 0, 0, 0);
 
     const timeLeftMs = expirationDate.getTime() - today.getTime();
@@ -73,13 +83,13 @@ const WarrantyHistory = () => {
 
     if (filterStatus) {
       currentHistoryWarranties = currentHistoryWarranties.filter(warranty => {
-        const { status } = getWarrantyStatus(warranty.purchaseDate);
+        const { status } = getWarrantyStatus(warranty);
         return status === filterStatus;
       });
     }
 
-    // Ordenar de más reciente a más antigua
-    currentHistoryWarranties.sort((a, b) => new Date(b.fechaCompra) - new Date(a.fechaCompra)); 
+    // Ordenar de más reciente a más antigua (use purchaseDate from the API)
+    currentHistoryWarranties.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
 
     setFilteredHistoryWarranties(currentHistoryWarranties);
   }, [filterStatus, historyWarranties]);
@@ -120,7 +130,7 @@ const WarrantyHistory = () => {
               </thead>
               <tbody>
                 {filteredHistoryWarranties.map(warranty => {
-                  const { expirationDate, daysLeft, status } = getWarrantyStatus(warranty.purchaseDate);
+                  const { expirationDate, daysLeft, status } = getWarrantyStatus(warranty);
                   return (
                     <tr key={warranty.WarrantyNumber}>
                       <td>{warranty.WarrantyNumber}</td>

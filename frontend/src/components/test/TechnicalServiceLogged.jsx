@@ -5,7 +5,7 @@ import LayoutBase from '../base/LayoutBaseUser';
 const sucursalesData = [
   {
     id: 1,
-    nombreEmpresa: 'Call Center - Garantías Gipsy',
+    nombreEmpresa: 'Call Center - Garantías',
     telefono: '+58 422-6247117',
     diaAtencion: 'Lunes a Viernes',
     horarioAtencion: '9:00 AM - 5:00 PM'

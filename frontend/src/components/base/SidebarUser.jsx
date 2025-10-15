@@ -12,7 +12,7 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
       <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarUser">
         <div className="logo">
             <Link to="/user/home" onClick={closeSidebar}>
-              <img src={logo} alt="Gipsy's logo" />
+              <img src={logo} alt="Logo" />
             </Link>
         </div>
         <div className="containerSideBar">

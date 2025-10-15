@@ -21,7 +21,7 @@ const HomeAdmin = () => {
       <div className="content">
         <div className="title-container">
           <div className="title-center">
-            <h2>Control de Garantías Gipsy</h2>
+            <h2>Control de Garantías</h2>
           </div>
           <div className="title-center">
             <h3>Bienvenido(a), Administrador(a): {user_first_name}</h3>

@@ -111,7 +111,7 @@ const Home = () => {
     <LayoutBaseTechServ activePage="home">
       <div className="home-tech-container">
         <div className="greeting-section">
-          <h2>Servicio Técnico de Garantías Gipsy</h2>
+          <h2>Servicio Técnico de Garantías</h2>
           <h3>Bienvenido(a), { user_first_name }</h3>
         </div>
 

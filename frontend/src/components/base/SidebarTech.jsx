@@ -12,7 +12,7 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
       <div className={`sidebar ${sidebarActive ? 'active' : ''}`} id="sidebarTech">
         <div className="logo">
             <Link to="/technical-service/home" onClick={closeSidebar}>
-              <img src={logo} alt="Gipsy's logo" />
+              <img src={logo} alt="Logo" />
             </Link>
         </div>
         <div className="containerSideBar">

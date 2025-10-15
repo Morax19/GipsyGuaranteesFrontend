@@ -14,13 +14,13 @@ const LayoutBaseUser = ({ userFirstName, activePage, children }) => {
     // Clear session token and accepted terms, dispatch logout event so other components can react
     try {
       sessionStorage.removeItem('session_token');
-      sessionStorage.removeItem('gipsy_accepted_terms');
+      sessionStorage.removeItem('accepted_terms');
     } catch (e) {
       // ignore storage errors
     }
     // notify other parts of the app
     try {
-      window.dispatchEvent(new Event('gipsy_logout'));
+      window.dispatchEvent(new Event('guarantees_logout'));
     } catch (e) {
       // ignore
     }

@@ -19,9 +19,9 @@ function WelcomePage() {
         <path d="M 0 20 C 80 110 160 80 240 80 C 320 40 420 80 500 60 L 500 150 L 0 150 Z" fill="#619990" />
         <path d="M 0 60 C 150 160 330 -30 500 60 L 500 150 L 0 150 Z" fill="#a2c0bb" />
       </svg>
-      {/* Logo Gipsy */}
+      {/* Logo */}
       <img src={logoHome} alt="Logo" className="logoHome" />
-      <h2>Bienvenido a Control de Garantías Gipsy</h2>
+      <h2>Bienvenido a Control de Garantías</h2>
 
       {/* Link a Términos y Condiciones (también abre modal al entrar) */}
       <p>
@@ -36,7 +36,7 @@ function WelcomePage() {
             Términos y Condiciones
           </a>
           <span>&nbsp;</span>
-        de las garantías Gipsy.
+        de nuestras garantías.
       </p>
 
       {/* Botón para ingresar */}
@@ -49,7 +49,6 @@ function WelcomePage() {
           Servicio Técnico
         </Link>
       </div>
-      {/* Terms modal removed — handled in Home.jsx */}
     </div>
   );
 };

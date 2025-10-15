@@ -12,7 +12,7 @@ const Home = () => {
   const [showModal, setShowModal] = useState(() => {
     try {
       // Use sessionStorage so acceptance lasts only for the browser tab/session
-      const accepted = sessionStorage.getItem('gipsy_accepted_terms');
+      const accepted = sessionStorage.getItem('accepted_terms');
       return accepted === 'true' ? false : true;
     } catch (e) {
       // If storage is unavailable, fall back to showing the modal 26660853
@@ -20,7 +20,7 @@ const Home = () => {
     }
   });
   const acceptBtnRef = useRef(null);
-  const pdfUrl = "/NormativasGarantiasGipsy.pdf"
+  const pdfUrl = "/NormativasGarantias.pdf"
 
   // Keep the page from scrolling and focus the Accept button while modal is open
   useEffect(() => {
@@ -55,7 +55,7 @@ const Home = () => {
       <div className="content">
         <div className="title-container">
           <div className="title-center">
-            <h2>Control de Garantías Gipsy</h2>
+            <h2>Control de Garantías</h2>
           </div>
           <div className="title-center">
             <h3>Bienvenido(a), {user_first_name}</h3>
@@ -89,14 +89,14 @@ const Home = () => {
             </div>
             <div className="terms-modal-footer">
               <p className="acceptance-text">
-                Al hacer clic en "Aceptar", usted confirma que ha leído, comprendido y acepta la totalidad de los Términos y Condiciones de las garantías Gipsy descritos en este documento.
+                Al hacer clic en "Aceptar", usted confirma que ha leído, comprendido y acepta la totalidad de los Términos y Condiciones de las garantías descritos en este documento.
               </p>
               <button
                 ref={acceptBtnRef}
                 className="accept-button"
                 onClick={() => {
                   try {
-                    sessionStorage.setItem('gipsy_accepted_terms', 'true');
+                    sessionStorage.setItem('accepted_terms', 'true');
                   } catch (e) {
                     // ignore storage errors
                   }

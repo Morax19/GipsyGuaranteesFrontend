@@ -32,7 +32,7 @@ const LayoutBaseAdmin = ({ userFirstName, activePage, children }) => {
           </div>
           <div className="logoMobile">
             <Link to="/homeSeller">
-              <img src="/IMG/Gipsy_imagotipo_color.png" alt="Gipsy's logo" />
+              <img src="/IMG/Gipsy_imagotipo_color.png" alt="Logo" />
             </Link>
           </div>
           <div className="user-info">

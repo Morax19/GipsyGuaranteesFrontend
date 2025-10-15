@@ -83,7 +83,7 @@ function Register() {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        alert('Se ha registrado exitosamente en Gipsy Garantías. Por favor, inicie sesión.');
+        alert('Se ha registrado exitosamente en el Servicio de Garantías. Por favor, inicie sesión.');
         alert(data.message);
         navigate('/user/login'); // Redirect to login page
       } else {

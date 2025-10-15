@@ -618,7 +618,7 @@ export default function Warranty() {
           />
 
           <label htmlFor="invoiceIMG">
-            Factura del producto <span className="required-asterisk">*</span>
+            Subir imagen de la factura de la compra <span className="required-asterisk">*</span>
             </label>
           <input
             type="file"
