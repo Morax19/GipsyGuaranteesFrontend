@@ -39,6 +39,7 @@ function Register() {
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -55,13 +56,16 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setMessage('');
     if (form.Password !== form.confirmPassword) {
       alert('Las contraseñas deben coincidir.');
+      setLoading(false);
       return;
     }
     if (!emailRegex.test(form.EmailAddress)) {
         setMessage('El formato del correo electrónico no es válido. Por favor, ingresar una dirección usuario@dominio.com');
+        setLoading(false);
         return;
     }
 
@@ -84,13 +88,15 @@ function Register() {
       if (response.ok) {
         setMessage(data.message);
         alert('Se ha registrado exitosamente en el Servicio de Garantías. Por favor, inicie sesión.');
+        setLoading(false);
         alert(data.message);
         navigate('/user/login'); // Redirect to login page
       } else {
+        setLoading(false);
         setMessage(data.warning);
       }
     } catch (error) {
-      console.log(apiUrl);
+      setLoading(false);
       setMessage('Error connecting to server: ' + error.message);
       console.error('Error during registration:', error);
     }
@@ -225,7 +231,9 @@ function Register() {
           </button>
         </div>
         <br />
-        <button className="register-button" type="submit">Registrarse</button>
+        <button className="register-button" type="submit" disabled={loading}>
+          {loading ? "Registrando..." : "Registrarse"}
+        </button>
       </form>
       {message && <p>{message}</p>}
     </div>
