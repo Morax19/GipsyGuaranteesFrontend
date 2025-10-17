@@ -25,11 +25,7 @@ const EditProfile = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      navigate('/');
-      return;
-    } else {
-      fetchWithAuth(`${apiUrl}/api/getCustomerByUserID/?userID=${user_id}`)
+    fetchWithAuth(`${apiUrl}/api/getCustomerByUserID/?userID=${user_id}`)
         .then(res => res.json())
         .then(data => {
           let prefix = '';
@@ -75,8 +71,7 @@ const EditProfile = () => {
             Zip: ''
           })
         );
-    }
-  }, [navigate, user_id]);
+    }, [user_id]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
