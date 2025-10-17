@@ -2,12 +2,24 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
+let hasShownNoTokenAlert = false;
+let hasShownUnauthorizedAlert = false;
+
 const ProtectedRoute = ({ children, requiredRole }) => {
   const token = sessionStorage.getItem('session_token');
 
+  // Reset guards when a token exists (user successfully logged in)
+  if (token) {
+    hasShownNoTokenAlert = false;
+    hasShownUnauthorizedAlert = false;
+  }
+
   if (!token) {
     // Redirect to the login page if there's no token
-    alert('Por favor, inicie sesión para acceder a esta página.');
+    if (!hasShownNoTokenAlert) {
+      hasShownNoTokenAlert = true;
+      alert('Por favor, inicie sesión para acceder a esta página.');
+    }
     return <Navigate to="/" replace />;
   }
 
@@ -15,12 +27,14 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   const userRole = decodedToken.role;
 
   if (requiredRole && userRole !== requiredRole && userRole !== 'Administrador') {
-    alert(`No está autorizado para ver esta página`)
+    if (!hasShownUnauthorizedAlert) {
+      hasShownUnauthorizedAlert = true;
+      alert('No está autorizado para ver esta página');
+    }
     sessionStorage.removeItem('session_token');
     return <Navigate to="/" replace />;
   }
 
-  // Render the child components (the protected page) if a token exists
   return children;
 };
 
