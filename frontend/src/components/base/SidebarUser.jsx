@@ -62,21 +62,21 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
                 <Link to="/user/change-password" className="optionLink" onClick={closeSidebar}>Cambiar Contraseña</Link>
               </div>
             </li>
-            <li>
-              {isAdmin && (
+            {isAdmin && (
               <>
-                <li>
-                  <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                <li className='navMenu'>
+                  <div className={`optionContainer ${isActive('home') ? '' : ''}`}>
                     <Link to="/technical-service/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Servicio Técnico</Link>
                   </div>
                 </li>
                 <li>
-                  <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                  <div className={`optionContainer ${isActive('home') ? '' : ''}`}>
                     <Link to="/admin/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Administrador</Link>
                   </div>
                 </li>
               </>
             )}
+            <li>
               {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
                 <Link to="/" className="optionLink" onClick={onLogout}>Cerrar Sesión</Link>

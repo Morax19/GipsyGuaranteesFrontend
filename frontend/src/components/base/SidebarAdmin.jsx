@@ -46,12 +46,12 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => 
           </ul>
           <ul className="bottomMenu">
             <li>
-              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+              <div className={`optionContainer ${isActive('home') ? '' : ''}`}>
                 <Link to="/user/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Usuario</Link>
               </div>
             </li>
             <li>
-              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+              <div className={`optionContainer ${isActive('home') ? '' : ''}`}>
                 <Link to="/technical-service/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Servicio Técnico</Link>
               </div>
             </li>
