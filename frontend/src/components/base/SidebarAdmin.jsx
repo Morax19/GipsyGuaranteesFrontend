@@ -42,8 +42,19 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => 
                 <a href="https://app.powerbi.com/groups/me/reports/16c30b6d-ce45-4692-ba22-5cb0e9cbca3b/327f1368f65acaa57287?ctid=e28fcd45-30d5-4919-b266-27bca9760759&experience=power-bi&chromeless=1" className="optionLink" onClick={closeSidebar} target='_blank'>Reporte Garantías</a>
               </div>
             </li>
+            
           </ul>
           <ul className="bottomMenu">
+            <li>
+              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                <Link to="/user/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Usuario</Link>
+              </div>
+            </li>
+            <li>
+              <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                <Link to="/technical-service/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Servicio Técnico</Link>
+              </div>
+            </li>
             <li>
               {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>

@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/base/menu.css';
+import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import logo from '../../assets/IMG/Gipsy_imagotipo_medioBlanco.png'
 
 const SidebarTech = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
   const isActive = (page) => activePage === page;
+
+  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
+  const isAdmin = role === 'Administrador';
 
   return (
     <>
@@ -29,8 +33,22 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
             </li>
           </ul>
           <ul className="bottomMenu">
+            {isAdmin && (
+              <>
+                <li>
+                  <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                    <Link to="/user/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Usuario</Link>
+                  </div>
+                </li>
+                <li>
+                  <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
+                    <Link to="/admin/home" className="optionLink" onClick={closeSidebar}>Ir a Portal de Administrador</Link>
+                  </div>
+                </li>
+              </>
+            )}
+            {/* Opción Cerrar Sesión */}
             <li>
-              {/* Opción Cerrar Sesión */}
               <div className={`optionContainer ${isActive('login') ? 'active' : ''}`}>
                 <Link to="/" className="optionLink" onClick={onLogout}>Cerrar Sesión</Link>
               </div>
