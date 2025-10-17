@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
-import { useNavigate } from 'react-router-dom';
 import LayoutBase from '../base/LayoutBaseUser';
 import imageHome from '../../assets/IMG/WarrantyWallpaperClientHome.webp';
 
 const Home = () => {
-
-  const navigate = useNavigate();
-
   // Initialize modal visibility from localStorage so acceptance persists across visits
   const [showModal, setShowModal] = useState(() => {
     try {
@@ -37,16 +33,6 @@ const Home = () => {
     document.body.style.overflow = '';
     return undefined;
   }, [showModal]);
-
-  // Logout handling moved to LayoutBaseUser; Home no longer listens for logout events.
-  
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/user/login');
-      return null;
-    }
-  }, [navigate]);
 
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
 

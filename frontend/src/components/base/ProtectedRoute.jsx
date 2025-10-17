@@ -7,6 +7,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
   if (!token) {
     // Redirect to the login page if there's no token
+    alert('Por favor, inicie sesión para acceder a esta página.');
     return <Navigate to="/" replace />;
   }
 

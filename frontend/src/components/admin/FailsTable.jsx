@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import editIcon from '../../assets/IMG/edit.png';
 import '../../styles/admin/failsTable.css';
 import LayoutBaseAdmin from '../base/LayoutBaseAdmin';
@@ -10,13 +9,6 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const FailsTable = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/admin/login');
-    }
-  }, [navigate]);
 
   const [allIssues, setAllIssues] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');

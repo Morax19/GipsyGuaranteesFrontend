@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
-import { jwtDecode } from 'jwt-decode';
 import LayoutBase from '../base/LayoutBaseUser';
 import InfoModal from './InfoModal';
 import '../../styles/user/warranty.css';
@@ -11,16 +9,6 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/user/login');
-      return null;
-    }
-  }, [navigate]);
-
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const initialFormData = {
     mainCustomerID: '',

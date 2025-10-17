@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import '../../styles/user/changePassword.css';
@@ -10,16 +9,6 @@ const isDevelopment = import.meta.env.MODE === 'development'
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const ChangePassword = () => {
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/user/login');
-      return null;
-    }
-  }, [navigate]);
-
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [passwords, setPasswords] = useState({ oldPassword1: '', oldPassword2: '', newPassword: '', newPassword2: '' });
   const [message, setMessage] = useState('');

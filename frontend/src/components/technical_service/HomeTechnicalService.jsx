@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
-import { useNavigate } from 'react-router-dom';
 import LayoutBaseTechServ from '../base/LayoutBaseTechServ';
 import '../../styles/technical_service/homeTechServ.css';
 import SearchedWarrantyDetailsModal from './SearchedWarrantyDetailsModal';
@@ -10,16 +9,6 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 const Home = () => {
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/technical-service/login');
-      return null;
-    }
-  }, [navigate]);
-
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);

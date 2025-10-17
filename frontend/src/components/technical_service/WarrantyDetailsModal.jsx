@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import '../../styles/technical_service/warrantyDetailsModal.css';
@@ -7,17 +6,7 @@ import '../../styles/technical_service/warrantyDetailsModal.css';
 const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
-const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) => {
-  
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/technical-service/login');
-      return null;
-    }
-  }, [navigate]);  
-  
+const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) => {  
   // Estado local para los campos editables del modal
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const [currentStatus, setCurrentStatus] = useState('');

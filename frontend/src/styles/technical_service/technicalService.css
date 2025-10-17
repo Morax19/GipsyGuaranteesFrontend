@@ -49,10 +49,11 @@ body.barraCurvaServTec::after {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 30px;
-    width: 120%; 
+    flex-wrap: wrap; /* allow children to wrap to next line */
+    width: 100%; /* avoid overflow and let container control width */
     box-sizing: border-box;
 }
 
@@ -62,8 +63,10 @@ body.barraCurvaServTec::after {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
+    flex-wrap: wrap;
     width: 100%; 
     box-sizing: border-box;
 }
@@ -76,6 +79,14 @@ body.barraCurvaServTec::after {
     flex: 1;
     font-style: italic;
     text-align: right;
+}
+
+.branch-card-details {
+    order: 99; /* place below the other items */
+    flex: 1 1 100%; /* occupy full width on its own line */
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
 }
 
 .whatsapp-icon-container {

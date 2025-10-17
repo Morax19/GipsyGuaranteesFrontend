@@ -70,6 +70,10 @@ const TechnicalService = () => {
               <div>{sucursal.diaAtencion}</div>
               <div>{sucursal.horarioAtencion}</div>
             </div>
+            <div className="branch-card-details">
+              <div className="branch-card-title">Importante:</div>
+              <div>Las garantías tienen una validez de 2 años para los productos de las marcas Black & Decker y Remington. El resto de marcas poseen una validez de 1 año. La garantía cubre hasta un máximo de 2 usos del servicio técnico.</div>
+            </div>
           </div>
         ))}
       </div>

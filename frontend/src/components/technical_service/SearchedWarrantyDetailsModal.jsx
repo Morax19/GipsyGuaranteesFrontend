@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import '../../styles/technical_service/warrantyDetailsModal.css';
 
 const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase }) => {
-  
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!sessionStorage.getItem('session_token')) {
-      alert('Por favor, inicie sesión para acceder a esta página.');
-      navigate('/technical-service/login');
-      return null;
-    }
-  }, [navigate]);
   
   if (!isOpen || !warranty) return null;
 
