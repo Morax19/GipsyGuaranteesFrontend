@@ -20,7 +20,7 @@ const Home = () => {
     }
   });
   const acceptBtnRef = useRef(null);
-  const pdfUrl = "/NORMATIVAS_DE_GARANTIA_PRODUCTOS__ELECTRICOS_GIPSY_09-10-2025[1].pdf"
+  const pdfUrl = "/NORMATIVAS DE GARANTIA PRODUCTOS  ELECTRICOS GIPSY 09-10-2025.pdf"
 
   // Keep the page from scrolling and focus the Accept button while modal is open
   useEffect(() => {

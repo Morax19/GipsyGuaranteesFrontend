@@ -28,7 +28,7 @@ function WelcomePage() {
         Conoce los
           <span>&nbsp;</span>
           <a
-            href="https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/ER9bGxB4X2VHrzE0GKMmLPgBf7RJFoUQGhE5tvFNE4sttQ?e=QHv98O"
+            href="https://gipsymx-my.sharepoint.com/:b:/g/personal/desarrollo_grupogipsy_com/Ef6wjEVKUoBPoMAM2P2QiacB3WKI1h2wRtFCGkGZckeNaA?e=v6mnG3"
             target="_blank"
             rel="noopener noreferrer"
             className="conditions-link"
