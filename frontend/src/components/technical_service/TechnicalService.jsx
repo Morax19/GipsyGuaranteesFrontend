@@ -11,7 +11,7 @@ const sucursalesData = [
     telefono: '+58 422-6247117',
     diaAtencion: 'Lunes a Viernes',
     horarioAtencion: '9:00 AM - 5:00 PM',
-    correo: 'info@garantiasservicio.com',
+    correo: 'garantiaserviciove@gmail.com',
     whatsappLink: 'https://wa.me/584226247117?text=Hola,%20quisiera%20consultar%20sobre%20una%20garantía.',
   },
 ];
