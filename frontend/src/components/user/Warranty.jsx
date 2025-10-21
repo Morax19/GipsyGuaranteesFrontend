@@ -301,11 +301,19 @@ export default function Warranty() {
     setLoading(true);
     
     if (!validateInvoiceNumber(formData.invoiceNumber)) {
+      setLoading(false);
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
       return;
     }
 
     const selectedStore = mainCustomers.find(mc => String(mc.ID) === String(formData.mainCustomerID));
+    // Validate that the user has selected/entered a valid store
+    if (!selectedStore) {
+      setLoading(false);
+      alert('No se ha encontrado la compañía asociada.');
+      return;
+    }
+
     const selectedBranch = branchAddresses.find(b => String(b.branchID) === String(formData.branchID));
     const img = document.getElementById("invoiceIMG").files[0];
 
