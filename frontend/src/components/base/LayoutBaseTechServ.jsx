@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Sidebar from './SidebarTech';
 import '../../styles/base/menu.css';
 import '../../styles/base/home.css';
 
 const LayoutBaseTechServ = ({ userFirstName, activePage, children }) => {
   const [sidebarActive, setSidebarActive] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setSidebarActive(!sidebarActive);
   const closeSidebar = () => setSidebarActive(false);
   const onLogout = () => {
-    sessionStorage.removeItem('session_token');
+    try { sessionStorage.removeItem('session_token'); } catch (e) { /* ignore */ }
     navigate('/');
-  }
+  };
 
   return (
     <div className="layout">
+      {/* overlay used on small screens to close the sidebar when clicking outside */}
+      <div
+        className={`backgroundOpacity ${sidebarActive ? 'active' : ''}`}
+        onClick={closeSidebar}
+        aria-hidden={!sidebarActive}
+      />
+
       {/* El Sidebar ahora es un componente separado */}
       <Sidebar
         activePage={activePage}
@@ -26,20 +34,18 @@ const LayoutBaseTechServ = ({ userFirstName, activePage, children }) => {
 
       {/* Contenido principal */}
       <div className={`main-content ${sidebarActive ? 'sidebar-open' : ''}`} id='mainContentTech'>
-        {/* <header>
-          <div className="menu-icon" onClick={toggleSidebar}>
-            <img src="/IMG/menu_icon.png" alt="Menu Icon" />
-          </div>
-          <div className="logoMobile">
-            <Link to="/homeSeller">
-              <img src="/IMG/Gipsy_imagotipo_color.png" alt="Logo" />
-            </Link>
-          </div>
-          <div className="user-info">
-            Hola, {userFirstName}
-          </div>
-        </header> */}
-        {/* Contenido específico de la página (children) */}
+        {/* small header with menu button for toggling sidebar on mobile */}
+        <header className="header header--tech">
+          <button
+            className="menu-icon menu-icon--tech"
+            onClick={toggleSidebar}
+            aria-label={sidebarActive ? 'Cerrar menú' : 'Abrir menú'}
+          >
+            ☰
+          </button>
+          <div style={{ flex: 1 }} />
+        </header>
+
         {children}
       </div>
     </div>

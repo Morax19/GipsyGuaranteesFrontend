@@ -1,28 +1,28 @@
 .infoModal-overlay-info {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.359);
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    background-color: rgba(0, 0, 0, 0.36);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 99;
+    z-index: 2000; /* above header/sidebar overlays */
     backdrop-filter: blur(2px);
-    transform: translateX(185px);
+    padding: 16px; /* keep some space on small screens */
+    box-sizing: border-box;
 }
 
 .infoModal-content-info {
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 520px;
     padding: 25px;
     display: flex;
     flex-direction: column;
     font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 2001; /* ensure modal content is above overlay */
 }
 
 .infoModal-header-info {
@@ -37,7 +37,7 @@
 .infoModal-header-info h3 {
     color: #324bab;
     margin: 0;
-    font-size: 1.3em;
+    font-size: 1.25rem;
     font-weight: 600;
 }
 

@@ -12,48 +12,58 @@ body {
 }
 
 #sidebarUser {
-    width: 380px;
-    flex-shrink: 0;
-    height: 100%;
+    /* Off-canvas sidebar for all screen sizes */
+    width: 280px;
+    height: 100vh;
     background-color: #4068f8;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
-    left: 0;
-    z-index: 1000;
+    left: -280px; /* hidden by default */
+    z-index: 1001;
     transition: transform 0.3s ease;
 }
 
 #sidebarTech {
-    width: 380px;
-    flex-shrink: 0;
-    height: 100%;
+    width: 280px;
+    height: 100vh;
     background-color: #455a64;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
-    left: 0;
-    z-index: 1000;
+    left: -280px;
+    z-index: 1001;
     transition: transform 0.3s ease;
 }
 
 #sidebarAdmin {
-    width: 380px;
-    flex-shrink: 0;
-    height: 100%;
+    width: 280px;
+    height: 100vh;
     background-color: #8b56ed;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
-    left: 0;
-    z-index: 1000;
+    left: -280px;
+    z-index: 1001;
     transition: transform 0.3s ease;
+}
+
+/* when active, slide the sidebar into view (global) */
+#sidebarUser.active,
+#sidebarTech.active,
+#sidebarAdmin.active {
+    transform: translateX(280px);
+}
+
+/* show overlay whenever active (global) */
+.backgroundOpacity.active {
+    display: block;
 }
 
 #sidebarUser .logo,
@@ -162,14 +172,54 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Menu icon base styles (button) */
 .menu-icon {
     width: auto;
     cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.35rem; /* hamburger size */
+    padding: 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Individual icon variations for different layouts */
+.menu-icon--user {
+    background-color: #2f55d6; /* slightly darker blue */
+    color: #ffffff;
+}
+
+.menu-icon--tech {
+    background-color: #37474f; /* slightly darker tech gray */
+    color: #ffffff;
+}
+
+.menu-icon:hover {
+    opacity: 0.9;
 }
 
 .menu-icon img {
     height: 35px;
     width: auto;
+}
+
+/* Header modifier to match its sidebar color when desired */
+.header--tech {
+    background-color: #455a64;
+}
+
+/* Admin variations */
+.menu-icon--admin {
+    background-color: #6f3fd6; /* purple-leaning admin color */
+    color: #ffffff;
+}
+
+.header--admin {
+    background-color: #8b56ed;
 }
 
 .logoMobile {
@@ -200,30 +250,6 @@ header {
 }
 
 @media (max-width: 1220px) {
-    #sidebarUser {
-        position: fixed;
-        left: -280px;
-        width: 280px;
-        height: 100vh;
-        z-index: 1001;
-        background-color: #4068f8;
-    }
-
-    #sidebarTech {
-        position: fixed;
-        left: -280px;
-        width: 280px;
-        height: 100vh;
-        z-index: 1001;
-        background-color: #455a64;
-    }
-
-    #sidebarUser.active,
-    #sidebarTech.active,
-    #sidebarAdmin.active {
-        transform: translateX(280px);
-    }
-
     #mainContentUser,
     #mainContentTech,
     #mainContentAdmin {
@@ -236,9 +262,7 @@ header {
         display: flex;
     }
 
-    .backgroundOpacity.active {
-        display: block;
-    }
+    
 
     div, p, span {
         font-size: 0.9rem;
