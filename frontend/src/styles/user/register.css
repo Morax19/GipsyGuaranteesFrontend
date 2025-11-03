@@ -7,15 +7,20 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f1efef;
     position: relative;
-    overflow: hidden;
-    display: flex;
+    overflow-y: auto;
+    display: block;
     justify-content: center;
     align-items: center;
 }
 
+body.barraCurvaURegister {
+    overflow-y: auto !important;
+    display: block !important;
+}
+
 body.barraCurvaURegister::after {
     content: '';
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -51,10 +56,11 @@ body.barraCurvaURegister::after {
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
     width: 500px;
-    margin-top: 24px;
-    margin-bottom: 24px;
+    margin: auto; /* add top margin so card isn't cut off */
 }
 
+/* Keep the card free to grow; document (body) should handle scrolling. */
+/* If a global rule elsewhere sets `overflow: hidden` on body or a root container, remove/adjust it so the page can scroll. */
 .cardContainerURegister h1, .cardContainerURegister h2, .cardContainerURegister h3 {
     margin-bottom: 5px;
     text-align: center;
@@ -129,7 +135,7 @@ body.barraCurvaURegister::after {
 }
 
 .logoURegister {
-    max-width: 300px;
+    max-width: 200px;
     margin-bottom: 30px;
 }
 
@@ -197,4 +203,16 @@ body.barraCurvaURegister::after {
 
 .registerPassword-toggle-button:hover img {
     transform: scale(1.1);
+}
+
+
+/* Responsive */
+
+@media (max-width: 650px) {
+    .cardContainerURegister {
+        width: 98%;
+        max-width: 400px;
+        padding: 20px 10px 15px 10px;
+        margin-top: 20px; 
+    }
 }

@@ -103,12 +103,13 @@ function Register() {
   };
 
   return (
-    <div className="cardContainerURegister">
+    <>
       <div className="back-link-container">
         <Link to="/user/login">
           <img src={backIcon} alt="Volver" className="back-icon" />
         </Link>
       </div>
+    <div className="cardContainerURegister">
       <img src={logo} alt="Logo" className="logoURegister" />
       <h2>Registro de usuario</h2>
       <br />
@@ -237,6 +238,7 @@ function Register() {
       </form>
       {message && <p>{message}</p>}
     </div>
+    </>
   );
 }
 
