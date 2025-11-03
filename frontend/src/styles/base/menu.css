@@ -191,12 +191,9 @@ header {
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     /* keep header visible and positioned below the top UI */
-    /* enable sticky so header remains at top but stays in document flow */
     position: sticky;
     top: 0;
-    /* lower z-index than the sidebar so when the sidebar opens it sits
-       above the header (sidebar overlays header). Sidebars use 1001. */
-    z-index: 1000;
+    z-index: 1002;
     box-sizing: border-box;
 }
 
