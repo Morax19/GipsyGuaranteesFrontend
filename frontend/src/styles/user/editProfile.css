@@ -131,3 +131,15 @@ body {
 .national-id-container .national-id {
   flex: 3.2;
 }
+
+
+/* Responsive */
+
+@media (max-width: 650px) {
+    .cardContainerEditProfile {
+        width: 90%;
+        max-width: 400px;
+        padding: 20px 10px 15px 10px;
+        margin-top: 20px; 
+    }
+}
