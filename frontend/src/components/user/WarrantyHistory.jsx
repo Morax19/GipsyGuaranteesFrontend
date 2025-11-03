@@ -29,7 +29,7 @@ const WarrantyHistory = () => {
           
         } else {
           console.log(data.error);
-          alert(data.warning)
+          //alert(data.warning)
         }
       } catch {
         console.log('Error de conexión con el servidor');

@@ -31,7 +31,7 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
           setStatusOptions(data); // Save array of statuses
         } else {
           console.log(data.error);
-          alert(data.warning)
+          //alert(data.warning)
         }
       } catch (error) {
         console.log('Error de conexión con el servidor');
