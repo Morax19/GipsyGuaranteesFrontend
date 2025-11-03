@@ -7,7 +7,8 @@ body {
 
 .layout {
     display: flex;
-    height: 100vh;
+    /* Use the dynamic --vh variable so layout adapts to mobile status/nav bars */
+    height: calc(var(--vh, 1vh) * 100);
     width: 100vw;
 }
 
@@ -19,11 +20,10 @@ body {
        stacking/transform contexts. Allow vertical scrolling when needed. */
      top: 0;
      bottom: 0;
-     /* Use anchored top/bottom and explicit height constraints so the
-         sidebar never exceeds the visible viewport on mobile (dynamic URL
-         bars). Allow internal scrolling when needed. */
-     height: 100%;
-     max-height: 100vh;
+     /* Use dynamic viewport unit to respect mobile browser UI (status / nav bars).
+         The JS sets --vh to 1% of the innerHeight; fall back to 1vh if unavailable. */
+     height: calc(var(--vh, 1vh) * 100);
+     max-height: calc(var(--vh, 1vh) * 100);
     background-color: #4068f8;
     display: flex;
     flex-direction: column;
@@ -41,8 +41,8 @@ body {
     width: 280px;
     top: 0;
     bottom: 0;
-    height: 100%;
-    max-height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    max-height: calc(var(--vh, 1vh) * 100);
     background-color: #455a64;
     display: flex;
     flex-direction: column;
@@ -60,8 +60,8 @@ body {
     width: 280px;
     top: 0;
     bottom: 0;
-    height: 100%;
-    max-height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    max-height: calc(var(--vh, 1vh) * 100);
     background-color: #8b56ed;
     display: flex;
     flex-direction: column;
@@ -161,6 +161,20 @@ body {
     height: 100%;
     width: 100%;
     padding-bottom: 10px;
+}
+
+/* Allow flex children to shrink properly and let internal content scroll.
+   Without min-height:0 some browsers prevent flex children from overflowing. */
+.containerSideBar {
+    min-height: 0;
+}
+
+/* Make the main list scroll if needed, keeping the bottom menu visible and reachable */
+#sidebarUser ul,
+#sidebarTech ul,
+#sidebarAdmin ul {
+    overflow-y: auto;
+    max-height: calc(var(--vh, 1vh) * 100 - 180px); /* reserve space for logo and bottom menu (approx) */
 }
 
 .bottomMenu {
