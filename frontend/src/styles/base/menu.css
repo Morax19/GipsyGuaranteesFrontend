@@ -181,10 +181,20 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* base padding then add safe-area inset on supported mobile browsers
+       so the header sits below the browser/status bar/notch. */
     padding: 10px 20px;
+    /* legacy iOS constant() then modern env() -- both ignored if unsupported */
+    padding-top: calc(10px + constant(safe-area-inset-top));
+    padding-top: calc(10px + env(safe-area-inset-top));
     background-color: #4068f8;
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* keep header visible and positioned below the top UI */
+    position: sticky;
+    top: 0;
+    z-index: 1002;
+    box-sizing: border-box;
 }
 
 /* Menu icon base styles (button) */
