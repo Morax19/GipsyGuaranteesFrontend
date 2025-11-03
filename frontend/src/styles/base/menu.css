@@ -17,9 +17,13 @@ body {
     /* Use anchoring instead of a fixed viewport height so the sidebar
        fills available vertical space and is not clipped by parent
        stacking/transform contexts. Allow vertical scrolling when needed. */
-    top: 0;
-    bottom: 0;
-    min-height: 100vh;
+     top: 0;
+     bottom: 0;
+     /* Use anchored top/bottom and explicit height constraints so the
+         sidebar never exceeds the visible viewport on mobile (dynamic URL
+         bars). Allow internal scrolling when needed. */
+     height: 100%;
+     max-height: 100vh;
     background-color: #4068f8;
     display: flex;
     flex-direction: column;
@@ -37,7 +41,8 @@ body {
     width: 280px;
     top: 0;
     bottom: 0;
-    min-height: 100vh;
+    height: 100%;
+    max-height: 100vh;
     background-color: #455a64;
     display: flex;
     flex-direction: column;
@@ -55,7 +60,8 @@ body {
     width: 280px;
     top: 0;
     bottom: 0;
-    min-height: 100vh;
+    height: 100%;
+    max-height: 100vh;
     background-color: #8b56ed;
     display: flex;
     flex-direction: column;
