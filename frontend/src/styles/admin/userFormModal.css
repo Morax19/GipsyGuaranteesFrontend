@@ -27,6 +27,8 @@
     max-height: calc(100vh - 40px);
     /* Let the inner body scroll so the footer can remain sticky */
     overflow: visible;
+    /* CSS variables for header/footer sizing so we can keep content visible */
+    --modal-footer-height: 64px; /* fallback value used to calculate padding */
     /* Ensure there is space at the bottom for the sticky footer and mobile safe-area */
     padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 12px);
 }
@@ -52,10 +54,14 @@
 /* Make footer stick to the bottom of the scrollable modal so it's always visible */
 .modal-footer-user {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
-    padding-top: 15px;
+    /* remove large margin so sticky footer doesn't push content unexpectedly */
+    margin-top: 0;
+    /* ensure footer has consistent height so we can pad the scroll area accordingly */
+    min-height: var(--modal-footer-height);
+    padding: 12px 12px;
     border-top: 1px solid #ccc;
     position: sticky;
     bottom: 0;
@@ -75,6 +81,8 @@
     /* keep the scrollable area within the viewport (subtract header+footer/paddings) */
     max-height: calc(100vh - 140px);
     padding-right: 10px;
+    /* Ensure last form controls are not hidden behind the sticky footer */
+    padding-bottom: calc(var(--modal-footer-height) + env(safe-area-inset-bottom, 8px) + 8px);
 }
 
 .modal-header-user {
@@ -287,6 +295,7 @@ input[type="password"]::-webkit-reveal {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    align-self: center; /* ensure buttons don't stretch vertically inside the footer */
 }
 
 .modal-button-user.save-button-user {
