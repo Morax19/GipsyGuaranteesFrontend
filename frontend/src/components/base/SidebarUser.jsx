@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/base/menu.css';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
@@ -9,6 +9,31 @@ const SidebarUser = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
 
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const isAdmin = role === 'Administrador';
+
+  // Ensure mobile viewport CSS variable is set as early as possible.
+  // Some mobile browsers change the visual viewport after initial paint and
+  // CSS relying on `var(--vh)` can compute incorrect heights causing items
+  // to be clipped until a reload. Set the variable on mount and on resize
+  // / orientationchange. Also schedule a short timeout to re-run after the
+  // browser UI settles.
+  useEffect(() => {
+    const setVh = () => {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }
+    };
+
+    setVh();
+    const timer = setTimeout(setVh, 250);
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+    };
+  }, []);
 
   return (
     <>

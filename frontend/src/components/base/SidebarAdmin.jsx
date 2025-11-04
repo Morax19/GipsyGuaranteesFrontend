@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/base/menu.css';
 import logo from '../../assets/IMG/Gipsy_imagotipo_medioBlanco.png'
 
 const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
   const isActive = (page) => activePage === page;
+
+  // Ensure mobile viewport CSS variable is set early to avoid layout
+  // calculations using var(--vh) being wrong on first load (mobile).
+  useEffect(() => {
+    const setVh = () => {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }
+    };
+
+    setVh();
+    const timer = setTimeout(setVh, 250);
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+    };
+  }, []);
 
   return (
     <>

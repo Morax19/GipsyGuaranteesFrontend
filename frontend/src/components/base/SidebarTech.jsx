@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/base/menu.css';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
@@ -9,6 +9,29 @@ const SidebarTech = ({ activePage, sidebarActive, closeSidebar, onLogout }) => {
 
   const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
   const isAdmin = role === 'Administrador';
+
+  // Ensure mobile viewport CSS variable is set early so sidebar layout
+  // calculations using var(--vh) don't end up with incorrect heights on
+  // first paint (common on some mobile browsers). Also refresh on resize
+  // and orientation change.
+  useEffect(() => {
+    const setVh = () => {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }
+    };
+
+    setVh();
+    const timer = setTimeout(setVh, 250);
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+    };
+  }, []);
 
   return (
     <>
