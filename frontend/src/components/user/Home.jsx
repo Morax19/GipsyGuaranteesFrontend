@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBase from '../base/LayoutBaseUser';
 import imageHome from '../../assets/IMG/WarrantyWallpaperClientHome.webp';
-import '../../styles/responsive/userHomeImg.css';
 
 const Home = () => {
   // Initialize modal visibility from localStorage so acceptance persists across visits
@@ -52,6 +51,16 @@ const Home = () => {
           src={imageHome}
           alt="Seller Wallpaper"
           className="user-home-img"
+          style={{
+            width: '100%',
+            maxWidth: '1100px',
+            display: 'block',
+            margin: '32px auto',
+            borderRadius: '18px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+            border: '1px solid #e0e0e0',
+            objectFit: 'cover'
+          }}
         />
       </div>
       {/* Modal de Términos y Condiciones - aparece al entrar y sólo se cierra con Aceptar */}

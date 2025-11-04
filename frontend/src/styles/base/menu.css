@@ -9,6 +9,8 @@ body {
     display: flex;
     /* Use the dynamic --vh variable so layout adapts to mobile status/nav bars */
     height: calc(var(--vh, 1vh) * 100);
+    /* default header height used to offset fixed header from content */
+    --app-header-height: 64px;
     width: 100vw;
 }
 
@@ -191,7 +193,8 @@ body {
 #mainContentTech,
 #mainContentAdmin {
     flex-grow: 1;
-    padding: 0;
+    /* offset content by the fixed header height so header is visible on load */
+    padding-top: var(--app-header-height);
     overflow-y: auto;
     overflow-x: hidden;
     background-color: #f8f8f8;
@@ -205,6 +208,14 @@ header {
     background-color: #4068f8;
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* make header appear immediately and stay visible */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* keep header below the overlay and sidebars when active; overlay will dim header */
+    z-index: 999;
+    box-sizing: border-box;
 }
 
 /* Menu icon base styles (button) */
@@ -281,7 +292,8 @@ header {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    /* Sit above the header but below the sidebar so the header is dimmed */
+    z-index: 1000;
 }
 
 @media (max-width: 1220px) {
