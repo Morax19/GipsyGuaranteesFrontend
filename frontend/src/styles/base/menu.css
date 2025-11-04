@@ -214,7 +214,7 @@ header {
     left: 0;
     right: 0;
     /* keep header below the overlay and sidebars when active; overlay will dim header */
-    z-index: 999;
+    /*z-index: 999;*/
     box-sizing: border-box;
 }
 
