@@ -23,16 +23,23 @@
     flex-direction: column;
     position: relative;
     font-family: Arial, sans-serif;
-    max-height: 90vh;
-    overflow-y: auto;
+    /* Use a safe max-height that accounts for mobile browser UI (address bars) */
+    max-height: calc(100vh - 40px);
+    /* Let the inner body scroll so the footer can remain sticky */
+    overflow: visible;
+    /* Ensure there is space at the bottom for the sticky footer and mobile safe-area */
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 12px);
 }
 
 @media (max-width: 650px) {
     .modal-content-user {
         width: 90% !important;
         max-width: 400px !important;
-        padding: 20px 10px 15px 10px !important;
+        /* tighten vertical padding but keep bottom padding so footer isn't clipped */
+        padding: 20px 10px 18px 10px !important;
         margin-top: 20px !important;
+        /* ensure the modal doesn't extend beyond the viewport on mobile */
+        max-height: calc(100vh - 40px) !important;
     }
 
     .modal-overlay-user {
@@ -40,6 +47,34 @@
         padding-top: 20px !important;
         transform: none !important;
     }
+}
+
+/* Make footer stick to the bottom of the scrollable modal so it's always visible */
+.modal-footer-user {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ccc;
+    position: sticky;
+    bottom: 0;
+    /* Ensure footer appears above content when scrolled */
+    background: linear-gradient(#fff, #fff);
+    /* Add extra bottom padding for mobile safe-area (iPhone home indicator, etc.) */
+    padding-bottom: calc(env(safe-area-inset-bottom, 8px) + 8px);
+    z-index: 2;
+}
+
+/* Small tweak: ensure the modal content area doesn't hide the sticky footer */
+.modal-body-user {
+    /* allow modal body to scroll independently while footer stays visible */
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+    /* keep the scrollable area within the viewport (subtract header+footer/paddings) */
+    max-height: calc(100vh - 140px);
+    padding-right: 10px;
 }
 
 .modal-header-user {
