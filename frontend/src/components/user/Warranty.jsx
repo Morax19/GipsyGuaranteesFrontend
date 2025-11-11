@@ -238,7 +238,6 @@ export default function Warranty() {
 
   // Debounced filter of main customers to avoid rendering huge lists
   useEffect(() => {
-    console.log('Ping');
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     if (!mainCustomerQuery) {
       // If cleared, also clear selection and suggestions
@@ -281,7 +280,6 @@ export default function Warranty() {
 
   // Close suggestions when clicking outside
   useEffect(() => {
-    console.log('Ping 2')
     function handleClickOutside(e) {
       if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
         setShowCustomerSuggestions(false);
@@ -533,7 +531,7 @@ export default function Warranty() {
                         background: highlightIndex === idx ? '#eef' : 'transparent'
                       }}
                     >
-                      {`(${mc.ID}) ${mc.FullName}`}
+                      {`${mc.FullName}`}
                     </li>
                   ))
                 ) : (
