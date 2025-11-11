@@ -22,22 +22,12 @@ export default function Warranty() {
     isRetail: '',
     productBrand: '',
     productCategory: '',
+    brandCategory: '',
+    productDetail: '',
     invoiceIMG: '',
   }
 
-  const [formData, setFormData] = useState({
-    mainCustomerID: '',
-    branchID: '',
-    RIF:'',
-    RIFtype:'',
-    purchaseDate: '',
-    invoiceNumber: '',
-    barCode: '',
-    invoiceIMG: '',
-    ItemId: '',
-    isRetail: '',
-    productBrand: '',
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
   const [mainCustomers, setMainCustomers] = useState([]);
@@ -75,57 +65,10 @@ export default function Warranty() {
     return pattern.test(value.trim());
   };
 
-  const fetchProductByBarCode = async (barCode) => {
-    const bar_code = barCode.trim();
-    if (!bar_code) {
-      alert('Por favor, ingrese un código de barras antes de buscar');
-      return;
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      ItemId: '',
-      productBrand: '',
-      brandCategory: '',
-      productCategory: '',
-      productDetail: ''
-    }));
-
+  const fetchMainCustomers = async (itemID) => {
     try {
       const response = await fetchWithAuth(
-        `${apiUrl}/api/getProductByBarCode/?barCode=${bar_code}`,
-        { method: 'GET' }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setProducts(data);
-
-        if (data && data.ID && data.Brand && data.Category && data.productDetail) {
-          setFormData(prev => ({
-            ...prev,
-            ItemId: data.ID,
-            productBrand: data.Brand || 'Marca del producto',
-            brandCategory: `${data.Brand} - ${data.Category}` || 'Marca del producto - Categoría del producto',
-            productCategory: data.Category || 'Categoría del producto',
-            productDetail: data.productDetail || 'Detalles del producto',
-          }));
-        }
-      } else {
-        console.error(data.error);
-        alert(data.error);
-      }
-    } catch {
-      console.error('Error de conexión con el servidor');
-      alert('Error de conexión con el servidor');
-    }
-  };
-
-  const fetchMainCustomers = async () => {
-    try {
-      const response = await fetchWithAuth(
-        `${apiUrl}/api/adminGetMainCustomers/`,
+        `${apiUrl}/api/getMainCustomersWarrantyRegister/?itemID=${itemID}`,
         {
           method: 'GET',
         }
@@ -238,12 +181,64 @@ export default function Warranty() {
     }
   };
 
+  const fetchProductByBarCode = async (barCode) => {
+    const bar_code = barCode.trim();
+    if (!bar_code) {
+      alert('Por favor, ingrese un código de barras antes de buscar');
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      ItemId: '',
+      productBrand: '',
+      brandCategory: '',
+      productCategory: '',
+      productDetail: ''
+    }));
+
+    try {
+      const response = await fetchWithAuth(
+        `${apiUrl}/api/getProductByBarCode/?barCode=${bar_code}`,
+        { method: 'GET' }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setProducts(data);
+
+        if (data && data.ID && data.Brand && data.Category && data.productDetail) {
+          setFormData(prev => ({
+            ...prev,
+            ItemId: data.ID,
+            productBrand: data.Brand || 'Marca del producto',
+            brandCategory: `${data.Brand} - ${data.Category}` || 'Marca del producto - Categoría del producto',
+            productCategory: data.Category || 'Categoría del producto',
+            productDetail: data.productDetail || 'Detalles del producto',
+          }));
+
+          fetchMainCustomers(data.ID);
+        }
+      } else {
+        console.error(data.error);
+        alert(data.error);
+      }
+    } catch {
+      console.error('Error de conexión con el servidor');
+      alert('Error de conexión con el servidor');
+    }
+  };
+
+  /*
   useEffect(() => {
     fetchMainCustomers();
   }, []);
+  */
 
   // Debounced filter of main customers to avoid rendering huge lists
   useEffect(() => {
+    console.log('Ping');
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     if (!mainCustomerQuery) {
       // If cleared, also clear selection and suggestions
@@ -286,6 +281,7 @@ export default function Warranty() {
 
   // Close suggestions when clicking outside
   useEffect(() => {
+    console.log('Ping 2')
     function handleClickOutside(e) {
       if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
         setShowCustomerSuggestions(false);
@@ -381,6 +377,72 @@ export default function Warranty() {
       <div className="cardContainerWarranty">
         <h2>Registro de Garantía</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="barCode">
+            Código de Barras <span className="required-asterisk">*</span>
+          </label>
+          <br />
+          <div className="search-container">
+            <input
+              type="text"
+              id="barCode"
+              name="barCode"
+              placeholder="Código de Barras"
+              required
+              value={formData.barCode}
+              onChange={handleChange}
+              style={{ flex: 1 }}
+            />
+            <button
+            type='button'
+            className='search-button'
+            onClick={() => fetchProductByBarCode(formData.barCode)}
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="white"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 
+                      1.398h-.001l3.85 3.85a1 1 0 0 0 
+                      1.415-1.415l-3.85-3.85zm-5.242 
+                      1.656a5 5 0 1 1 0-10 5 5 0 0 1 
+                      0 10z"/>
+            </svg>
+            </button>
+          </div>
+          
+          <br />
+          
+          <label htmlFor="brandCategory">
+            Marca y categoría del producto:
+          </label>
+          <input
+            type="text"
+            id="brandCategory"
+            name="brandCategory"
+            placeholder="Marca del producto - Categoría del producto"
+            required
+            value={formData.brandCategory}
+            onChange={handleChange}
+            disabled
+          />
+
+          <label htmlFor="productDetail">
+            Descripción del producto:
+          </label>
+          <input
+            type="text"
+            id="productDetail"
+            name="productDetail"
+            placeholder="Detalles del producto"
+            required
+            value={formData.productDetail}
+            onChange={handleChange}
+            disabled
+          />
+
           {/* Customer Select */}
           <label htmlFor="mainCustomerSearch">
             Compañía asociada <span className="required-asterisk">*</span>
@@ -471,7 +533,7 @@ export default function Warranty() {
                         background: highlightIndex === idx ? '#eef' : 'transparent'
                       }}
                     >
-                      {mc.FullName}
+                      {`(${mc.ID}) ${mc.FullName}`}
                     </li>
                   ))
                 ) : (
@@ -505,43 +567,43 @@ export default function Warranty() {
               {/* Auto-filled and locked RIFtype */}
               <label htmlFor="RIFtype">
                 RIF de la tienda <span className="required-asterisk">*</span>
-                </label>
-                <div className="rif-container">
-                    <div className="rif-type">
-                        <select
-                          id="RIFtype"
-                          name="RIFtype"
-                          required={editableField}
-                          value={formData.RIFtype}
-                          onChange={handleChange}
-                          disabled={editableField}
-                        >
-                          <option value="">Tipo</option>
-                          {RIFtypeOptions.map(opt => (
-                            <option key={opt} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-                    </div>
-                    <div className="rif-number">
-                        <input
-                          type="number"
-                          id="RIF"
-                          name="RIF"
-                          placeholder="Número de RIF"
-                          maxLength={10}
-                          required={editableField}
-                          value={formData.RIF}
-                          onChange={handleChange}
-                          disabled={editableField}
-                        />
-                    </div>
+              </label>
+              <div className="rif-container">
+                <div className="rif-type">
+                  <select
+                    id="RIFtype"
+                    name="RIFtype"
+                    required={editableField}
+                    value={formData.RIFtype}
+                    onChange={handleChange}
+                    disabled={editableField}
+                  >
+                    <option value="">Tipo</option>
+                    {RIFtypeOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="rif-number">
+                  <input
+                    type="number"
+                    id="RIF"
+                    name="RIF"
+                    placeholder="Número de RIF"
+                    maxLength={10}
+                    required={editableField}
+                    value={formData.RIF}
+                    onChange={handleChange}
+                    disabled={editableField}
+                  />
+                </div>
               </div>
             </>
           )}
 
           <label htmlFor="purchaseDate">
             Fecha de compra <span className="required-asterisk">*</span>
-            </label>
+          </label>
           <input
             type="date"
             id="purchaseDate"
@@ -552,70 +614,9 @@ export default function Warranty() {
             max={new Date().toISOString().split('T')[0]} // Prevent future dates
           />
 
-          <label htmlFor="barCode">
-            Código de Barras <span className="required-asterisk">*</span>
-            </label>
-          <br />
-          <div className="search-container">
-            <input
-              type="text"
-              id="barCode"
-              name="barCode"
-              placeholder="Código de Barras"
-              required
-              value={formData.barCode}
-              onChange={handleChange}
-              style={{ flex: 1 }}
-            />
-            <button
-            type='button'
-            className='search-button'
-            onClick={() => fetchProductByBarCode(formData.barCode)}
-            >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              fill="white"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 
-                      1.398h-.001l3.85 3.85a1 1 0 0 0 
-                      1.415-1.415l-3.85-3.85zm-5.242 
-                      1.656a5 5 0 1 1 0-10 5 5 0 0 1 
-                      0 10z"/>
-            </svg>
-            </button>
-          </div>
-          <br />
-          
-          <label htmlFor="brandCategory">Marca y categoría del producto:</label>
-          <input
-            type="text"
-            id="brandCategory"
-            name="brandCategory"
-            placeholder="Marca del producto - Categoría del producto"
-            required
-            value={formData.brandCategory}
-            onChange={handleChange}
-            disabled={!!formData.brandCategory}
-          />
-
-          <label htmlFor="productDetail">Descripción del producto:</label>
-          <input
-            type="text"
-            id="productDetail"
-            name="productDetail"
-            placeholder="Detalles del producto"
-            required
-            value={formData.productDetail}
-            onChange={handleChange}
-            disabled={!!formData.productDetail}
-          />
-
           <label htmlFor="invoiceNumber">
             Número de Factura <span className="required-asterisk">*</span>
-            </label>
+          </label>
           <input
             type="text"
             id="invoiceNumber"

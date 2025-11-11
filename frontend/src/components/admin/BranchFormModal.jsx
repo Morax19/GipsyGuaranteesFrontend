@@ -317,7 +317,7 @@ const BranchFormModal = ({ isOpen, onClose, branchToEdit, onSave, mainCustomers,
                         onMouseEnter={() => setHighlightIndex(idx)}
                         style={{ padding: '8px 10px', cursor: 'pointer', background: highlightIndex === idx ? '#eef' : 'transparent' }}
                       >
-                        {mc.FullName}
+                        {`(${mc.ID}) ${mc.FullName}`}
                       </li>
                     ))
                   ) : (
