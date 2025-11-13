@@ -26,7 +26,7 @@ export default function Warranty() {
     productDetail: '',
     invoiceIMG: '',
   }
-
+  
   const [formData, setFormData] = useState(initialFormData);
 
   const RIFtypeOptions = ['V', 'E', 'J', 'G', 'C', 'P'];
@@ -229,12 +229,6 @@ export default function Warranty() {
       alert('Error de conexión con el servidor');
     }
   };
-
-  /*
-  useEffect(() => {
-    fetchMainCustomers();
-  }, []);
-  */
 
   // Debounced filter of main customers to avoid rendering huge lists
   useEffect(() => {

@@ -1,5 +1,5 @@
 .modal-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -10,7 +10,6 @@
     align-items: center;
     z-index: 99;
     backdrop-filter: blur(2px);
-    transform: translateX(200px);
 }
 
 .modal-content {

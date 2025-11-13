@@ -10,7 +10,6 @@
     align-items: center;
     z-index: 99;
     backdrop-filter: blur(2px);
-    transform: translateX(200px);
 }
 
 .modal-content {
