@@ -24,7 +24,9 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
     width: 600px;
-    margin: 70px auto;
+    margin: auto;
+    margin-top: 50px; 
+    margin-bottom: 80px;
 }
 
 .cardContainerWarranty h2{
