@@ -372,7 +372,9 @@ export default function Warranty() {
           <label htmlFor="barCode">
             Código de Barras <span className="required-asterisk">*</span>
           </label>
-          <br />
+          <small style={{ color: '#555', marginLeft: '70px', marginRight: '70px', marginBottom: '8px', display: 'block'}}>
+            Ingrese el código de barras del producto y presione el ícono de búsqueda para autocompletar los detalles del producto.
+          </small>
           <div className="search-container">
             <input
               type="text"
@@ -410,6 +412,9 @@ export default function Warranty() {
           <label htmlFor="brandCategory">
             Marca y categoría del producto:
           </label>
+          <small style={{ color: '#555', marginLeft: '70px', marginRight: '70px', display: 'block'}}>
+            La marca y categoría del producto se completan automáticamente después de buscar el código de barras.
+          </small>
           <input
             type="text"
             id="brandCategory"
@@ -424,6 +429,9 @@ export default function Warranty() {
           <label htmlFor="productDetail">
             Descripción del producto:
           </label>
+          <small style={{ color: '#555', marginLeft: '70px', marginRight: '70px', display: 'block'}}>
+            La descripción del producto se completa automáticamente después de buscar el código de barras.
+          </small>
           <input
             type="text"
             id="productDetail"
@@ -439,6 +447,9 @@ export default function Warranty() {
           <label htmlFor="mainCustomerSearch">
             Compañía asociada <span className="required-asterisk">*</span>
           </label>
+          <small style={{ color: '#555', marginLeft: '70px', marginRight: '70px', display: 'block'}}>
+            Es necesario ingresar el producto para seleccionar la compañía asociada. Escriba el nombre de la compañía y selecciónela de la lista.
+          </small>
           <div ref={customerSearchRef} className="customer-search-container">
             <input
               type="text"
@@ -540,6 +551,9 @@ export default function Warranty() {
               <label htmlFor="branchID">
                 Sucursal <span className="required-asterisk">*</span>
               </label>
+              <small style={{ color: '#555', marginLeft: '70px', marginRight: '70px', display: 'block'}}>
+                Seleccione la sucursal donde realizó la compra.
+              </small>
               <select
                 id="branchID"
                 name="branchID"
