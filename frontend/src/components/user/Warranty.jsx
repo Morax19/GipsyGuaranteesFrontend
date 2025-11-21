@@ -386,7 +386,7 @@ export default function Warranty() {
 
             {/* Contenido de la nube de diálogo */}
             <div className="tooltip-bubble">
-              Si requiere ayuda para llenar el formulario, puede ver el <a href="#" target="_blank" rel="noopener noreferrer">video tutorial</a>.
+              Si requiere ayuda para llenar el formulario, puede ver el <a href="https://www.youtube.com/watch?v=SavhHnWla6c" target="_blank" rel="noopener noreferrer">video tutorial</a>.
             </div>
           </div>
         </div>
