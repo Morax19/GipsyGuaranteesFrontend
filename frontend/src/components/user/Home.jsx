@@ -82,6 +82,7 @@ const Home = () => {
             src="https://www.youtube.com/embed/grZJtXr_45A"  /*https://www.youtube.com/embed/TU_ID_DEL_VIDEO*/
             title="Servicio de Garantías - Video Tutorial"
             frameBorder="0"
+            referrerPolicy="strict-origin-when-cross-origin"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             style={{ display: 'block' }}
