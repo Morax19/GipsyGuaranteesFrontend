@@ -47,7 +47,7 @@ const Home = () => {
             <h3>Bienvenido(a), {user_first_name}</h3>
           </div>
         </div>
-        <img
+        {/* <img
           src={imageHome}
           alt="Seller Wallpaper"
           className="user-home-img"
@@ -61,7 +61,32 @@ const Home = () => {
             border: '1px solid #e0e0e0',
             objectFit: 'cover'
           }}
-        />
+        /> */}
+        {/* REEMPLAZA LA ETIQUETA <img ... /> POR ESTO: */}
+        <div 
+          style={{
+            width: '100%',
+            maxWidth: '1100px',
+            margin: '32px auto',
+            borderRadius: '18px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+            border: '1px solid #e0e0e0',
+            overflow: 'hidden',
+            aspectRatio: '16/9',
+            position: 'relative'
+          }}
+        >
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/grZJtXr_45A"  /*https://www.youtube.com/embed/TU_ID_DEL_VIDEO*/
+            title="Servicio de Garantías - Video Tutorial"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            style={{ display: 'block' }}
+          ></iframe>
+        </div>
       </div>
       {/* Modal de Términos y Condiciones - aparece al entrar y sólo se cierra con Aceptar */}
       {showModal && (

@@ -19,6 +19,9 @@ const InfoModal = ({ isOpen, onClose }) => {
           <p>
             Si la factura contiene varios productos, debe crear un registro de garantía por cada uno de ellos.
           </p>
+          <p>
+            Si requiere ayuda para llenar el formulario, puede ver el <a href="https://www.youtube.com/watch?v=grZJtXr_45A" target="_blank" rel="noopener noreferrer">video tutorial</a>. También podrá verlo desde el ícono de información (i) en el título "Registro de Garantía".
+          </p>
         </div>
 
         <div className="infoModal-footer-info">

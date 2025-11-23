@@ -203,6 +203,92 @@ body {
   font-weight: bold;
 }
 
+/* --- Estilos para el Tooltip de Ayuda --- */
+
+/* Contenedor que alinea el título y el ícono */
+.header-with-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+/* Elimina el margen del h2 original para que lo maneje el contenedor */
+.header-with-info h2 {
+    margin-bottom: 0;
+}
+
+/* Contenedor relativo para el ícono y la nube */
+.info-tooltip-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+/* Estilo del ícono SVG */
+.info-icon {
+    color: #324bab;
+    transition: color 0.3s ease;
+}
+
+.info-tooltip-container:hover .info-icon {
+    color: #5b7efa;
+}
+
+/* La nube de diálogo (oculta por defecto) */
+.tooltip-bubble {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 135%;
+    left: 50%;
+    margin-left: -110px;
+    width: 200px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s, bottom 0.3s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    line-height: 1.4;
+}
+
+/* Flechita de la nube hacia abajo */
+.tooltip-bubble::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+/* Mostrar la nube al hacer Hover, Active (click sostenido) o Focus (tap en móvil) */
+.info-tooltip-container:hover .tooltip-bubble,
+.info-tooltip-container:active .tooltip-bubble,
+.info-tooltip-container:focus .tooltip-bubble,
+.info-tooltip-container:focus-within .tooltip-bubble {
+    visibility: visible;
+    opacity: 1;
+    bottom: 125%;
+}
+
+/* Enlace dentro del tooltip */
+.tooltip-bubble a {
+    color: #93aafe;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
 
 
 /* Responsive */
@@ -213,5 +299,22 @@ body {
         max-width: 400px;
         padding: 20px 10px 15px 10px;
         margin-top: 20px; 
+    }
+}
+
+/* --- Ajuste Móvil del Tooltip --- */
+@media (max-width: 480px) {
+    .tooltip-bubble {
+        width: 180px;
+        left: auto;
+        right: -15px;
+        transform: none;
+    }
+
+    /* Movemos la flechita para que coincida con el ícono */
+    .tooltip-bubble::after {
+        left: auto; 
+        right: 18px;
+        margin-left: 0;
     }
 }
