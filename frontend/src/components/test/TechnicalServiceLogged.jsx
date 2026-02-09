@@ -7,9 +7,9 @@ const sucursalesData = [
   {
     id: 1,
     nombreEmpresa: 'Call Center - Garantías',
-    telefono: '+58 422-6247117',
+    telefono: '+58 422-6247117,  +58 212-7613001 y +58 212-7619572',
     diaAtencion: 'Lunes a Viernes',
-    horarioAtencion: '9:00 AM - 5:00 PM',
+    horarioAtencion: '9:00 AM - 4:00 PM',
     correo: 'garantiaserviciove@gmail.com',
     whatsappLink: 'https://wa.me/584226247117?text=Hola,%20quisiera%20consultar%20sobre%20una%20garantía.',
   },
