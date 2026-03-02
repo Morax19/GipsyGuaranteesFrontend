@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { getCurrentUserInfo } from '../../utils/getCurrentUser';
 import LayoutBase from '../base/LayoutBaseUser';
@@ -44,6 +45,7 @@ export default function Warranty() {
   const [editableField, setEditableField] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(true);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseInfoModal = () => {
     setShowInfoModal(false); 
@@ -345,9 +347,11 @@ export default function Warranty() {
       if (response.ok) {
         alert(data.message);
         setFormData(initialFormData);
-        // Reset file input
+        // Reset file input (if still present)
         const fileInput = document.getElementById('invoiceIMG');
         if (fileInput) fileInput.value = '';
+        // Redirect user to their home page after successful registration
+        try { navigate('/user/home', { replace: true }); } catch (err) { /* ignore navigation errors */ }
       } else {
         console.error(data.error);
         alert(data.warning);
