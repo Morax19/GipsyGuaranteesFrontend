@@ -10,7 +10,8 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const apiUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL_LOCAL : import.meta.env.VITE_API_BASE_URL_PROD;
 
 export default function Warranty() {
-  const {user_id, user_first_name, email_address, role} = getCurrentUserInfo();
+  const {user_id, user_first_name, email_address} = getCurrentUserInfo();
+  
   const initialFormData = {
     mainCustomerID: '',
     branchID: '',
@@ -25,7 +26,7 @@ export default function Warranty() {
     productCategory: '',
     brandCategory: '',
     productDetail: '',
-    invoiceIMG: '',
+    invoiceIMG: null, // FIX: Iniciamos como null para manejar el archivo en estado
   }
   
   const [formData, setFormData] = useState(initialFormData);
@@ -42,7 +43,10 @@ export default function Warranty() {
   const inputRef = useRef(null);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const searchDebounceRef = useRef(null);
-  const [editableField, setEditableField] = useState(false);
+  
+  // FIX: Renombrado de editableField a hasBranches para mayor claridad
+  const [hasBranches, setHasBranches] = useState(false); 
+  
   const [showInfoModal, setShowInfoModal] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -51,13 +55,12 @@ export default function Warranty() {
     setShowInfoModal(false); 
   };
 
-  // Normalizer: trim, collapse spaces, remove diacritics, lowercase
   const normalizeText = (s = '') =>
     s
       .toString()
       .normalize('NFD')
       .replace(/\p{Diacritic}/gu, '')
-      .replace(/[^\p{L}\p{N} ]+/gu, ' ') // remove punctuation except letters/numbers
+      .replace(/[^\p{L}\p{N} ]+/gu, ' ') 
       .replace(/\s+/g, ' ')
       .trim()
       .toLowerCase();
@@ -71,14 +74,11 @@ export default function Warranty() {
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/getMainCustomersWarrantyRegister/?itemID=${itemID}`,
-        {
-          method: 'GET',
-        }
+        { method: 'GET' }
       );
 
       const data = await response.json();
       if (response.ok) {
-        // Precompute normalized FullName to avoid repeated normalization on each keystroke
         const normalized = (data || []).map(mc => ({
           ...mc,
           _norm: normalizeText(mc.FullName || '')
@@ -97,9 +97,7 @@ export default function Warranty() {
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/getBranchByCustomerID/?mainCustomerID=${mainCustomerID}&isRetail=${isRetail}`,
-        {
-          method: 'GET',
-        }
+        { method: 'GET' }
       );
 
       const data = await response.json();
@@ -107,20 +105,16 @@ export default function Warranty() {
         const branches = data || [];
         setBranchAddresses(branches);
         if (branches.length > 0) {
-          // enable the branch select; do NOT autofill RIF here. RIF should be filled when user selects a branch.
-          setEditableField(true);
-          // ensure previous branch/RIF are cleared so user can pick a branch
+          setHasBranches(true); // FIX: Usamos el nuevo nombre
           setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
         } else {
-          // no branches for this customer
-          setEditableField(false);
+          setHasBranches(false);
           setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
         }
       } else {
         console.error(data.error);
-        //alert(data.error);
         setBranchAddresses([]);
-        setEditableField(false);
+        setHasBranches(false);
         setFormData(prev => ({ ...prev, branchID: '', RIFtype: '', RIF: '' }));
       }
     } catch {
@@ -128,23 +122,10 @@ export default function Warranty() {
     }
   };
 
-  // Handle form field changes
   const handleChange = ({ target: { name, value, files } }) => {
-    if (name === 'mainCustomerID') {
-      const [id, retail] = value.split('-');
-
-      setFormData(prev => ({
-        ...prev,
-        mainCustomerID: id,
-        isRetail: retail,
-        branchID: '',
-        RIFtype: '',
-        RIF: '',
-      }));
-      if (value) fetchBranchAddresses(id, retail);
-      else setBranchAddresses([]);
-
-    } else if (name === 'branchID') {
+    // FIX: Eliminado el bloque de 'mainCustomerID' (Código Muerto)
+    
+    if (name === 'branchID') {
       const selectedBranch = branchAddresses.find(
         b => String(b.branchID) === String(value)
       );
@@ -159,25 +140,33 @@ export default function Warranty() {
         setFormData(prev => ({ ...prev, branchID: value }));
       }
     } else if (name === 'RIF') {
-        // Filter out any non-numeric characters from the RIF input
         const filteredValue = value.replace(/[^0-9]/g, '');
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: filteredValue
-        }));
+        setFormData(prevData => ({ ...prevData, [name]: filteredValue }));
     } else if (name === 'purchaseDate') {
-      // Ensure the date is always in YYYY-MM-DD format
-      const formattedDate = value;
-      setFormData(prev => ({
-        ...prev,
-        purchaseDate: formattedDate
-      }));
+      setFormData(prev => ({ ...prev, purchaseDate: value }));
     } else if (name === 'barCode') {
       const filteredValue = value.replace(/[^0-9]/g, '');
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: filteredValue
-        }));
+      setFormData(prevData => ({
+          ...prevData,
+          [name]: filteredValue,
+          // FIX: Forzar limpieza del producto si se edita el código de barras manualemente
+          ItemId: '',
+          productBrand: '',
+          productCategory: '',
+          brandCategory: '',
+          productDetail: '',
+          mainCustomerID: '',
+          branchID: '',
+          RIFtype: '',
+          RIF: ''
+      }));
+      // FIX: Resetear tiendas si se borra o cambia el código
+      setMainCustomers([]);
+      setBranchAddresses([]);
+      setMainCustomerQuery('');
+    } else if (name === 'invoiceIMG') {
+      // FIX: Manejo correcto del archivo vía estado de React
+      setFormData(prev => ({ ...prev, invoiceIMG: files[0] }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -190,6 +179,7 @@ export default function Warranty() {
       return;
     }
 
+    // Limpiar campos previos
     setFormData(prev => ({
       ...prev,
       ItemId: '',
@@ -209,17 +199,15 @@ export default function Warranty() {
 
       if (response.ok) {
         setProducts(data);
-
         if (data && data.ID && data.Brand && data.Category && data.productDetail) {
           setFormData(prev => ({
             ...prev,
             ItemId: data.ID,
             productBrand: data.Brand || 'Marca del producto',
-            brandCategory: `${data.Brand} - ${data.Category}` || 'Marca del producto - Categoría del producto',
+            brandCategory: `${data.Brand} - ${data.Category}`,
             productCategory: data.Category || 'Categoría del producto',
             productDetail: data.productDetail || 'Detalles del producto',
           }));
-
           fetchMainCustomers(data.ID);
         }
       } else {
@@ -227,16 +215,14 @@ export default function Warranty() {
         alert(data.error);
       }
     } catch {
-      console.error('Error de conexión con el servidor');
       alert('Error de conexión con el servidor');
     }
   };
 
-  // Debounced filter of main customers to avoid rendering huge lists
+  // Debounce Autocomplete
   useEffect(() => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     if (!mainCustomerQuery) {
-      // If cleared, also clear selection and suggestions
       setFilteredMainCustomers([]);
       setShowCustomerSuggestions(false);
       setHighlightIndex(-1);
@@ -247,8 +233,6 @@ export default function Warranty() {
       const qNorm = normalizeText(mainCustomerQuery);
       const tokens = qNorm.split(' ').filter(Boolean);
 
-      // If we recently selected a suggestion and updated the input value programmatically,
-      // suppress reopening the suggestions box on that update.
       if (suppressShowOnQuery) {
         setFilteredMainCustomers([]);
         setShowCustomerSuggestions(false);
@@ -258,23 +242,20 @@ export default function Warranty() {
       }
 
       const matches = mainCustomers.filter(mc => {
-        // Only search FullName (use precomputed _norm)
         if (!mc._norm) return false;
-        // Every token must appear somewhere in the normalized full name (AND semantics)
         return tokens.every(t => mc._norm.includes(t));
       }).slice(0, 50);
 
       setFilteredMainCustomers(matches);
       setShowCustomerSuggestions(matches.length > 0);
       setHighlightIndex(-1);
-    }, 200); // 200ms debounce
+    }, 200); 
 
     return () => {
       if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     };
   }, [mainCustomerQuery, mainCustomers]);
 
-  // Close suggestions when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
@@ -285,11 +266,17 @@ export default function Warranty() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Submit warranty registration
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     
+    // FIX: Validar que el usuario haya hecho "Buscar" en el código de barras y exista ItemId
+    if (!formData.ItemId) {
+      setLoading(false);
+      alert('Por favor, presione el ícono de búsqueda del código de barras para identificar el producto.');
+      return;
+    }
+
     if (!validateInvoiceNumber(formData.invoiceNumber)) {
       setLoading(false);
       alert('El número de factura no es válido. Use solo letras, números, guiones o barras, entre 5 y 20 caracteres.');
@@ -297,27 +284,24 @@ export default function Warranty() {
     }
 
     const selectedStore = mainCustomers.find(mc => String(mc.ID) === String(formData.mainCustomerID));
-    // Validate that the user has selected/entered a valid store
     if (!selectedStore) {
       setLoading(false);
-      alert('No se ha encontrado la compañía asociada.');
+      alert('Debe seleccionar una compañía asociada válida de la lista.');
       return;
     }
 
     const selectedBranch = branchAddresses.find(b => String(b.branchID) === String(formData.branchID));
-    const img = document.getElementById("invoiceIMG").files[0];
 
     const warrantyData = new FormData();
     warrantyData.append('registerID', user_id);
     warrantyData.append('userFirstName', user_first_name);
     warrantyData.append('emailAddress', email_address);
 
-    if (editableField) {
+    if (hasBranches) {
       warrantyData.append('branchID', formData.branchID);
       warrantyData.append('RIFtype', formData.RIFtype);
       warrantyData.append('RIF', formData.RIF);
-    }
-    else {
+    } else {
       warrantyData.append('branchID', '');
       warrantyData.append('RIFtype', '');
       warrantyData.append('RIF', '');
@@ -330,10 +314,11 @@ export default function Warranty() {
     warrantyData.append('productModel', formData.productDetail);
     warrantyData.append('productBarcode', formData.barCode);
     warrantyData.append('invoiceNumber', formData.invoiceNumber);
-    warrantyData.append('invoiceIMG', img);
+    warrantyData.append('invoiceIMG', formData.invoiceIMG); // FIX: Se obtiene directamente del estado
     warrantyData.append('storeName', selectedStore ? selectedStore.FullName : '');
     warrantyData.append('branchName', selectedBranch ? selectedBranch.companyName : '');
     warrantyData.append('mainCustomerID', selectedStore.ID);
+
     try {
       const response = await fetchWithAuth(
         `${apiUrl}/api/warrantyRegister/`,
@@ -347,17 +332,16 @@ export default function Warranty() {
       if (response.ok) {
         alert(data.message);
         setFormData(initialFormData);
-        // Reset file input (if still present)
+        setMainCustomerQuery(''); // Limpiar autocompletado
         const fileInput = document.getElementById('invoiceIMG');
         if (fileInput) fileInput.value = '';
-        // Redirect user to their home page after successful registration
-        try { navigate('/user/home', { replace: true }); } catch (err) { /* ignore navigation errors */ }
+        
+        try { navigate('/user/home', { replace: true }); } catch (err) {}
       } else {
-        console.error(data.error);
-        alert(data.warning);
+        alert(data.warning || data.error);
       }
     } catch {
-      console.error('Error de conexión con el servidor');
+      alert('Error de conexión con el servidor');
     } finally {
       setLoading(false);
     }
@@ -374,9 +358,7 @@ export default function Warranty() {
 
         <div className="header-with-info">
           <h2>Registro de Garantía</h2>
-
           <div className="info-tooltip-container" tabIndex={0}>
-            {/* Ícono de información (i) */}
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               width="20" 
@@ -387,8 +369,6 @@ export default function Warranty() {
             >
               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
             </svg>
-
-            {/* Contenido de la nube de diálogo */}
             <div className="tooltip-bubble">
               Si requiere ayuda para llenar el formulario, puede ver el <a href="https://www.youtube.com/watch?v=grZJtXr_45A" target="_blank" rel="noopener noreferrer">video tutorial</a>.
             </div>
@@ -470,7 +450,6 @@ export default function Warranty() {
             disabled
           />
 
-          {/* Customer Select */}
           <label htmlFor="mainCustomerSearch">
             Compañía asociada <span className="required-asterisk">*</span>
           </label>
@@ -486,11 +465,9 @@ export default function Warranty() {
               value={mainCustomerQuery}
               onChange={e => {
                 setMainCustomerQuery(e.target.value);
-                // clear previously selected mainCustomerID and any branch/RIF while typing
                 setFormData(prev => ({ ...prev, mainCustomerID: '', isRetail: '', branchID: '', RIFtype: '', RIF: '' }));
-                // clear branch list and disable branch select until a customer is chosen
                 setBranchAddresses([]);
-                setEditableField(false);
+                setHasBranches(false);
               }}
               onFocus={() => mainCustomerQuery && setShowCustomerSuggestions(true)}
               ref={inputRef}
@@ -506,13 +483,11 @@ export default function Warranty() {
                   e.preventDefault();
                   const sel = filteredMainCustomers[highlightIndex >= 0 ? highlightIndex : 0];
                   if (sel) {
-                    // set selected main customer and clear previous branch/RIF selection
                     setFormData(prev => ({ ...prev, mainCustomerID: sel.ID, isRetail: sel.isRetail, branchID: '', RIFtype: '', RIF: '' }));
                     setMainCustomerQuery(sel.FullName || '');
                     setShowCustomerSuggestions(false);
                     setSuppressShowOnQuery(true);
                     fetchBranchAddresses(sel.ID, sel.isRetail);
-                    // blur input to ensure suggestions close
                     if (inputRef.current && typeof inputRef.current.blur === 'function') inputRef.current.blur();
                   }
                 } else if (e.key === 'Escape') {
@@ -521,32 +496,19 @@ export default function Warranty() {
               }}
               required
               autoComplete="off"
-              aria-autocomplete="list"
-              aria-controls="mainCustomer-suggestions"
-              aria-expanded={showCustomerSuggestions}
             />
             {showCustomerSuggestions && (
               <ul id="mainCustomer-suggestions" className="suggestions-list" role="listbox" style={{
-                position: 'absolute',
-                zIndex: 40,
-                left: 0,
-                right: 0,
-                maxHeight: '240px',
-                overflowY: 'auto',
-                background: 'white',
-                border: '1px solid #ccc',
-                listStyle: 'none',
-                margin: 0,
-                padding: 0
+                position: 'absolute', zIndex: 40, left: 0, right: 0, maxHeight: '240px',
+                overflowY: 'auto', background: 'white', border: '1px solid #ccc',
+                listStyle: 'none', margin: 0, padding: 0
               }}>
                 {filteredMainCustomers.length > 0 ? (
                   filteredMainCustomers.map((mc, idx) => (
                     <li
                       key={`${mc.ID}-${mc.isRetail}`}
                       onMouseDown={(e) => {
-                          // prevent browser focusing the input before we blur
                           try { e.preventDefault(); } catch (err) {}
-                          // set selected main customer and clear previous branch/RIF selection
                           setFormData(prev => ({ ...prev, mainCustomerID: mc.ID, isRetail: mc.isRetail, branchID: '', RIFtype: '', RIF: '' }));
                           setMainCustomerQuery(mc.FullName || '');
                           setShowCustomerSuggestions(false);
@@ -573,7 +535,8 @@ export default function Warranty() {
             )}
           </div>
 
-          {editableField && (
+          {/* FIX: Uso semántico de hasBranches. Eliminado required innecesario de inputs deshabilitados */}
+          {hasBranches && (
             <>
               <label htmlFor="branchID">
                 Sucursal <span className="required-asterisk">*</span>
@@ -584,7 +547,7 @@ export default function Warranty() {
               <select
                 id="branchID"
                 name="branchID"
-                required={editableField}
+                required
                 value={formData.branchID}
                 onChange={handleChange}
                 disabled={!formData.mainCustomerID}
@@ -597,7 +560,6 @@ export default function Warranty() {
                 ))}
               </select>
 
-              {/* Auto-filled and locked RIFtype */}
               <label htmlFor="RIFtype">
                 RIF de la tienda <span className="required-asterisk">*</span>
               </label>
@@ -606,10 +568,9 @@ export default function Warranty() {
                   <select
                     id="RIFtype"
                     name="RIFtype"
-                    required={editableField}
                     value={formData.RIFtype}
                     onChange={handleChange}
-                    disabled={editableField}
+                    disabled // Bloqueado, solo lectura
                   >
                     <option value="">Tipo</option>
                     {RIFtypeOptions.map(opt => (
@@ -619,15 +580,15 @@ export default function Warranty() {
                 </div>
                 <div className="rif-number">
                   <input
-                    type="number"
+                    type="text"         // FIX: number a text para evitar fallos con el reemplazo Regex
+                    inputMode="numeric" // FIX: Mantiene el teclado numérico en móviles
                     id="RIF"
                     name="RIF"
                     placeholder="Número de RIF"
                     maxLength={10}
-                    required={editableField}
                     value={formData.RIF}
                     onChange={handleChange}
-                    disabled={editableField}
+                    disabled // Solo lectura
                   />
                 </div>
               </div>
@@ -644,7 +605,7 @@ export default function Warranty() {
             required
             value={formData.purchaseDate}
             onChange={handleChange}
-            max={new Date().toISOString().split('T')[0]} // Prevent future dates
+            max={new Date().toISOString().split('T')[0]} 
           />
 
           <label htmlFor="invoiceNumber">
