@@ -60,7 +60,7 @@ const SidebarAdmin = ({ activePage, sidebarActive, closeSidebar, onLogout }) => 
             </li>
             <li>
               <div className={`optionContainer ${isActive('warrantyReport') ? 'active' : ''}`}>
-                <a href="https://app.powerbi.com/groups/me/reports/16c30b6d-ce45-4692-ba22-5cb0e9cbca3b/327f1368f65acaa57287?ctid=e28fcd45-30d5-4919-b266-27bca9760759&experience=power-bi&chromeless=1" className="optionLink" onClick={closeSidebar} target='_blank'>Reporte Garantías</a>
+                <a href="https://app.powerbi.com/groups/me/reports/982e279d-7215-4029-96c3-435f7bb2d14d/97d69b06ec0e00986670?ctid=89f40f4c-5692-42c5-9d40-22ae54d15dc4&experience=power-bi&chromeless=1" className="optionLink" onClick={closeSidebar} target='_blank'>Reporte Garantías</a>
               </div>
             </li>
             
