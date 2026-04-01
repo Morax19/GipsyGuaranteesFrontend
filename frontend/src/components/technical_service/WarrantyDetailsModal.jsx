@@ -331,6 +331,9 @@ const WarrantyDetailsModal = ({ isOpen, onClose, warranty, onUpdateWarranty }) =
             <div className="detail-row">
               <strong>Producto:</strong> <span>{warranty.Description}</span>
             </div>
+            <div className="detail-row">
+              <strong>Anexo de Factura:</strong><a href={warranty.invoiceCopyPath || '#'} target="_blank" rel="noopener noreferrer"><b>{warranty.invoiceFileName || 'N/A'}</b></a>
+            </div>
           </div>
 
           <hr /> {/* Separador visual */}

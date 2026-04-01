@@ -65,6 +65,9 @@ const SearchedWarrantyDetailsModal = ({ isOpen, onClose, warranty, onOpenCase })
               <strong>Número de Factura:</strong> <span>{warranty.invoiceNumber || 'N/A'}</span>
             </div>
             <div className="detail-row">
+              <strong>Anexo de Factura:</strong><a href={warranty.invoiceCopyPath || '#'} target="_blank" rel="noopener noreferrer"><b>{warranty.invoiceFileName || 'N/A'}</b></a>
+            </div>
+            <div className="detail-row">
               <strong>Fecha de Compra:</strong> <span>{warranty.purchaseDate || 'N/A'}</span>
             </div>
             <div className="detail-row">
